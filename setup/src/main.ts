@@ -9,10 +9,12 @@ import * as exec from '@actions/exec';
 async function installFcli(): Promise<void> {
 	const fcliVersion = getFcliVersion();
 	let cachedPath = tc.find('fcli', fcliVersion);
-	if ( cachedPath ) {
+	if (cachedPath) {
 		core.info(`Using fcli ${fcliVersion} from cache`);
 	} else {
-		const baseUrl = `https://github.com/fortify-ps/fcli/releases/download/${fcliVersion}`
+		const baseUrl = fcliVersion === 'latest'
+			? 'https://github.com/fortify/fcli/releases/latest/download'
+			: `https://github.com/fortify/fcli/releases/download/${fcliVersion}`
 		let installPath = '/opt/fortify/fcli';
 		core.info(`Installing fcli ${fcliVersion} from ${baseUrl}`);
 		// TODO Verify download hashes
@@ -46,9 +48,9 @@ function getFcliVersion(): string {
 }
 
 async function installTool(toolName: string, toolVersion: string): Promise<void> {
-	if ( toolVersion!=='none') {
+	if (toolVersion !== 'none') {
 		let installPath = tc.find(toolName, toolVersion);
-		if ( installPath ) {
+		if (installPath) {
 			core.info(`Using ${toolName} ${toolVersion} from cache`);
 		} else {
 			core.info(`Installing ${toolName} ${toolVersion}`);
@@ -61,10 +63,10 @@ async function installTool(toolName: string, toolVersion: string): Promise<void>
 }
 
 async function main(): Promise<void> {
-	const tools = [ 'sc-client', 'fod-uploader', 'vuln-exporter']
+	const tools = ['sc-client', 'fod-uploader', 'vuln-exporter']
 	try {
 		await installFcli();
-		for ( const tool of tools ) {
+		for (const tool of tools) {
 			await installTool(tool, core.getInput(tool))
 		}
 	} catch (err) {

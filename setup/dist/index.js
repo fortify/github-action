@@ -6599,7 +6599,9 @@ function installFcli() {
             core.info(`Using fcli ${fcliVersion} from cache`);
         }
         else {
-            const baseUrl = `https://github.com/fortify-ps/fcli/releases/download/${fcliVersion}`;
+            const baseUrl = fcliVersion === 'latest'
+                ? 'https://github.com/fortify/fcli/releases/latest/download'
+                : `https://github.com/fortify/fcli/releases/download/${fcliVersion}`;
             let installPath = '/opt/fortify/fcli';
             core.info(`Installing fcli ${fcliVersion} from ${baseUrl}`);
             // TODO Verify download hashes
