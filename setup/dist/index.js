@@ -6633,7 +6633,7 @@ function getFcliVersion() {
         // TODO: Once we add support for checking fcli hash based on provided version,
         //       use latest version for which hash is known if fcliVersion=='default'
         case "default": return "latest";
-        default: return (fcliVersion.match(/\d+\.\d+\.\d+/)) ? "v" + fcliVersion : fcliVersion;
+        default: return (fcliVersion.match(/^\d+\.\d+\.\d+$/)) ? "v" + fcliVersion : fcliVersion;
     }
 }
 function installTool(toolName, toolVersion) {
