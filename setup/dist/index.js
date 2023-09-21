@@ -6587,7 +6587,21 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 const core = __importStar(__nccwpck_require__(2186));
 const tc = __importStar(__nccwpck_require__(7784));
 const exec = __importStar(__nccwpck_require__(1514));
+// TODO Update to 2.0.0 once available
 const INTERNAL_FCLI_VERSION = 'dev_develop';
+// TODO For both fcli and other tools, if version is 'latest', we probably shouldn't use
+//      tool cache (as then we may never download newer versions), but we do want to check
+//      whether installPath already exists to avoid reinstalling multiple times within a
+//      single workflow (depending on how we organize other actions, this setup action may 
+//      be invoked multiple times).
+// TODO Somewhat related, if version is 'default', we may want to translate that to the 
+//      actual version number for use in tool path and cache. For tools installed through
+//      fcli, we can run `fcli tool * list` with query and output options to get the version
+//      number for the default version.
+// TODO We may need 'internal' versions for the other tools as well, for example a composite
+//      export-vulnerabilities workflow may use this setup action to install a specific FVE
+//      version, but we don't want to add that version to the system path as we don't want
+//      the export-vulnerabilities action to override the FVE version requested by the user.
 /**
  * Install fcli
  * @returns path to the directory where fcli was installed
@@ -6596,7 +6610,7 @@ function installFcli(fcliVersion) {
     return __awaiter(this, void 0, void 0, function* () {
         let cachedPath = tc.find('fcli', fcliVersion);
         if (cachedPath) {
-            core.info(`Using fcli ${fcliVersion} from cache`);
+            core.info(`Using previously installed fcli ${fcliVersion}`);
         }
         else {
             const baseUrl = fcliVersion === 'latest'
@@ -6641,7 +6655,7 @@ function installTool(internalFcli, toolName, toolVersion) {
         if (toolVersion !== 'none') {
             let installPath = tc.find(toolName, toolVersion);
             if (installPath) {
-                core.info(`Using ${toolName} ${toolVersion} from cache`);
+                core.info(`Using previously installed ${toolName} ${toolVersion}`);
             }
             else {
                 core.info(`Installing ${toolName} ${toolVersion}`);
