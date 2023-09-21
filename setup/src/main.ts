@@ -2,12 +2,13 @@ import * as core from '@actions/core';
 import * as tc from '@actions/tool-cache';
 import * as exec from '@actions/exec';
 
+const INTERNAL_FCLI_VERSION='dev_develop';
+
 /**
  * Install fcli
  * @returns path to the directory where fcli was installed
  */
-async function installFcli(): Promise<void> {
-	const fcliVersion = getFcliVersion();
+async function installFcli(fcliVersion: string): Promise<string> {
 	let cachedPath = tc.find('fcli', fcliVersion);
 	if (cachedPath) {
 		core.info(`Using fcli ${fcliVersion} from cache`);
@@ -15,7 +16,7 @@ async function installFcli(): Promise<void> {
 		const baseUrl = fcliVersion === 'latest'
 			? 'https://github.com/fortify/fcli/releases/latest/download'
 			: `https://github.com/fortify/fcli/releases/download/${fcliVersion}`
-		let installPath = '/opt/fortify/fcli';
+		let installPath = `/opt/fortify/fcli/${fcliVersion}`;
 		core.info(`Installing fcli ${fcliVersion} from ${baseUrl}`);
 		// TODO Verify download hashes
 		if (process.platform === 'win32') {
@@ -33,7 +34,7 @@ async function installFcli(): Promise<void> {
 		}
 		cachedPath = await tc.cacheDir(installPath, 'fcli', fcliVersion);
 	}
-	core.addPath(cachedPath);
+	return cachedPath;
 }
 
 function getFcliVersion(): string {
@@ -47,15 +48,15 @@ function getFcliVersion(): string {
 	}
 }
 
-async function installTool(toolName: string, toolVersion: string): Promise<void> {
+async function installTool(internalFcliPath: string, toolName: string, toolVersion: string): Promise<void> {
 	if (toolVersion !== 'none') {
 		let installPath = tc.find(toolName, toolVersion);
 		if (installPath) {
 			core.info(`Using ${toolName} ${toolVersion} from cache`);
 		} else {
 			core.info(`Installing ${toolName} ${toolVersion}`);
-			installPath = `/opt/fortify/${toolName}`;
-			await exec.exec('fcli', ['tool', toolName, 'install', toolVersion, '-d', installPath]);
+			installPath = `/opt/fortify/${toolName}/${toolVersion}`;
+			await exec.exec(`${internalFcliPath}/fcli`, ['tool', toolName, 'install', toolVersion, '-d', installPath]);
 			installPath = await tc.cacheDir(installPath, toolName, toolVersion);
 		}
 		core.addPath(`${installPath}/bin`);
@@ -65,9 +66,11 @@ async function installTool(toolName: string, toolVersion: string): Promise<void>
 async function main(): Promise<void> {
 	const tools = ['sc-client', 'fod-uploader', 'vuln-exporter']
 	try {
-		await installFcli();
+		const internalFcliPath = await installFcli(INTERNAL_FCLI_VERSION);
+		core.exportVariable('INTERNAL_FCLI_PATH', internalFcliPath);
+		core.addPath(await installFcli(getFcliVersion()));
 		for (const tool of tools) {
-			await installTool(tool, core.getInput(tool))
+			await installTool(internalFcliPath, tool, core.getInput(tool))
 		}
 	} catch (err) {
 		core.setFailed("Action failed with error: " + err);

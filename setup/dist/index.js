@@ -6587,13 +6587,13 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 const core = __importStar(__nccwpck_require__(2186));
 const tc = __importStar(__nccwpck_require__(7784));
 const exec = __importStar(__nccwpck_require__(1514));
+const INTERNAL_FCLI_VERSION = 'dev_develop';
 /**
  * Install fcli
  * @returns path to the directory where fcli was installed
  */
-function installFcli() {
+function installFcli(fcliVersion) {
     return __awaiter(this, void 0, void 0, function* () {
-        const fcliVersion = getFcliVersion();
         let cachedPath = tc.find('fcli', fcliVersion);
         if (cachedPath) {
             core.info(`Using fcli ${fcliVersion} from cache`);
@@ -6602,7 +6602,7 @@ function installFcli() {
             const baseUrl = fcliVersion === 'latest'
                 ? 'https://github.com/fortify/fcli/releases/latest/download'
                 : `https://github.com/fortify/fcli/releases/download/${fcliVersion}`;
-            let installPath = '/opt/fortify/fcli';
+            let installPath = `/opt/fortify/fcli/${fcliVersion}`;
             core.info(`Installing fcli ${fcliVersion} from ${baseUrl}`);
             // TODO Verify download hashes
             if (process.platform === 'win32') {
@@ -6623,7 +6623,7 @@ function installFcli() {
             }
             cachedPath = yield tc.cacheDir(installPath, 'fcli', fcliVersion);
         }
-        core.addPath(cachedPath);
+        return cachedPath;
     });
 }
 function getFcliVersion() {
@@ -6636,7 +6636,7 @@ function getFcliVersion() {
         default: return (fcliVersion.match(/^\d+\.\d+\.\d+$/)) ? "v" + fcliVersion : fcliVersion;
     }
 }
-function installTool(toolName, toolVersion) {
+function installTool(internalFcli, toolName, toolVersion) {
     return __awaiter(this, void 0, void 0, function* () {
         if (toolVersion !== 'none') {
             let installPath = tc.find(toolName, toolVersion);
@@ -6645,8 +6645,8 @@ function installTool(toolName, toolVersion) {
             }
             else {
                 core.info(`Installing ${toolName} ${toolVersion}`);
-                installPath = `/opt/fortify/${toolName}`;
-                yield exec.exec('fcli', ['tool', toolName, 'install', toolVersion, '-d', installPath]);
+                installPath = `/opt/fortify/${toolName}/${toolVersion}`;
+                yield exec.exec(internalFcli, ['tool', toolName, 'install', toolVersion, '-d', installPath]);
                 installPath = yield tc.cacheDir(installPath, toolName, toolVersion);
             }
             core.addPath(`${installPath}/bin`);
@@ -6657,9 +6657,15 @@ function main() {
     return __awaiter(this, void 0, void 0, function* () {
         const tools = ['sc-client', 'fod-uploader', 'vuln-exporter'];
         try {
-            yield installFcli();
+            // Install fixed fcli version for internal action use. The path to the
+            // internal fcli executable is accessible through the INTERNAL_FCLI
+            // environment variable.
+            const internalFcli = core.toPlatformPath((yield installFcli(INTERNAL_FCLI_VERSION)) + '/fcli');
+            core.exportVariable('INTERNAL_FCLI', internalFcli);
+            // Install user-specified fcli version and other Fortify tools
+            core.addPath(yield installFcli(getFcliVersion()));
             for (const tool of tools) {
-                yield installTool(tool, core.getInput(tool));
+                yield installTool(internalFcli, tool, core.getInput(tool));
             }
         }
         catch (err) {
