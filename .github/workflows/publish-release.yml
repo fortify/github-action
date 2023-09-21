@@ -1,0 +1,36 @@
+on:
+  push:
+    branches: 
+      - main   # New GitHub-favored name for default branch
+      
+name: Publish release
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check-out source code
+        uses: actions/checkout@v2
+      
+      - name: Generate and process release PR
+        id: release_please
+        uses: GoogleCloudPlatform/release-please-action@v2
+        with:
+          release-type: node
+          package-name: ${{ github.event.repository.name }}
+          
+      - name: Publish v{major}.{minor} tag
+        if: steps.release_please.outputs.release_created
+        uses: richardsimko/update-tag@v1
+        with:
+          tag_name: v${{steps.release_please.outputs.major}}.${{steps.release_please.outputs.minor}}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
+          
+      - name: Publish v{major} tag
+        if: steps.release_please.outputs.release_created
+        uses: richardsimko/update-tag@v1
+        with:
+          tag_name: v${{steps.release_please.outputs.major}}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
+          

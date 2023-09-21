@@ -1,0 +1,27 @@
+name: 'Setup Fortify Tools'
+description: 'Set up Fortify tools like fcli, ScanCentral Client, FoDUploader and FortifyVulnerabilityExporter'
+author: 'Fortify'
+inputs:
+  fcli:
+    description: 'The fcli version to install. Allowed values: latest, default or specific version number.'
+    default: 'default'
+    required: false
+  sc-client:
+    description: 'The ScanCentral Client version to install. Allowed values: none (do not install), latest, default (latest known by fcli) or specific version number.'
+    default: 'default'
+    required: false
+  fod-uploader:
+    description: 'The FoDUploader version to install. Allowed values: none (do not install), latest, default (latest known by fcli) or specific version number.'
+    default: 'default'
+    required: false
+  vuln-exporter:
+    description: 'The FortifyVulnerabilityExporter version to install. Allowed values: none (do not install), latest, default (latest known by fcli) or specific version number.'
+    default: 'default'
+    required: false
+runs:
+  using: node20
+  main: 'dist/index.js'
+branding:
+  icon: 'shield'
+  color: 'blue'
+
