@@ -1,0 +1,16 @@
+name: 'Package source code & dependencies'
+description: 'Package source code & dependencies for SAST & SCA scans'
+author: 'Fortify'
+runs:
+  using: composite
+  steps:
+    - uses: fortify-ps/github-action/setup@main
+      with:
+        export-path: false
+        sc-client: 23.1.0
+    - run: ${SC_CLIENT_CMD} package ${PACKAGE_OPTS} -o package.zip
+      shell: bash
+branding:
+  icon: 'shield'
+  color: 'blue'
+
