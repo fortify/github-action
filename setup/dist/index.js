@@ -6602,7 +6602,7 @@ function installAndConfigure(internalFcliCmd, toolName, toolVersion) {
             core.info(`Skipping ${toolName} installation`);
         }
         else {
-            const installPath = yield installIfNotCached(internalFcliCmd, toolName, toolVersion);
+            const installPath = yield installIfNotCached(internalFcliCmd, toolName, toolVersion, core.info);
             exportVariables(toolName, toolVersion, installPath);
         }
     });
@@ -6612,17 +6612,17 @@ function installAndConfigure(internalFcliCmd, toolName, toolVersion) {
  * This function doesn't export any variables; this is handled by installAndConfigure
  * if applicable.
 */
-function installIfNotCached(internalFcliCmd, toolName, toolVersion) {
+function installIfNotCached(internalFcliCmd, toolName, toolVersion, log) {
     return __awaiter(this, void 0, void 0, function* () {
         const installPath = `/opt/fortify/${toolName}/${toolVersion}`;
         // We explicitly don't use GitHub tool-cache as we support semantic versioning;
         // versions like 'latest' or 'v2' may change over time so we don't want to use
-        // an older cached version.
+        // an older cached version in case new versions are released.
         if (fs.existsSync(installPath)) {
-            core.info(`Using previously installed ${toolName} ${toolVersion}`);
+            log(`Using previously installed ${toolName} ${toolVersion}`);
         }
         else {
-            core.info(`Installing ${toolName} ${toolVersion}`);
+            log(`Installing ${toolName} ${toolVersion}`);
             yield install(internalFcliCmd, toolName, toolVersion, installPath);
         }
         return installPath;
@@ -6743,9 +6743,9 @@ function getToolVersion(tool) {
 function main() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            // Install fixed fcli version for internal action use by this
-            // action only.
-            const internalFcliCmd = core.toPlatformPath((yield installIfNotCached('', 'fcli', INTERNAL_FCLI_VERSION)) + '/bin/fcli');
+            // Install fixed fcli version for internal action use by this action only.
+            const internalFcliPath = yield installIfNotCached('', 'fcli', INTERNAL_FCLI_VERSION, core.debug);
+            const internalFcliCmd = core.toPlatformPath(`${internalFcliPath}/bin/fcli`);
             // Install user-specified tools
             const tools = ['fcli', 'sc-client', 'fod-uploader', 'vuln-exporter'];
             for (const tool of tools) {

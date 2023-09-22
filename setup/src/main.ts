@@ -16,7 +16,7 @@ async function installAndConfigure(internalFcliCmd: string, toolName: string, to
 	if (toolVersion==='skip') {
 		core.info(`Skipping ${toolName} installation`);
 	} else {
-		const installPath = await installIfNotCached(internalFcliCmd, toolName, toolVersion);
+		const installPath = await installIfNotCached(internalFcliCmd, toolName, toolVersion, core.info);
 		exportVariables(toolName, toolVersion, installPath)
 	}
 }
@@ -26,15 +26,15 @@ async function installAndConfigure(internalFcliCmd: string, toolName: string, to
  * This function doesn't export any variables; this is handled by installAndConfigure
  * if applicable. 
 */
-async function installIfNotCached(internalFcliCmd: string, toolName: string, toolVersion: string): Promise<string> {
+async function installIfNotCached(internalFcliCmd: string, toolName: string, toolVersion: string, log: (arg: string) => void): Promise<string> {
 	const installPath = `/opt/fortify/${toolName}/${toolVersion}`;
 	// We explicitly don't use GitHub tool-cache as we support semantic versioning;
 	// versions like 'latest' or 'v2' may change over time so we don't want to use
-	// an older cached version.
+	// an older cached version in case new versions are released.
 	if (fs.existsSync(installPath)) {
-		core.info(`Using previously installed ${toolName} ${toolVersion}`);
+		log(`Using previously installed ${toolName} ${toolVersion}`);
 	} else {
-		core.info(`Installing ${toolName} ${toolVersion}`);
+		log(`Installing ${toolName} ${toolVersion}`);
 		await install(internalFcliCmd, toolName, toolVersion, installPath);
 	}
 	return installPath;
@@ -144,9 +144,9 @@ function getToolVersion(tool: string): string {
  */
 async function main(): Promise<void> {
 	try {
-		// Install fixed fcli version for internal action use by this
-		// action only.
-		const internalFcliCmd = core.toPlatformPath(await installIfNotCached('', 'fcli', INTERNAL_FCLI_VERSION)+'/bin/fcli');
+		// Install fixed fcli version for internal action use by this action only.
+		const internalFcliPath = await installIfNotCached('', 'fcli', INTERNAL_FCLI_VERSION, core.debug);
+		const internalFcliCmd = core.toPlatformPath(`${internalFcliPath}/bin/fcli`);
 		
 		// Install user-specified tools
 		const tools = ['fcli', 'sc-client', 'fod-uploader', 'vuln-exporter']
