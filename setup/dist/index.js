@@ -6707,6 +6707,9 @@ function exportVariables(toolName, toolVersion, installPath) {
     core.exportVariable(varBaseName + '_BIN_DIR', core.toPlatformPath(`${installPath}/bin`));
     let cmd = '';
     switch (toolName) {
+        case 'fcli':
+            cmd = 'fcli';
+            break;
         case 'sc-client':
             cmd = 'scancentral';
             break;
@@ -6717,7 +6720,7 @@ function exportVariables(toolName, toolVersion, installPath) {
             cmd = 'FoDUpload';
             break;
     }
-    core.exportVariable(varBaseName + '_BIN_DIR', core.toPlatformPath(`${installPath}/bin/${cmd}`));
+    core.exportVariable(varBaseName + '_CMD', core.toPlatformPath(`${installPath}/bin/${cmd}`));
 }
 /**
  * Get the configured tool version for the given tool.

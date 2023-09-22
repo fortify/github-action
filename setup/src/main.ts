@@ -115,11 +115,12 @@ function exportVariables(toolName: string, toolVersion: string, installPath: str
 	core.exportVariable(varBaseName+'_BIN_DIR', core.toPlatformPath(`${installPath}/bin`));
 	let cmd = '';
 	switch (toolName) {
+		case 'fcli': cmd = 'fcli'; break;
 		case 'sc-client': cmd = 'scancentral'; break;
 		case 'vuln-exporter': cmd = 'FortifyVulnerabilityExporter'; break;
 		case 'fod-uploader': cmd = 'FoDUpload'; break;
 	}
-	core.exportVariable(varBaseName+'_BIN_DIR', core.toPlatformPath(`${installPath}/bin/${cmd}`));
+	core.exportVariable(varBaseName+'_CMD', core.toPlatformPath(`${installPath}/bin/${cmd}`));
 }
 
 /**
