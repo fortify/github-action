@@ -6587,99 +6587,166 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 const core = __importStar(__nccwpck_require__(2186));
 const tc = __importStar(__nccwpck_require__(7784));
 const exec = __importStar(__nccwpck_require__(1514));
+const fs = __importStar(__nccwpck_require__(3994));
 // TODO Update to 2.0.0 once available
 const INTERNAL_FCLI_VERSION = 'dev_develop';
-// TODO For both fcli and other tools, if version is 'latest', we probably shouldn't use
-//      tool cache (as then we may never download newer versions), but we do want to check
-//      whether installPath already exists to avoid reinstalling multiple times within a
-//      single workflow (depending on how we organize other actions, this setup action may 
-//      be invoked multiple times).
-// TODO Somewhat related, if version is 'default', we may want to translate that to the 
-//      actual version number for use in tool path and cache. For tools installed through
-//      fcli, we can run `fcli tool * list` with query and output options to get the version
-//      number for the default version.
-// TODO We may need 'internal' versions for the other tools as well, for example a composite
-//      export-vulnerabilities workflow may use this setup action to install a specific FVE
-//      version, but we don't want to add that version to the system path as we don't want
-//      the export-vulnerabilities action to override the FVE version requested by the user.
+const LATEST_KNOWN_FCLI_VERSION = 'v1.3.1';
 /**
- * Install fcli
- * @returns path to the directory where fcli was installed
- */
-function installFcli(fcliVersion) {
+ * Install and configure the given version of the given tool, then export environment
+ * variables to allow pipelines to locate the tool installation(s). If the given version
+ * equals 'skip' the tool installation will be skipped.
+*/
+function installAndConfigure(internalFcliCmd, toolName, toolVersion) {
     return __awaiter(this, void 0, void 0, function* () {
-        let cachedPath = tc.find('fcli', fcliVersion);
-        if (cachedPath) {
-            core.info(`Using previously installed fcli ${fcliVersion}`);
+        if (toolVersion === 'skip') {
+            core.info(`Skipping ${toolName} installation`);
         }
         else {
-            const baseUrl = fcliVersion === 'latest'
-                ? 'https://github.com/fortify/fcli/releases/latest/download'
-                : `https://github.com/fortify/fcli/releases/download/${fcliVersion}`;
-            let installPath = `/opt/fortify/fcli/${fcliVersion}`;
-            core.info(`Installing fcli ${fcliVersion} from ${baseUrl}`);
-            // TODO Verify download hashes
-            if (process.platform === 'win32') {
-                const downloadPath = yield tc.downloadTool(`${baseUrl}/fcli-windows.zip`);
-                installPath = yield tc.extractZip(downloadPath, installPath);
-            }
-            else if (process.platform === 'darwin') {
-                const downloadPath = yield tc.downloadTool(`${baseUrl}/fcli-mac.tgz`);
-                installPath = yield tc.extractTar(downloadPath, installPath);
-            }
-            else if (process.platform === 'linux') {
-                const downloadPath = yield tc.downloadTool(`${baseUrl}/fcli-linux.tgz`);
-                installPath = yield tc.extractTar(downloadPath, installPath);
-            }
-            else {
-                // TODO Install Java version?
-                throw "Unsupported platform";
-            }
-            cachedPath = yield tc.cacheDir(installPath, 'fcli', fcliVersion);
+            const installPath = yield installIfNotCached(internalFcliCmd, toolName, toolVersion);
+            exportVariables(toolName, toolVersion, installPath);
         }
-        return cachedPath;
     });
 }
-function getFcliVersion() {
-    const fcliVersion = core.getInput('fcli');
-    switch (fcliVersion) {
-        case "latest": return "latest";
-        // TODO: Once we add support for checking fcli hash based on provided version,
-        //       use latest version for which hash is known if fcliVersion=='default'
-        case "default": return "latest";
-        default: return (fcliVersion.match(/^\d+\.\d+\.\d+$/)) ? "v" + fcliVersion : fcliVersion;
-    }
-}
-function installTool(internalFcli, toolName, toolVersion) {
+/**
+ * Install the given version of the given tool if it hasn't been previously installed.
+ * This function doesn't export any variables; this is handled by installAndConfigure
+ * if applicable.
+*/
+function installIfNotCached(internalFcliCmd, toolName, toolVersion) {
     return __awaiter(this, void 0, void 0, function* () {
-        if (toolVersion !== 'none') {
-            let installPath = tc.find(toolName, toolVersion);
-            if (installPath) {
-                core.info(`Using previously installed ${toolName} ${toolVersion}`);
-            }
-            else {
-                core.info(`Installing ${toolName} ${toolVersion}`);
-                installPath = `/opt/fortify/${toolName}/${toolVersion}`;
-                yield exec.exec(internalFcli, ['tool', toolName, 'install', toolVersion, '-d', installPath]);
-                installPath = yield tc.cacheDir(installPath, toolName, toolVersion);
-            }
-            core.addPath(`${installPath}/bin`);
+        const installPath = `/opt/fortify/${toolName}/${toolVersion}`;
+        // We explicitly don't use GitHub tool-cache as we support semantic versioning;
+        // versions like 'latest' or 'v2' may change over time so we don't want to use
+        // an older cached version.
+        if (fs.existsSync(installPath)) {
+            core.info(`Using previously installed ${toolName} ${toolVersion}`);
+        }
+        else {
+            core.info(`Installing ${toolName} ${toolVersion}`);
+            yield install(internalFcliCmd, toolName, toolVersion, installPath);
+        }
+        return installPath;
+    });
+}
+/**
+ * Install the given version of the given tool to the given path. This function doesn't
+ * perform any tool caching, and doesn't set any environment variables; this is handled
+ * by installAndConfigure if applicable. If an fcli installation is requested, we use
+ * the installFcli function, in which case the internalFcliCmd parameter may be empty.
+ * For other tool installations, we execute the given internalFcliCmd to have fcli
+ * install the requested tool.
+ */
+function install(internalFcliCmd, toolName, toolVersion, installPath) {
+    return __awaiter(this, void 0, void 0, function* () {
+        if (toolName === 'fcli') {
+            yield installFcli(installPath, toolVersion);
+        }
+        else {
+            yield exec.exec(internalFcliCmd, ['tool', toolName, 'install', toolVersion, '-d', installPath]);
         }
     });
 }
+/**
+ * Install the given fcli version to the given path. This function doesn't perform any tool
+ * caching, and doesn't set any environment variables; this is handled by installAndConfigure
+ * if applicable.
+ */
+function installFcli(installPath, version) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const baseUrl = getFcliBaseUrl(version);
+        installPath = `${installPath}/bin`;
+        core.info(`Installing fcli ${version} from ${baseUrl}`);
+        if (process.platform === 'win32') {
+            const downloadPath = yield tc.downloadTool(`${baseUrl}/fcli-windows.zip`);
+            verifyFcliHash(downloadPath, 'fcli-windows.zip', version);
+            installPath = yield tc.extractZip(downloadPath, installPath);
+        }
+        else if (process.platform === 'darwin') {
+            const downloadPath = yield tc.downloadTool(`${baseUrl}/fcli-mac.tgz`);
+            verifyFcliHash(downloadPath, 'fcli-mac.tgz', version);
+            installPath = yield tc.extractTar(downloadPath, installPath);
+        }
+        else if (process.platform === 'linux') {
+            const downloadPath = yield tc.downloadTool(`${baseUrl}/fcli-linux.tgz`);
+            verifyFcliHash(downloadPath, 'fcli-linux.zip', version);
+            installPath = yield tc.extractTar(downloadPath, installPath);
+        }
+        else {
+            // TODO Install Java version? Should we then also generate a bash script
+            // for invoking 'java -jar <path/to/jar> $@'? 
+            throw "Unsupported platform";
+        }
+    });
+}
+/**
+ * Get the base URL for downloading fcli artifacts for the given version.
+ */
+function getFcliBaseUrl(version) {
+    if (version.match(/^\d+\.\d+\.\d+$/)) {
+        version = `v${version}`;
+    }
+    return `https://github.com/fortify/fcli/releases/download/${version}`;
+}
+/**
+ * Verify the integrity of the given fcli archive.
+*/
+function verifyFcliHash(archivePath, variant, version) {
+    // TODO Implement integrity checks
+    core.warning(`Not verifying integrity of ${variant} ${version}`);
+}
+/**
+ * Export environment variables for the given tool name and version, allowing
+ * pipelines to locate the tool installation(s).
+*/
+function exportVariables(toolName, toolVersion, installPath) {
+    if (core.getBooleanInput('export-path')) {
+        core.addPath(`${installPath}/bin`);
+    }
+    const varBaseName = toolName.toUpperCase().replace('-', '_');
+    core.exportVariable(varBaseName + '_INSTALL_DIR', core.toPlatformPath(installPath));
+    core.exportVariable(varBaseName + '_BIN_DIR', core.toPlatformPath(`${installPath}/bin`));
+    let cmd = '';
+    switch (toolName) {
+        case 'sc-client':
+            cmd = 'scancentral';
+            break;
+        case 'vuln-exporter':
+            cmd = 'FortifyVulnerabilityExporter';
+            break;
+        case 'fod-uploader':
+            cmd = 'FoDUpload';
+            break;
+    }
+    core.exportVariable(varBaseName + '_BIN_DIR', core.toPlatformPath(`${installPath}/bin/${cmd}`));
+}
+/**
+ * Get the configured tool version for the given tool.
+ */
+function getToolVersion(tool) {
+    let version = core.getInput(tool);
+    if (version === 'latest') {
+        version = 'default';
+    }
+    if (tool === 'fcli' && version === 'default') {
+        version = LATEST_KNOWN_FCLI_VERSION;
+    }
+    return version;
+}
+/**
+ * Main entrypoint for this GitHub Action. This function installs a fixed fcli
+ * version for internal use, then iterates over the available tools to install
+ * them if applicable.
+ */
 function main() {
     return __awaiter(this, void 0, void 0, function* () {
-        const tools = ['sc-client', 'fod-uploader', 'vuln-exporter'];
         try {
-            // Install fixed fcli version for internal action use. The path to the
-            // internal fcli executable is accessible through the INTERNAL_FCLI
-            // environment variable.
-            const internalFcli = core.toPlatformPath((yield installFcli(INTERNAL_FCLI_VERSION)) + '/fcli');
-            core.exportVariable('INTERNAL_FCLI', internalFcli);
-            // Install user-specified fcli version and other Fortify tools
-            core.addPath(yield installFcli(getFcliVersion()));
+            // Install fixed fcli version for internal action use by this
+            // action only.
+            const internalFcliCmd = core.toPlatformPath((yield installIfNotCached('', 'fcli', INTERNAL_FCLI_VERSION)) + '/bin/fcli');
+            // Install user-specified tools
+            const tools = ['fcli', 'sc-client', 'fod-uploader', 'vuln-exporter'];
             for (const tool of tools) {
-                yield installTool(internalFcli, tool, core.getInput(tool));
+                yield installAndConfigure(internalFcliCmd, tool, getToolVersion(tool));
             }
         }
         catch (err) {
@@ -6753,6 +6820,14 @@ module.exports = require("https");
 
 "use strict";
 module.exports = require("net");
+
+/***/ }),
+
+/***/ 3994:
+/***/ ((module) => {
+
+"use strict";
+module.exports = require("node:fs");
 
 /***/ }),
 
