@@ -6719,8 +6719,13 @@ function exportVariables(toolName, toolVersion, installPath) {
         case 'fod-uploader':
             cmd = 'FoDUpload';
             break;
+        case 'bugtracker-utility':
+            cmd = 'FortifyBugTrackerUtility';
+            break;
     }
-    core.exportVariable(varBaseName + '_CMD', core.toPlatformPath(`${installPath}/bin/${cmd}`));
+    if (cmd) {
+        core.exportVariable(varBaseName + '_CMD', core.toPlatformPath(`${installPath}/bin/${cmd}`));
+    }
 }
 /**
  * Get the configured tool version for the given tool.
@@ -6747,7 +6752,7 @@ function main() {
             const internalFcliPath = yield installIfNotCached('', 'fcli', INTERNAL_FCLI_VERSION, core.debug);
             const internalFcliCmd = core.toPlatformPath(`${internalFcliPath}/bin/fcli`);
             // Install user-specified tools
-            const tools = ['fcli', 'sc-client', 'fod-uploader', 'vuln-exporter'];
+            const tools = ['fcli', 'sc-client', 'fod-uploader', 'vuln-exporter', 'bugtracker-utility'];
             for (const tool of tools) {
                 yield installAndConfigure(internalFcliCmd, tool, getToolVersion(tool));
             }

@@ -119,8 +119,11 @@ function exportVariables(toolName: string, toolVersion: string, installPath: str
 		case 'sc-client': cmd = 'scancentral'; break;
 		case 'vuln-exporter': cmd = 'FortifyVulnerabilityExporter'; break;
 		case 'fod-uploader': cmd = 'FoDUpload'; break;
+		case 'bugtracker-utility': cmd = 'FortifyBugTrackerUtility'; break;
 	}
-	core.exportVariable(varBaseName+'_CMD', core.toPlatformPath(`${installPath}/bin/${cmd}`));
+	if (cmd) {
+		core.exportVariable(varBaseName+'_CMD', core.toPlatformPath(`${installPath}/bin/${cmd}`));
+	}
 }
 
 /**
@@ -149,7 +152,7 @@ async function main(): Promise<void> {
 		const internalFcliCmd = core.toPlatformPath(`${internalFcliPath}/bin/fcli`);
 		
 		// Install user-specified tools
-		const tools = ['fcli', 'sc-client', 'fod-uploader', 'vuln-exporter']
+		const tools = ['fcli', 'sc-client', 'fod-uploader', 'vuln-exporter', 'bugtracker-utility']
 		for (const tool of tools) {
 			await installAndConfigure(internalFcliCmd, tool, getToolVersion(tool));
 		}
