@@ -1,10 +1,10 @@
 {
-  "name": "fortify-setup",
+  "name": "fortify-run",
   "version": "1.0.0",
-  "description": "GitHub Action for setting up Fortify tools",
+  "description": "GitHub Action for running arbitrary tools",
   "main": "dist/index.js",
   "scripts": {
-    "build": "ncc build src/setup.ts",
+    "build": "ncc build src/run.ts",
     "lint": "eslint . --ext .ts,.tsx",
     "format": "prettier --write **/*.ts"
   },

@@ -1,0 +1,29 @@
+name: 'Perform SAST scan'
+description: 'Perform a SAST scan on Fortify on Demand'
+author: 'Fortify'
+runs:
+  using: composite
+  steps:
+    - uses: fortify-ps/github-action/setup@main
+      with:
+        export-path: false
+        fcli: action-default
+    - uses: fortify-ps/github-action/package@main
+    - uses: fortify-ps/github-action/fod-login@main
+    - uses: fortify-ps/github-action/run@main
+      with:
+        cmd: '"${FCLI_CMD}" fod scan start-sast "${FOD_RELEASE}" -f package.zip --store fod_scan ${EXTRA_FOD_SAST_OPTS}'
+    - uses: fortify-ps/github-action/run@main
+      if: env.DO_WAIT == 'true' || env.DO_EXPORT == 'true'
+      with:
+        cmd: '"${FCLI_CMD}" fod scan wait-for ::fod_scan::'
+    - uses: fortify-ps/github-action/run@main
+      with:
+        cmd: '"${FCLI_CMD}" fod session logout'       
+    - if: env.DO_EXPORT == 'true'
+      uses: fortify-ps/github-action/fod-export@main
+        
+branding:
+  icon: 'shield'
+  color: 'blue'
+

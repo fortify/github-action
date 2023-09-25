@@ -2,10 +2,30 @@ import * as core from '@actions/core';
 import * as tc from '@actions/tool-cache';
 import * as exec from '@actions/exec';
 import * as fs from 'node:fs';
-
-// TODO Update to 2.0.0 once available
-const INTERNAL_FCLI_VERSION='dev_develop';
-const LATEST_KNOWN_FCLI_VERSION='v1.3.1';
+      
+const TOOLS: Record<string, Record<string, Record<string, string>>> = {
+	"fcli": { 
+		"versionAliases": {"action-default": "dev_develop", "latest": "1.3.1"},
+		"cmds": {"win32": "fcli.exe", "linux": "fcli", "darwin": "fcli"}
+	},
+	"sc-client": { 
+		"versionAliases": {"action-default": "23.1.0"},
+		"cmds": {"win32": "scancentral.bat", "linux": "scancentral", "darwin": "scancentral"}
+	},
+	"vuln-exporter": { 
+		"versionAliases": {"action-default": "2.0.3"},
+		"cmds": {"win32": "FortifyVulnerabilityExporter.bat", "linux": "FortifyVulnerabilityExporter", "darwin": "FortifyVulnerabilityExporter"}
+	},
+	"fod-uploader": { 
+		"versionAliases": {"action-default": "5.4.0"},
+		"cmds": {"win32": "FoDUploader.bat", "linux": "FoDUploader", "darwin": "FoDUploader"}
+	},
+	"bugtracker-utility": { 
+		"versionAliases": {"action-default": "4.12"},
+		"cmds": {"win32": "FortifyBugTrackerUtility.bat", "linux": "FortifyBugTrackerUtility", "darwin": "FortifyBugTrackerUtility"}
+	}
+};
+const INTERNAL_FCLI_VERSION = TOOLS["fcli"]["versionAliases"]["action-default"];
 
 /** 
  * Install and configure the given version of the given tool, then export environment
@@ -16,7 +36,8 @@ async function installAndConfigure(internalFcliCmd: string, toolName: string, to
 	if (toolVersion==='skip') {
 		core.info(`Skipping ${toolName} installation`);
 	} else {
-		const installPath = await installIfNotCached(internalFcliCmd, toolName, toolVersion, core.info);
+		const actualVersion = TOOLS[toolName]["versionAliases"][toolVersion] || toolVersion;
+		const installPath = await installIfNotCached(internalFcliCmd, toolName, actualVersion, core.info);
 		exportVariables(toolName, toolVersion, installPath)
 	}
 }
@@ -113,31 +134,10 @@ function exportVariables(toolName: string, toolVersion: string, installPath: str
 	const varBaseName = toolName.toUpperCase().replace('-','_')
 	core.exportVariable(varBaseName+'_INSTALL_DIR', core.toPlatformPath(installPath));
 	core.exportVariable(varBaseName+'_BIN_DIR', core.toPlatformPath(`${installPath}/bin`));
-	let cmd = '';
-	switch (toolName) {
-		case 'fcli': cmd = 'fcli'; break;
-		case 'sc-client': cmd = 'scancentral'; break;
-		case 'vuln-exporter': cmd = 'FortifyVulnerabilityExporter'; break;
-		case 'fod-uploader': cmd = 'FoDUpload'; break;
-		case 'bugtracker-utility': cmd = 'FortifyBugTrackerUtility'; break;
-	}
+	const cmd = TOOLS[toolName]["cmds"][process.platform];
 	if (cmd) {
 		core.exportVariable(varBaseName+'_CMD', core.toPlatformPath(`${installPath}/bin/${cmd}`));
 	}
-}
-
-/**
- * Get the configured tool version for the given tool.
- */
-function getToolVersion(tool: string): string {
-	let version = core.getInput(tool);
-	if (version==='latest') {
-		version = 'default';
-	}
-	if (tool==='fcli' && version==='default') {
-		version = LATEST_KNOWN_FCLI_VERSION;
-	}
-	return version;	
 }
 
 /**
@@ -154,7 +154,7 @@ async function main(): Promise<void> {
 		// Install user-specified tools
 		const tools = ['fcli', 'sc-client', 'fod-uploader', 'vuln-exporter', 'bugtracker-utility']
 		for (const tool of tools) {
-			await installAndConfigure(internalFcliCmd, tool, getToolVersion(tool));
+			await installAndConfigure(internalFcliCmd, tool, core.getInput(tool));
 		}
 	} catch (err) {
 		core.setFailed("Action failed with error: " + err);

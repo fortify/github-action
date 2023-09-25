@@ -22,6 +22,10 @@ inputs:
     description: 'The FortifyVulnerabilityExporter version to install. Allowed values: skip (default value, do not install), latest, or specific version number.'
     default: 'skip'
     required: false
+  bugtracker-utility:
+    description: 'The FortifyBugTrackerUtility version to install. Allowed values: skip (default value, do not install), latest, or specific version number.'
+    default: 'skip'
+    required: false
 runs:
   using: node20
   main: 'dist/index.js'

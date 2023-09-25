@@ -1,0 +1,29 @@
+name: 'Run "fcli fod session login" command'
+description: 'Run "fcli fod session login" command based on environment variables'
+author: 'Fortify'
+runs:
+  using: composite
+  steps:
+    - uses: fortify-ps/github-action/setup@main
+      with:
+        export-path: false
+        fcli: action-default
+    - run: |
+        if [ -z "$FOD_URL" ]; then
+          echo "ERROR: FOD_URL environment variable must be set"; exit 1;
+        fi
+        if [ -n "${FOD_CLIENT_ID}" -a -n "${FOD_CLIENT_SECRET}" ]; then
+          echo '_FOD_LOGIN_OPTS=--url "${FOD_URL}" --client-id "${FOD_CLIENT_ID}" --client-secret "${FOD_CLIENT_SECRET}" ${EXTRA_FOD_LOGIN_OPTS}' >> $GITHUB_ENV
+        elif [ -n "${FOD_USER}" -a -n "${FOD_PASSWORD}" -a -n "${FOD_TENANT}" ]; then
+          echo '_FOD_LOGIN_OPTS=--url "${FOD_URL}" -t "${FOD_TENANT}" -u "${FOD_USER}" -p "${FOD_PASSWORD}" ${EXTRA_FOD_LOGIN_OPTS}' >> $GITHUB_ENV
+        else
+          echo "ERROR: Either FOD_CLIENT_ID and FOD_CLIENT_SECRET, or FOD_TENANT, FOD_USER and FOD_PASSWORD environment variables must be set"; exit 1;
+        fi
+      shell: bash
+    - uses: fortify-ps/github-action/run@main
+      with:
+        cmd: '"${FCLI_CMD}" fod session login ${_FOD_LOGIN_OPTS}'         
+branding:
+  icon: 'shield'
+  color: 'blue'
+

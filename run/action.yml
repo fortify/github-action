@@ -1,0 +1,14 @@
+name: 'Setup Fortify Tools'
+description: 'Run arbitrary commands; any ${<var>} references will be resolved as environment variables'
+author: 'Fortify'
+inputs:
+  cmd:
+    description: 'Command to run'
+    required: true
+runs:
+  using: node20
+  main: 'dist/index.js'
+branding:
+  icon: 'shield'
+  color: 'blue'
+

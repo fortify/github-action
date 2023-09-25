@@ -1,0 +1,37 @@
+name: 'Perform SAST scan'
+description: 'Perform a SAST scan on Fortify on Demand'
+author: 'Fortify'
+runs:
+  using: composite
+  steps:
+    - uses: fortify-ps/github-action/setup@main
+      with:
+        export-path: false
+        vuln-exporter: action-default
+    - run: |
+        if [[ ${FOD_RELEASE} == ?(-)+([0-9]) ]]; then
+          RELEASE_OPT="--fod.release.id=${FOD_RELEASE}"
+        else
+          RELEASE_OPT="--fod.release.name=${FOD_RELEASE}"
+        fi
+        "${VULN_EXPORTER_CMD}" FoDToGitHub "--fod.baseUrl=${FOD_URL}" \
+          "--fod.tenant=${FOD_TENANT}" "--fod.user=${FOD_USER}" "--fod.password=${FOD_PASSWORD}" \
+          "--fod.clientID=${FOD_CLIENT_ID}" "--fod.clientSecret=${FOD_CLIENT_SECRET}" \
+          "${RELEASE_OPT}"
+      shell: bash
+    # Uploaded the generated file containing Fortify vulnerabilities to GitHub.
+    - uses: github/codeql-action/upload-sarif@v2
+      with:
+        sarif_file: ./gh-fortify-sast.sarif
+          
+    # Optionally store the generated file for troubleshooting purposes.
+    - uses: actions/upload-artifact@v2
+      if: always()
+      with:
+        name: sarif-files
+        path: ./gh-fortify-sast.sarif  
+        
+branding:
+  icon: 'shield'
+  color: 'blue'
+
