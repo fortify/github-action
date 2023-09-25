@@ -1,5 +1,5 @@
-name: 'Perform SAST scan'
-description: 'Perform a SAST scan on Fortify on Demand'
+name: 'Export FoD vulnerability data to GitHub'
+description: 'Export FoD vulnerability data to GitHub'
 author: 'Fortify'
 runs:
   using: composite

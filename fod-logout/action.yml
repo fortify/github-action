@@ -1,0 +1,17 @@
+name: 'Run "fcli fod session login" command'
+description: 'Run "fcli fod session login" command based on environment variables'
+author: 'Fortify'
+runs:
+  using: composite
+  steps:
+    - uses: fortify-ps/github-action/setup@main
+      with:
+        export-path: false
+        fcli: action-default
+    - uses: fortify-ps/github-action/run@main
+      with:
+        cmd: '"${FCLI_CMD}" fod session logout'        
+branding:
+  icon: 'shield'
+  color: 'blue'
+

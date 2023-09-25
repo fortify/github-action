@@ -17,9 +17,7 @@ runs:
       if: env.DO_WAIT == 'true' || env.DO_EXPORT == 'true'
       with:
         cmd: '"${FCLI_CMD}" fod scan wait-for ::fod_scan::'
-    - uses: fortify-ps/github-action/run@main
-      with:
-        cmd: '"${FCLI_CMD}" fod session logout'       
+    - uses: fortify-ps/github-action/fod-logout@main       
     - if: env.DO_EXPORT == 'true'
       uses: fortify-ps/github-action/fod-export@main
         
