@@ -1,18 +1,18 @@
-name: 'TODO'
-description: 'TODO'
+name: 'Run Fortify Scans'
+description: 'This action allows for running various Fortify scans on Fortify Hosted, Fortify on Demand, and private Fortify SSC/ScanCentral instances.'
 author: 'Fortify'
 inputs:
-  test:
-    description: 'Test'
-    default: 'none'
+  sast:
+    description: 'Run a SAST scan, takes either true or false (default)'
+    default: 'false'
     required: false
 runs:
   using: composite
   steps:
-    - uses: fortify-ps/github-action/setup@main
-      with:
-        test: |
-          ${{inputs.test}}
+    - uses: fortify-ps/github-action/fod-sast-scan@main
+      if: inputs.sast=='true' && env.FOD_URL
+    - uses: fortify-ps/github-action/sc-sast-scan@main
+      if: inputs.sast=='true' && env.SSC_URL  
         
 branding:
   icon: 'shield'
