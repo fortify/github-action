@@ -48,7 +48,8 @@ async function installAndConfigure(internalFcliCmd: string, toolName: string, to
  * if applicable. 
 */
 async function installIfNotCached(internalFcliCmd: string, toolName: string, toolVersion: string, log: (arg: string) => void): Promise<string> {
-	const installPath = `/opt/fortify/${toolName}/${toolVersion}`;
+	const tmpPath = process.env['RUNNER_TEMP'];
+	const installPath = `${tmpPath}/fortify/${toolName}/${toolVersion}`;
 	// We explicitly don't use GitHub tool-cache as we support semantic versioning;
 	// versions like 'latest' or 'v2' may change over time so we don't want to use
 	// an older cached version in case new versions are released.

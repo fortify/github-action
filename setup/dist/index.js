@@ -6635,7 +6635,8 @@ function installAndConfigure(internalFcliCmd, toolName, toolVersion) {
 */
 function installIfNotCached(internalFcliCmd, toolName, toolVersion, log) {
     return __awaiter(this, void 0, void 0, function* () {
-        const installPath = `/opt/fortify/${toolName}/${toolVersion}`;
+        const tmpPath = process.env['RUNNER_TEMP'];
+        const installPath = `${tmpPath}/fortify/${toolName}/${toolVersion}`;
         // We explicitly don't use GitHub tool-cache as we support semantic versioning;
         // versions like 'latest' or 'v2' may change over time so we don't want to use
         // an older cached version in case new versions are released.
