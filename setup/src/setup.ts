@@ -29,14 +29,14 @@ const TOOLS: Record<string, Record<string, Record<string, string>>> = {
 const INTERNAL_FCLI_VERSION = TOOLS["fcli"]["versionAliases"]["action-default"];
 const FCLI_SHA256: Record<string, Record<string, string>> = {
 	"dev_github-action": { 
-		"win32": "dgdsgg",
-		"linux": "dsfdfas",
-		"darwin": "dsfdsfdf" 
+		"win32": "803089f25c6e15e73281e61182ebe30f9542a93d7326105c3869b0771611436c",
+		"linux": "6bf599d1951f59bf9d3c115b7ac398625f86add52f3bc3b55fdb58ffe6aef360",
+		"darwin": "c730a6f4c49640bfd54d566608f869357e80e2a334468d1a75967ca230fb3239" 
 	},
 	"1.3.1": { 
-		"win32": "dgdsgg",
-		"linux": "dsfdfas",
-		"darwin": "dsfdsfdf" 
+		"win32": "7557f5a390405654bad777c76795ffdc69ab6b7bb3204bc32311fd500c52c776",
+		"linux": "4982191d756cbde2749243dcd98f76277c2bde635a06500658305a00aec75016",
+		"darwin": "05f89d6954f5efdd1fd8eceee85b3aeecabe357321dcd84c4b16412bb6d01538" 
 	}
 	
 }
