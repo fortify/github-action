@@ -9,16 +9,14 @@ runs:
         export-path: false
         vuln-exporter: action-default
     - run: |
-        if [[ ${FOD_RELEASE} == ?(-)+([0-9]) ]]; then
-          RELEASE_OPT="--fod.release.id=${FOD_RELEASE}"
-        else
-          RELEASE_OPT="--fod.release.name=${FOD_RELEASE}"
-        fi
-        "${VULN_EXPORTER_CMD}" FoDToGitHub "--fod.baseUrl=${FOD_URL}" \
-          "--fod.tenant=${FOD_TENANT}" "--fod.user=${FOD_USER}" "--fod.password=${FOD_PASSWORD}" \
-          "--fod.clientID=${FOD_CLIENT_ID}" "--fod.clientSecret=${FOD_CLIENT_SECRET}" \
-          "${RELEASE_OPT}"
+        case ${FOD_RELEASE} in
+          ''|*[!0-9]*) echo '_RELEASE_OPT="--ssc.version.id=${FOD_RELEASE}"' >> $GITHUB_ENV ;;
+          *) echo '_RELEASE_OPT="--ssc.version.name=${FOD_RELEASE}"' >> $GITHUB_ENV ;;
+        esac
       shell: bash
+    - uses: fortify-ps/github-action/run@main
+      with:
+        cmd: '"${VULN_EXPORTER_CMD}" FoDToGitHub "--fod.baseUrl=${FOD_URL}" "--fod.tenant=${FOD_TENANT}" "--fod.user=${FOD_USER}" "--fod.password=${FOD_PASSWORD}" "--fod.clientID=${FOD_CLIENT_ID}" "--fod.clientSecret=${FOD_CLIENT_SECRET}" "${_RELEASE_OPT}"'
     # Uploaded the generated file containing Fortify vulnerabilities to GitHub.
     - uses: github/codeql-action/upload-sarif@v2
       with:
