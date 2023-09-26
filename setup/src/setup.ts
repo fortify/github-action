@@ -2,10 +2,11 @@ import * as core from '@actions/core';
 import * as tc from '@actions/tool-cache';
 import * as exec from '@actions/exec';
 import * as fs from 'node:fs';
+import * as crypto from 'node:crypto';
       
 const TOOLS: Record<string, Record<string, Record<string, string>>> = {
 	"fcli": { 
-		"versionAliases": {"action-default": "dev_develop", "latest": "1.3.1"},
+		"versionAliases": {"action-default": "dev_github-action", "latest": "1.3.1"},
 		"cmds": {"win32": "fcli.exe", "linux": "fcli", "darwin": "fcli"}
 	},
 	"sc-client": { 
@@ -26,6 +27,19 @@ const TOOLS: Record<string, Record<string, Record<string, string>>> = {
 	}
 };
 const INTERNAL_FCLI_VERSION = TOOLS["fcli"]["versionAliases"]["action-default"];
+const FCLI_SHA256: Record<string, Record<string, string>> = {
+	"dev_github-action": { 
+		"win32": "dgdsgg",
+		"linux": "dsfdfas",
+		"darwin": "dsfdsfdf" 
+	},
+	"1.3.1": { 
+		"win32": "dgdsgg",
+		"linux": "dsfdfas",
+		"darwin": "dsfdsfdf" 
+	}
+	
+}
 
 /** 
  * Install and configure the given version of the given tool, then export environment
@@ -89,15 +103,15 @@ async function installFcli(installPath: string, version: string): Promise<void> 
 	core.info(`Installing fcli ${version} from ${baseUrl}`);
 	if (process.platform === 'win32') {
 		const downloadPath = await tc.downloadTool(`${baseUrl}/fcli-windows.zip`);
-		verifyFcliHash(downloadPath, 'fcli-windows.zip', version);
+		verifyFcliHash(downloadPath, version);
 		installPath = await tc.extractZip(downloadPath, installPath);
 	} else if (process.platform === 'darwin') {
 		const downloadPath = await tc.downloadTool(`${baseUrl}/fcli-mac.tgz`);
-		verifyFcliHash(downloadPath, 'fcli-mac.tgz', version);
+		verifyFcliHash(downloadPath, version);
 		installPath = await tc.extractTar(downloadPath, installPath);
 	} else if (process.platform === 'linux') {
 		const downloadPath = await tc.downloadTool(`${baseUrl}/fcli-linux.tgz`);
-		verifyFcliHash(downloadPath, 'fcli-linux.zip', version);
+		verifyFcliHash(downloadPath, version);
 		installPath = await tc.extractTar(downloadPath, installPath);
 	} else {
 		// TODO Install Java version? Should we then also generate a bash script
@@ -119,9 +133,30 @@ function getFcliBaseUrl(version: string): string {
 /**
  * Verify the integrity of the given fcli archive.
 */
-function verifyFcliHash(archivePath: string, variant: string, version: string) {
-	// TODO Implement integrity checks
-	core.warning(`Not verifying integrity of ${variant} ${version}`);
+function verifyFcliHash(archivePath: string, version: string) {
+	const platform = process.platform;
+	const expectedSha256 = FCLI_SHA256[version][platform];
+	if (!expectedSha256) {
+		core.warning(`Not verifying integrity of ${archivePath}`);
+	} else {
+		const currentSha256Promise = calculateSha256(archivePath);
+		currentSha256Promise.then( currentSha256 => {
+			if ( currentSha256!==expectedSha256) {
+				throw `Invalid SHA256 hash for fcli ${version} (${platform}).\nExpected: ${expectedSha256}\nCurrent: ${currentSha256}`
+			}
+		});
+	}
+}
+
+async function calculateSha256(filePath: string): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const hash = crypto.createHash('sha256');
+    const stream = fs.createReadStream(filePath);
+
+    stream.on('data', (data) => hash.update(data));
+    stream.on('end', () => resolve(hash.digest('hex')));
+    stream.on('error', (error) => reject(error));
+  });
 }
 
 /** 
@@ -153,8 +188,7 @@ async function main(): Promise<void> {
 		const internalFcliCmd = core.toPlatformPath(`${internalFcliPath}/bin/fcli`);
 		
 		// Install user-specified tools
-		const tools = ['fcli', 'sc-client', 'fod-uploader', 'vuln-exporter', 'bugtracker-utility']
-		for (const tool of tools) {
+		for (const tool of Object.keys(TOOLS)) {
 			await installAndConfigure(internalFcliCmd, tool, core.getInput(tool));
 		}
 	} catch (err) {

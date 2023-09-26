@@ -6588,9 +6588,10 @@ const core = __importStar(__nccwpck_require__(2186));
 const tc = __importStar(__nccwpck_require__(7784));
 const exec = __importStar(__nccwpck_require__(1514));
 const fs = __importStar(__nccwpck_require__(3994));
+const crypto = __importStar(__nccwpck_require__(5764));
 const TOOLS = {
     "fcli": {
-        "versionAliases": { "action-default": "dev_develop", "latest": "1.3.1" },
+        "versionAliases": { "action-default": "dev_github-action", "latest": "1.3.1" },
         "cmds": { "win32": "fcli.exe", "linux": "fcli", "darwin": "fcli" }
     },
     "sc-client": {
@@ -6611,6 +6612,18 @@ const TOOLS = {
     }
 };
 const INTERNAL_FCLI_VERSION = TOOLS["fcli"]["versionAliases"]["action-default"];
+const FCLI_SHA256 = {
+    "dev_github-action": {
+        "win32": "dgdsgg",
+        "linux": "dsfdfas",
+        "darwin": "dsfdsfdf"
+    },
+    "1.3.1": {
+        "win32": "dgdsgg",
+        "linux": "dsfdfas",
+        "darwin": "dsfdsfdf"
+    }
+};
 /**
  * Install and configure the given version of the given tool, then export environment
  * variables to allow pipelines to locate the tool installation(s). If the given version
@@ -6680,17 +6693,17 @@ function installFcli(installPath, version) {
         core.info(`Installing fcli ${version} from ${baseUrl}`);
         if (process.platform === 'win32') {
             const downloadPath = yield tc.downloadTool(`${baseUrl}/fcli-windows.zip`);
-            verifyFcliHash(downloadPath, 'fcli-windows.zip', version);
+            verifyFcliHash(downloadPath, version);
             installPath = yield tc.extractZip(downloadPath, installPath);
         }
         else if (process.platform === 'darwin') {
             const downloadPath = yield tc.downloadTool(`${baseUrl}/fcli-mac.tgz`);
-            verifyFcliHash(downloadPath, 'fcli-mac.tgz', version);
+            verifyFcliHash(downloadPath, version);
             installPath = yield tc.extractTar(downloadPath, installPath);
         }
         else if (process.platform === 'linux') {
             const downloadPath = yield tc.downloadTool(`${baseUrl}/fcli-linux.tgz`);
-            verifyFcliHash(downloadPath, 'fcli-linux.zip', version);
+            verifyFcliHash(downloadPath, version);
             installPath = yield tc.extractTar(downloadPath, installPath);
         }
         else {
@@ -6712,9 +6725,31 @@ function getFcliBaseUrl(version) {
 /**
  * Verify the integrity of the given fcli archive.
 */
-function verifyFcliHash(archivePath, variant, version) {
-    // TODO Implement integrity checks
-    core.warning(`Not verifying integrity of ${variant} ${version}`);
+function verifyFcliHash(archivePath, version) {
+    const platform = process.platform;
+    const expectedSha256 = FCLI_SHA256[version][platform];
+    if (!expectedSha256) {
+        core.warning(`Not verifying integrity of ${archivePath}`);
+    }
+    else {
+        const currentSha256Promise = calculateSha256(archivePath);
+        currentSha256Promise.then(currentSha256 => {
+            if (currentSha256 !== expectedSha256) {
+                throw `Invalid SHA256 hash for fcli ${version} (${platform}).\nExpected: ${expectedSha256}\nCurrent: ${currentSha256}`;
+            }
+        });
+    }
+}
+function calculateSha256(filePath) {
+    return __awaiter(this, void 0, void 0, function* () {
+        return new Promise((resolve, reject) => {
+            const hash = crypto.createHash('sha256');
+            const stream = fs.createReadStream(filePath);
+            stream.on('data', (data) => hash.update(data));
+            stream.on('end', () => resolve(hash.digest('hex')));
+            stream.on('error', (error) => reject(error));
+        });
+    });
 }
 /**
  * Export environment variables for the given tool name and version, allowing
@@ -6744,8 +6779,7 @@ function main() {
             const internalFcliPath = yield installIfNotCached('', 'fcli', INTERNAL_FCLI_VERSION, core.debug);
             const internalFcliCmd = core.toPlatformPath(`${internalFcliPath}/bin/fcli`);
             // Install user-specified tools
-            const tools = ['fcli', 'sc-client', 'fod-uploader', 'vuln-exporter', 'bugtracker-utility'];
-            for (const tool of tools) {
+            for (const tool of Object.keys(TOOLS)) {
                 yield installAndConfigure(internalFcliCmd, tool, core.getInput(tool));
             }
         }
@@ -6820,6 +6854,14 @@ module.exports = require("https");
 
 "use strict";
 module.exports = require("net");
+
+/***/ }),
+
+/***/ 5764:
+/***/ ((module) => {
+
+"use strict";
+module.exports = require("node:crypto");
 
 /***/ }),
 
