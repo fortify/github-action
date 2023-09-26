@@ -1,0 +1,32 @@
+name: 'Run "fcli fod session login" command'
+description: 'Run "fcli fod session login" command based on environment variables'
+author: 'Fortify'
+runs:
+  using: composite
+  steps:
+    - uses: fortify-ps/github-action/setup@main
+      with:
+        export-path: false
+        fcli: action-default
+    - run: |
+        # TODO If we wait for scan completion, potentially we could generate a CIToken if 
+        #      SSC_USER and SSC_PASSWORD have been set, and then revoke the token once the
+        #      scan has been successfully processed on SSC.
+        if [ -z "$SSC_URL" ]; then
+          echo "ERROR: SSC_URL environment variable must be set"; exit 1;
+        fi
+        if [ -z "$SC_SAST_TOKEN" ]; then
+          echo "ERROR: SC_SAST_TOKEN environment variable must be set"; exit 1;
+        fi
+        if [ -z "SSC_TOKEN" ]; then
+          echo "ERROR: SSC_TOKEN environment variable must be set"; exit 1;
+        fi
+        echo '_SC_SAST_LOGIN_OPTS=--ssc-url "${SSC_URL}" -t "${SSC_TOKEN}" -c "${SC_SAST_TOKEN}" ${EXTRA_SC_SAST_LOGIN_OPTS}' >> $GITHUB_ENV
+      shell: bash
+    - uses: fortify-ps/github-action/run@main
+      with:
+        cmd: '"${FCLI_CMD}" sc-sast session login ${_SC_SAST_LOGIN_OPTS}'         
+branding:
+  icon: 'shield'
+  color: 'blue'
+

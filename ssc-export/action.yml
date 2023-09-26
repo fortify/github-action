@@ -1,0 +1,37 @@
+name: 'xport FoD vulnerability data to GitHub'
+description: 'xport FoD vulnerability data to GitHub'
+author: 'Fortify'
+runs:
+  using: composite
+  steps:
+    - uses: fortify-ps/github-action/setup@main
+      with:
+        export-path: false
+        vuln-exporter: action-default
+    - run: |
+        if [[ ${SSC_APPVERSION} == ?(-)+([0-9]) ]]; then
+          _APPVERSION_OPT="--ssc.version.id=${SSC_APPVERSION}"
+        else
+          _APPVERSION_OPT="--ssc.version.name=${SSC_APPVERSION}"
+        fi
+        "${VULN_EXPORTER_CMD}" SSCToGitHub "--ssc.baseUrl=${SSC_URL}" \
+          "--ssc.user=${SSC_USER}" "--ssc.password=${SSC_PASSWORD}" \
+          "--ssc.authToken=${SSC_TOKEN}" \
+          "${_APPVERSION_OPT}"
+      shell: bash
+    # Uploaded the generated file containing Fortify vulnerabilities to GitHub.
+    - uses: github/codeql-action/upload-sarif@v2
+      with:
+        sarif_file: ./gh-fortify-sast.sarif
+          
+    # Optionally store the generated file for troubleshooting purposes.
+    - uses: actions/upload-artifact@v2
+      if: always()
+      with:
+        name: sarif-files
+        path: ./gh-fortify-sast.sarif  
+        
+branding:
+  icon: 'shield'
+  color: 'blue'
+

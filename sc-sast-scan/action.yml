@@ -1,5 +1,5 @@
 name: 'Perform SAST scan'
-description: 'Perform a SAST scan on Fortify on Demand'
+description: 'Perform a SAST scan on ScanCentral SAST'
 author: 'Fortify'
 runs:
   using: composite
@@ -9,17 +9,17 @@ runs:
         export-path: false
         fcli: action-default
     - uses: fortify-ps/github-action/package@main
-    - uses: fortify-ps/github-action/fod-login@main
+    - uses: fortify-ps/github-action/sc-sast-login@main
     - uses: fortify-ps/github-action/run@main
       with:
-        cmd: '"${FCLI_CMD}" fod scan start-sast "${FOD_RELEASE}" -f package.zip --store fod_scan ${EXTRA_FOD_SAST_SCAN_OPTS}'
+        cmd: '"${FCLI_CMD}" sc-sast scan start --publish-to "${SSC_APPVERSION}" -p package.zip -v "${SC_SAST_SENSOR_VERSION}" --store sc_sast_scan ${EXTRA_SC_SAST_SCAN_OPTS}'
     - uses: fortify-ps/github-action/run@main
       if: env.DO_WAIT == 'true' || env.DO_EXPORT == 'true'
       with:
-        cmd: '"${FCLI_CMD}" fod scan wait-for ::fod_scan::'
-    - uses: fortify-ps/github-action/fod-logout@main       
+        cmd: '"${FCLI_CMD}" sc-sast scan wait-for ::sc_sast_scan::'
+    - uses: fortify-ps/github-action/sc-sast-logout@main       
     - if: env.DO_EXPORT == 'true'
-      uses: fortify-ps/github-action/fod-export@main
+      uses: fortify-ps/github-action/ssc-export@main
         
 branding:
   icon: 'shield'
