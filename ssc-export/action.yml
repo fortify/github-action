@@ -9,11 +9,10 @@ runs:
         export-path: false
         vuln-exporter: action-default
     - run: |
-        if [[ ${SSC_APPVERSION} == ?(-)+([0-9]) ]]; then
-          _APPVERSION_OPT="--ssc.version.id=${SSC_APPVERSION}"
-        else
-          _APPVERSION_OPT="--ssc.version.name=${SSC_APPVERSION}"
-        fi
+        case ${SSC_APPVERSION} in
+          ''|*[!0-9]*) _APPVERSION_OPT="--ssc.version.id=${SSC_APPVERSION}" ;;
+          *) _APPVERSION_OPT="--ssc.version.name=${SSC_APPVERSION}" ;;
+        esac
         "${VULN_EXPORTER_CMD}" SSCToGitHub "--ssc.baseUrl=${SSC_URL}" \
           "--ssc.user=${SSC_USER}" "--ssc.password=${SSC_PASSWORD}" \
           "--ssc.authToken=${SSC_TOKEN}" \
