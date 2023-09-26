@@ -25,7 +25,7 @@ runs:
         sarif_file: ./gh-fortify-sast.sarif
           
     # Optionally store the generated file for troubleshooting purposes.
-    - uses: actions/upload-artifact@v2
+    - uses: actions/upload-artifact@v3
       if: always()
       with:
         name: sarif-files
