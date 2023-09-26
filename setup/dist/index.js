@@ -6619,7 +6619,7 @@ const INTERNAL_FCLI_VERSION = TOOLS["fcli"]["versionAliases"]["action-default"];
 function installAndConfigure(internalFcliCmd, toolName, toolVersion) {
     return __awaiter(this, void 0, void 0, function* () {
         if (toolVersion === 'skip') {
-            core.info(`Skipping ${toolName} installation`);
+            core.debug(`Skipping ${toolName} installation`);
         }
         else {
             const actualVersion = TOOLS[toolName]["versionAliases"][toolVersion] || toolVersion;

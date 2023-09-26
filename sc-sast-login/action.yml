@@ -8,10 +8,10 @@ runs:
       with:
         export-path: false
         fcli: action-default
+    # TODO If we wait for scan completion, potentially we could generate a CIToken if 
+    #      SSC_USER and SSC_PASSWORD have been set, and then revoke the token once the
+    #      scan has been successfully processed on SSC.
     - run: |
-        # TODO If we wait for scan completion, potentially we could generate a CIToken if 
-        #      SSC_USER and SSC_PASSWORD have been set, and then revoke the token once the
-        #      scan has been successfully processed on SSC.
         if [ -z "$SSC_URL" ]; then
           echo "ERROR: SSC_URL environment variable must be set"; exit 1;
         fi

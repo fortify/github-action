@@ -34,7 +34,7 @@ const INTERNAL_FCLI_VERSION = TOOLS["fcli"]["versionAliases"]["action-default"];
 */
 async function installAndConfigure(internalFcliCmd: string, toolName: string, toolVersion: string): Promise<void> {
 	if (toolVersion==='skip') {
-		core.info(`Skipping ${toolName} installation`);
+		core.debug(`Skipping ${toolName} installation`);
 	} else {
 		const actualVersion = TOOLS[toolName]["versionAliases"][toolVersion] || toolVersion;
 		const installPath = await installIfNotCached(internalFcliCmd, toolName, actualVersion, core.info);
