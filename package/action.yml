@@ -10,7 +10,7 @@ runs:
         sc-client: action-default
     - uses: fortify-ps/github-action/run@main
       with: 
-        cmd: '"${SC_CLIENT_CMD}" package ${PACKAGE_OPTS} -o package.zip'
+        cmd: '"${SC_CLIENT_CMD}" package ${EXTRA_PACKAGE_OPTS} -o package.zip'
 branding:
   icon: 'shield'
   color: 'blue'
