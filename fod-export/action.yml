@@ -18,6 +18,9 @@ runs:
       with:
         cmd: '"${VULN_EXPORTER_CMD}" FoDToGitHub "--fod.baseUrl=${FOD_URL}" "--fod.tenant=${FOD_TENANT}" "--fod.user=${FOD_USER}" "--fod.password=${FOD_PASSWORD}" "--fod.clientID=${FOD_CLIENT_ID}" "--fod.clientSecret=${FOD_CLIENT_SECRET}" "${_RELEASE_OPT}"'
     # Uploaded the generated file containing Fortify vulnerabilities to GitHub.
+    - run: |
+        echo '_RELEASE_OPT=""' >> $GITHUB_ENV
+      shell: bash 
     - uses: github/codeql-action/upload-sarif@v2
       with:
         sarif_file: ./gh-fortify-sast.sarif

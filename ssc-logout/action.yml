@@ -22,7 +22,10 @@ runs:
       shell: bash
     - uses: fortify-ps/github-action/run@main
       with:
-        cmd: '"${FCLI_CMD}" ssc session logout ${_SSC_LOGOUT_OPTS}'      
+        cmd: '"${FCLI_CMD}" ssc session logout ${_SSC_LOGOUT_OPTS}'  
+    - run: |
+        echo '_SSC_LOGOUT_OPTS=""' >> $GITHUB_ENV
+      shell: bash     
 branding:
   icon: 'shield'
   color: 'blue'

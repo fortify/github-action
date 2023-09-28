@@ -22,7 +22,10 @@ runs:
       shell: bash
     - uses: fortify-ps/github-action/run@main
       with:
-        cmd: '"${FCLI_CMD}" fod session login ${_FOD_LOGIN_OPTS}'         
+        cmd: '"${FCLI_CMD}" fod session login ${_FOD_LOGIN_OPTS}'  
+    - run: |
+        echo '_FOD_LOGIN_OPTS=""' >> $GITHUB_ENV
+      shell: bash      
 branding:
   icon: 'shield'
   color: 'blue'

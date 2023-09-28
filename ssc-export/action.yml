@@ -17,7 +17,9 @@ runs:
     - uses: fortify-ps/github-action/run@main
       with:
         cmd: '"${VULN_EXPORTER_CMD}" SSCToGitHub "--ssc.baseUrl=${SSC_URL}" "--ssc.user=${SSC_USER}" "--ssc.password=${SSC_PASSWORD}" "--ssc.authToken=${SSC_TOKEN}" "${_APPVERSION_OPT}"'
-  
+    - run: |
+        echo '_APPVERSION_OPT=""' >> $GITHUB_ENV
+      shell: bash 
     # Uploaded the generated file containing Fortify vulnerabilities to GitHub.
     - uses: github/codeql-action/upload-sarif@v2
       with:
