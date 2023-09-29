@@ -4,10 +4,7 @@ author: 'Fortify'
 runs:
   using: composite
   steps:
-    - uses: fortify-ps/github-action/setup@main
-      with:
-        export-path: false
-        fcli: action-default
+    # Define login options
     - run: |
         if [ -z "$FOD_URL" ]; then
           echo "ERROR: FOD_URL environment variable must be set"; exit 1;
@@ -20,9 +17,11 @@ runs:
           echo "ERROR: Either FOD_CLIENT_ID and FOD_CLIENT_SECRET, or FOD_TENANT, FOD_USER and FOD_PASSWORD environment variables must be set"; exit 1;
         fi
       shell: bash
-    - uses: fortify-ps/github-action/run@main
+    # Run fcli login command; note that the calling action/workflow is responsible for installing fcli
+    - uses: fortify-ps/github-action/internal/run@main
       with:
         cmd: '"${FCLI_CMD}" fod session login ${_FOD_LOGIN_OPTS}'  
+    # Clean up temporary environment variables
     - run: |
         echo '_FOD_LOGIN_OPTS=""' >> $GITHUB_ENV
       shell: bash      

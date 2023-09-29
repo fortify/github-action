@@ -9,15 +9,15 @@ runs:
         export-path: false
         fcli: action-default
     - uses: fortify-ps/github-action/package@main
-    - uses: fortify-ps/github-action/fod-login@main
-    - uses: fortify-ps/github-action/run@main
+    - uses: fortify-ps/github-action/internal/fod-login@main
+    - uses: fortify-ps/github-action/internal/run@main
       with:
         cmd: '"${FCLI_CMD}" fod scan start-sast "${FOD_RELEASE}" -f package.zip --store fod_scan ${EXTRA_FOD_SAST_SCAN_OPTS}'
-    - uses: fortify-ps/github-action/run@main
+    - uses: fortify-ps/github-action/internal/run@main
       if: env.DO_WAIT == 'true' || env.DO_EXPORT == 'true'
       with:
         cmd: '"${FCLI_CMD}" fod scan wait-for ::fod_scan::'
-    - uses: fortify-ps/github-action/fod-logout@main       
+    - uses: fortify-ps/github-action/internal/fod-logout@main       
     - if: env.DO_EXPORT == 'true'
       uses: fortify-ps/github-action/fod-export@main
         

@@ -4,28 +4,27 @@ author: 'Fortify'
 runs:
   using: composite
   steps:
-    - uses: fortify-ps/github-action/setup@main
-      with:
-        export-path: false
-        fcli: action-default
+    # Define login options
     - run: |
         if [ -z "$SSC_URL" ]; then
           echo "ERROR: SSC_URL environment variable must be set"; exit 1;
         fi
         if [ -n "${SSC_TOKEN}" ]; then
-          echo '_SSC_LOGOUT_OPTS=--no-revoke-token' >> $GITHUB_ENV
+          echo '_SSC_LOGIN_OPTS=--url "${SSC_URL}" --token "${SSC_TOKEN}" ${EXTRA_SSC_LOGIN_OPTS}' >> $GITHUB_ENV
         elif [ -n "${SSC_USER}" -a -n "${SSC_PASSWORD}" ]; then
-          echo '_SSC_LOGOUT_OPTS=--u "${SSC_USER}" -p "${SSC_PASSWORD}"' >> $GITHUB_ENV
+          echo '_SSC_LOGIN_OPTS=--url "${SSC_URL}" -u "${SSC_USER}" -p "${SSC_PASSWORD}" ${EXTRA_SSC_LOGIN_OPTS}' >> $GITHUB_ENV
         else
           echo "ERROR: Either SSC_TOKEN, or SSC_USER and SSC_PASSWORD environment variables must be set"; exit 1;
         fi
       shell: bash
-    - uses: fortify-ps/github-action/run@main
+    # Run fcli login command; note that the calling action/workflow is responsible for installing fcli
+    - uses: fortify-ps/github-action/internal/run@main
       with:
-        cmd: '"${FCLI_CMD}" ssc session logout ${_SSC_LOGOUT_OPTS}'  
+        cmd: '"${FCLI_CMD}" ssc session login ${_SSC_LOGIN_OPTS}'   
+    # Clean up temporary environment variables
     - run: |
-        echo '_SSC_LOGOUT_OPTS=""' >> $GITHUB_ENV
-      shell: bash     
+        echo '_SSC_LOGIN_OPTS=""' >> $GITHUB_ENV
+      shell: bash       
 branding:
   icon: 'shield'
   color: 'blue'

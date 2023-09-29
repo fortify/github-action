@@ -4,11 +4,8 @@ author: 'Fortify'
 runs:
   using: composite
   steps:
-    - uses: fortify-ps/github-action/setup@main
-      with:
-        export-path: false
-        fcli: action-default
-    - uses: fortify-ps/github-action/run@main
+    # Run fcli logout command; note that the calling action/workflow is responsible for installing fcli
+    - uses: fortify-ps/github-action/internal/run@main
       with:
         cmd: '"${FCLI_CMD}" fod session logout'        
 branding:

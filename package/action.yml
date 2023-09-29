@@ -8,7 +8,7 @@ runs:
       with:
         export-path: false
         sc-client: action-default
-    - uses: fortify-ps/github-action/run@main
+    - uses: fortify-ps/github-action/internal/run@main
       with: 
         cmd: '"${SC_CLIENT_CMD}" package ${EXTRA_PACKAGE_OPTS} -o package.zip'
 branding:
