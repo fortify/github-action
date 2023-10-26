@@ -6668,11 +6668,13 @@ const FCLI_SHA256 = {
 function updateFcliVersionAliases() {
     for (const slug in FCLI_SHA256) {
         const version = slug.substring(0, slug.indexOf('/'));
-        const alias1 = version.substring(0, version.indexOf('.'));
-        const alias2 = version.substring(0, version.lastIndexOf('.'));
-        core.info(`${version} (${slug}) aliases: ${alias1} ${alias2}`);
-        TOOLS["fcli"]["versionAliases"][alias1] = version;
-        TOOLS["fcli"]["versionAliases"][alias2] = version;
+        const minorAlias = version.substring(0, version.lastIndexOf('.'));
+        const majorAlias = version.substring(0, version.indexOf('.'));
+        if (!TOOLS["fcli"]["versionAliases"][minorAlias]) {
+            core.info(`${version} (${slug}) aliases: ${minorAlias} ${majorAlias}`);
+            TOOLS["fcli"]["versionAliases"][minorAlias] = version;
+            TOOLS["fcli"]["versionAliases"][majorAlias] = version;
+        }
     }
 }
 /**
