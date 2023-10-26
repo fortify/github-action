@@ -6759,7 +6759,7 @@ function getFcliDownloadSlug(version) {
             slug += "fcli-mac.tgz";
             break;
         case "linux":
-            slug += "fcli-linux";
+            slug += "fcli-linux.tgz";
             break;
         default:
             // TODO Install Java version? Should we then also generate a bash script

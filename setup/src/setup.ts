@@ -162,7 +162,7 @@ function getFcliDownloadSlug(version: string): string {
 	switch (process.platform) {
 		case "win32": slug+="fcli-windows.zip"; break;
 		case "darwin": slug+="fcli-mac.tgz"; break;
-		case "linux": slug+="fcli-linux"; break;
+		case "linux": slug+="fcli-linux.tgz"; break;
 		default: 
 			// TODO Install Java version? Should we then also generate a bash script
 			// for invoking 'java -jar <path/to/jar> $@'? 
