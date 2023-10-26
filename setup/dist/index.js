@@ -6665,6 +6665,13 @@ const FCLI_SHA256 = {
     "v1.0.0/fcli-mac.tgz": "8d9e514b851d798dc1ecc5c7d96e31298c4afffe88d66dbc013eeb0ca5967fc3",
     "v1.0.0/fcli-windows.zip": "177dc75c8aaa3e188a313d75e68ea85832e097b85f62e15f9f2edc6ffb323f71"
 };
+function updateFcliVersionAliases() {
+    for (const slug in Object.keys(FCLI_SHA256)) {
+        const version = slug.substring(0, slug.indexOf('/'));
+        TOOLS["fcli"]["versionAliases"][version.substring(0, version.indexOf('.'))] = version;
+        TOOLS["fcli"]["versionAliases"][version.substring(0, version.lastIndexOf('.'))] = version;
+    }
+}
 /**
  * Install and configure the given version of the given tool, then export environment
  * variables to allow pipelines to locate the tool installation(s). If the given version
@@ -6819,6 +6826,7 @@ function exportVariables(toolName, toolVersion, installPath) {
  */
 function main() {
     return __awaiter(this, void 0, void 0, function* () {
+        updateFcliVersionAliases();
         try {
             // Install fixed fcli version for internal action use by this action only.
             const internalFcliPath = yield installIfNotCached('', 'fcli', INTERNAL_FCLI_VERSION, core.debug);

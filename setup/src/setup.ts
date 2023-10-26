@@ -81,6 +81,14 @@ const FCLI_SHA256: Record<string, string> = {
 	"v1.0.0/fcli-windows.zip": "177dc75c8aaa3e188a313d75e68ea85832e097b85f62e15f9f2edc6ffb323f71"
 }
 
+function updateFcliVersionAliases() {
+	for ( const slug in Object.keys(FCLI_SHA256) ) {
+		const version = slug.substring(0, slug.indexOf('/'));
+		TOOLS["fcli"]["versionAliases"][version.substring(0, version.indexOf('.'))] = version;
+		TOOLS["fcli"]["versionAliases"][version.substring(0, version.lastIndexOf('.'))] = version;
+	}
+}
+
 /** 
  * Install and configure the given version of the given tool, then export environment
  * variables to allow pipelines to locate the tool installation(s). If the given version
@@ -222,6 +230,7 @@ function exportVariables(toolName: string, toolVersion: string, installPath: str
  * them if applicable.
  */
 async function main(): Promise<void> {
+	updateFcliVersionAliases();
 	try {
 		// Install fixed fcli version for internal action use by this action only.
 		const internalFcliPath = await installIfNotCached('', 'fcli', INTERNAL_FCLI_VERSION, core.debug);
