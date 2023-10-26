@@ -84,8 +84,11 @@ const FCLI_SHA256: Record<string, string> = {
 function updateFcliVersionAliases() {
 	for ( const slug in Object.keys(FCLI_SHA256) ) {
 		const version = slug.substring(0, slug.indexOf('/'));
-		TOOLS["fcli"]["versionAliases"][version.substring(0, version.indexOf('.'))] = version;
-		TOOLS["fcli"]["versionAliases"][version.substring(0, version.lastIndexOf('.'))] = version;
+		const alias1 = version.substring(0, version.indexOf('.'));
+		const alias2 = version.substring(0, version.lastIndexOf('.'));
+		core.info(`${version} aliases: ${alias1} ${alias2}`);
+		TOOLS["fcli"]["versionAliases"][alias1] = version;
+		TOOLS["fcli"]["versionAliases"][alias2] = version;
 	}
 }
 
