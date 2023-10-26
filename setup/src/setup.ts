@@ -87,8 +87,11 @@ function updateFcliVersionAliases() {
 		const minorAlias = version.substring(0, version.lastIndexOf('.'));
 		const majorAlias = version.substring(0, version.indexOf('.'));
 		if (!TOOLS["fcli"]["versionAliases"][minorAlias]) {
-			core.info(`${version} (${slug}) aliases: ${minorAlias} ${majorAlias}`);
+			core.info(`${version} (${slug}) alias: ${minorAlias}`);
 			TOOLS["fcli"]["versionAliases"][minorAlias] = version;
+		}
+		if (!TOOLS["fcli"]["versionAliases"][majorAlias]) {
+			core.info(`${version} (${slug}) alias: ${majorAlias}`);
 			TOOLS["fcli"]["versionAliases"][majorAlias] = version;
 		}
 	}
