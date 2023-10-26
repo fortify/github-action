@@ -23,7 +23,7 @@ inputs:
     default: 'skip'
     required: false
   bugtracker-utility:
-    description: 'The FortifyBugTrackerUtility version to install. Allowed values: skip (default value, do not install), latest, or specific version number. Supports semantic versioning, for example `v4` will install the latest known `4.x` version. Version may be specified either with or without the `v` prefix, for example `v4.12` and `4.12` are semantically the same.'
+    description: 'The FortifyBugTrackerUtility version to install. Allowed values: `skip` (default value, do not install), `latest`, or specific version number. Supports semantic versioning, for example `v4` will install the latest known `4.x` version. Version may be specified either with or without the `v` prefix, for example `v4.12` and `4.12` are semantically the same.'
     default: 'skip'
     required: false
 runs:
