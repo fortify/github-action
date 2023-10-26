@@ -15,33 +15,33 @@ The [Fortify github-action repository]({{repo-url}}) hosts various Fortify-relat
 
 **Fortify on Demand**
 
-* [`https://github.com/fortify-ps/github-action@<version>`](#primary-action)  
+* [`fortify/github-action@v1`](#primary-action)  
   For now, this action provides the same functionality as the `fod-sast-scan` action listed below. Future versions may add support for running other types of scans or performing other FoD actions.
-* [`https://github.com/fortify-ps/github-action/fod-sast-scan@<version>`](#fod-sast-scan-action)  
+* [`fortify/github-action/fod-sast-scan@v1`](#fod-sast-scan-action)  
   Package source code, submit SAST scan request to Fortify on Demand, optionally wait for completion and export results back to the GitHub Security dashboard.
-* [`https://github.com/fortify-ps/github-action/package@<version>`](#package-action)  
+* [`fortify/github-action/package@v1`](#package-action)  
   Package source code for running a SAST scan, using the latest version of ScanCentral Client.
-* [`https://github.com/fortify-ps/github-action/fod-export@<version>`](#fod-export-action)  
+* [`fortify/github-action/fod-export@v1`](#fod-export-action)  
   Export vulnerability data from Fortify on Demand to the GitHub Security dashboard.
-* [`https://github.com/fortify-ps/github-action/setup@<version>`](#setup-action)  
+* [`fortify/github-action/setup@v1`](#setup-action)  
   Install various Fortify tools like [fcli](https://github.com/fortify/fcli), [ScanCentral Client](https://www.microfocus.com/documentation/fortify-software-security-center/2310/SC_SAST_Help_23.1.0/index.htm#A_Clients.htm), [FortifyVulnerabilityExporter](https://github.com/fortify/FortifyVulnerabilityExporter) and [FortifyBugTrackerUtility](https://github.com/fortify-ps/FortifyBugTrackerUtility) for use in your pipeline
   
 **SSC / ScanCentral SAST/ ScanCentral DAST**
 
-* [`https://github.com/fortify-ps/github-action@<version>`](#primary-action)  
+* [`fortify/github-action@v1`](#primary-action)  
   For now, this action provides the same functionality as the `ssc-sast-scan` action listed below. Future versions may add support for running other types of scans or performing other SSC / ScanCentral actions.
-* [`https://github.com/fortify-ps/github-action/sc-sast-scan@<version>`](#sc-sast-scan-action)  
+* [`fortify/github-action/sc-sast-scan@v1`](#sc-sast-scan-action)  
   Package source code, submit SAST scan request to ScanCentral SAST, optionally wait for completion and export results back to the GitHub Security dashboard.
-* [`https://github.com/fortify-ps/github-action/package@<version>`](#package-action)  
+* [`fortify/github-action/package@v1`](#package-action)  
   Package source code for running a SAST scan, using the latest version of ScanCentral Client.
-* [`https://github.com/fortify-ps/github-action/ssc-export@<version>`](#ssc-export-action)  
+* [`fortify/github-action/ssc-export@v1`](#ssc-export-action)  
   Export vulnerability data from Fortify Software Security Center (SSC) to the GitHub Security dashboard.
-* [`https://github.com/fortify-ps/github-action/setup@<version>`](#setup-action)  
+* [`fortify/github-action/setup@v1`](#setup-action)  
   Install various Fortify tools like [fcli](https://github.com/fortify/fcli), [ScanCentral Client](https://www.microfocus.com/documentation/fortify-software-security-center/2310/SC_SAST_Help_23.1.0/index.htm#A_Clients.htm), [FortifyVulnerabilityExporter](https://github.com/fortify/FortifyVulnerabilityExporter) and [FortifyBugTrackerUtility](https://github.com/fortify-ps/FortifyBugTrackerUtility) for use in your pipeline
 
 ## Primary action
 
-The primary `fortify/github-action` currently allows for running SAST scans on either Fortify on Demand or ScanCentral SAST; future versions may add support for other activities like running DAST scans. Which activities to perform is controlled through action inputs, the input for those activities is provided through environment variables.
+The primary `fortify/github-action@v1` currently allows for running SAST scans on either Fortify on Demand or ScanCentral SAST; future versions may add support for other activities like running DAST scans. Which activities to perform is controlled through action inputs, the input for those activities is provided through environment variables.
 
 ### Action inputs
 
@@ -50,8 +50,8 @@ If not specified or when set to false, no SAST scan will be performed. When set 
 
 To successfully perform the SAST scan, additional environment variables will need to be configured on the action as listed in these sections:
 
-* Fortify on Demand: [`https://github.com/fortify-ps/github-action/fod-sast-scan@<version>`](#fod-sast-scan-action)
-* ScanCentral SAST: [`https://github.com/fortify-ps/github-action/sc-sast-scan@<version>`](#sc-sast-scan-action)
+* Fortify on Demand: [`fortify/github-action/fod-sast-scan@v1`](#fod-sast-scan-action)
+* ScanCentral SAST: [`fortify/github-action/sc-sast-scan@v1`](#sc-sast-scan-action)
 
 ### Sample workflows
 
@@ -129,9 +129,19 @@ The sample workflow below demonstrates how to configure the action for installin
 
 ## package action
 
+This action packages source code to be scanned on Fortify on Demand or ScanCentral SAST.
+
+TODO
+
+### Action environment variable inputs
+
 TODO
 
 ## fod-sast-scan action
+
+TODO
+
+### Action environment variable inputs
 
 TODO
 
@@ -139,11 +149,23 @@ TODO
 
 TODO
 
+### Action environment variable inputs
+
+TODO
+
 ## sc-sast-scan action
 
 TODO
 
+### Action environment variable inputs
+
+TODO
+
 ## ssc-export action
+
+TODO
+
+### Action environment variable inputs
 
 TODO
 
