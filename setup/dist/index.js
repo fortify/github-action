@@ -6666,7 +6666,7 @@ const FCLI_SHA256 = {
     "v1.0.0/fcli-windows.zip": "177dc75c8aaa3e188a313d75e68ea85832e097b85f62e15f9f2edc6ffb323f71"
 };
 function updateFcliVersionAliases() {
-    for (const slug in Object.keys(FCLI_SHA256)) {
+    for (const slug in FCLI_SHA256) {
         const version = slug.substring(0, slug.indexOf('/'));
         const alias1 = version.substring(0, version.indexOf('.'));
         const alias2 = version.substring(0, version.lastIndexOf('.'));
