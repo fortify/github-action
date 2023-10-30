@@ -4,5 +4,5 @@
 **`SSC_TOKEN`**   
 Required when authenticating with an SSC token (recommended). Most actions should work fine with a `CIToken`.
 
-**`SSC_USER & `SSC_PASSWORD`**   
+**`SSC_USER` & `SSC_PASSWORD`**   
 Required when authenticating with user credentials.

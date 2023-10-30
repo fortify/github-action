@@ -298,7 +298,7 @@ Before running this action, please ensure that the appropriate application versi
 **`SSC_TOKEN`**   
 Required when authenticating with an SSC token (recommended). Most actions should work fine with a `CIToken`.
 
-**`SSC_USER & `SSC_PASSWORD`**   
+**`SSC_USER` & `SSC_PASSWORD`**   
 Required when authenticating with user credentials.
 
 <!-- END-INCLUDE:env-ssc-connection.md -->
@@ -367,7 +367,7 @@ This action exports the latest vulnerability data from an SSC application versio
 **`SSC_TOKEN`**   
 Required when authenticating with an SSC token (recommended). Most actions should work fine with a `CIToken`.
 
-**`SSC_USER & `SSC_PASSWORD`**   
+**`SSC_USER` & `SSC_PASSWORD`**   
 Required when authenticating with user credentials.
 
 <!-- END-INCLUDE:env-ssc-connection.md -->
