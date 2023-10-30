@@ -48,14 +48,177 @@ The primary `fortify/github-action@v1` currently allows for running SAST scans o
 **`sast-scan`**    
 If not specified or when set to false, no SAST scan will be performed. When set to true, the action will run a SAST scan on either Fortify on Demand (if the FOD_URL environment variable has been specified), or on ScanCentral SAST (if the SSC_URL environment variable has been specified). This includes packaging the source code, running the scan, and optionally reporting scan results back into GitHub. 
 
-To successfully perform the SAST scan, additional environment variables will need to be configured on the action as listed in these sections:
+### Action environment variable inputs
 
-* Fortify on Demand: [`fortify/github-action/fod-sast-scan@v1`](#fod-sast-scan-action)
-* ScanCentral SAST: [`fortify/github-action/sc-sast-scan@v1`](#sc-sast-scan-action)
+#### Fortify on Demand
+
+
+<!-- START-INCLUDE:env-fod-sast-scan.md -->
+
+
+
+<!-- START-INCLUDE:env-fod-login.md -->
+
+
+<!-- START-INCLUDE:env-fod-connection.md -->
+
+**`FOD_URL`**    
+Required: Fortify on Demand URL, for example https://ams.fortify.com
+
+**`FOD_CLIENT_ID` & `FOD_CLIENT_SECRET`**   
+Required when authenticating with an API key: FoD Client ID (API key) and Secret (API secret)
+
+**`FOD_TENANT`, `FOD_USER` & `FOD_PASSWORD`**   
+Required when authenticating with user credentials: FoD tenant, user and password. It's recommended to use a Personal Access Token instead of an actual user password.
+
+<!-- END-INCLUDE:env-fod-connection.md -->
+
+
+**`EXTRA_FOD_LOGIN_OPTS`**    
+Optional: Extra FoD login options, for example for disabling SSL checks or changing connection time-outs; see [`fcli fod session login` documentation](https://fortify.github.io/fcli/v2.0.0//manpage/fcli-fod-session-login.html)
+
+<!-- END-INCLUDE:env-fod-login.md -->
+
+
+
+<!-- START-INCLUDE:env-fod-release.md -->
+
+**`FOD_RELEASE`**    
+Required: Fortify on Demand release to use with this action. This can be specified either as a numeric release id, `<app>:<release>` (for non-microservices applications) or `<app>:<microservice>:<release>` (for microservices applications).
+
+<!-- END-INCLUDE:env-fod-release.md -->
+
+
+
+<!-- START-INCLUDE:env-package.md -->
+
+**`EXTRA_PACKAGE_OPTS`**    
+Optional: By default, this action runs `scancentral package -o package.zip`. The `EXTRA_PACKAGE_OPTS` environment variable can be used to specify additional packaging options like `-bt none` to disable automatic build tool detection, or `-oss` to collect additional files for an open-source scan (FoD only).
+
+<!-- END-INCLUDE:env-package.md -->
+
+
+**`EXTRA_FOD_SAST_SCAN_OPTS`**    
+Optional: Extra FoD SAST scan options; see [`fcli fod sast-scan start` documentation](https://fortify.github.io/fcli/v2.0.0//manpage/fcli-fod-sast-scan-start.html)
+
+**`DO_WAIT`**    
+Optional: By default, this action will not wait until the scan has been completed. To have the workflow wait until the scan has been completed, set the `DO_WAIT` environment variable to `true`. Note that `DO_WAIT` is implied if `DO_EXPORT` is set to `true`; see below.
+
+**`DO_EXPORT`**    
+Optional: If set to `true`, this action will export scan results to the GitHub Security Code Scanning dashboard.
+
+<!-- END-INCLUDE:env-fod-sast-scan.md -->
+
+
+#### ScanCentral SAST
+
+
+<!-- START-INCLUDE:env-sc-sast-scan.md -->
+
+
+
+<!-- START-INCLUDE:env-sc-sast-login.md -->
+
+
+<!-- START-INCLUDE:env-ssc-connection.md -->
+
+**`SSC_URL`**    
+(Required) Fortify Software Security Center URL, for example https://ssc.customer.fortifyhosted.net/
+
+**`SSC_TOKEN`**   
+Required when authenticating with an SSC token (recommended). Most actions should work fine with a `CIToken`.
+
+**`SSC_USER` & `SSC_PASSWORD`**   
+Required when authenticating with user credentials.
+
+<!-- END-INCLUDE:env-ssc-connection.md -->
+
+
+**`SC_SAST_CLIENT_AUTH_TOKEN`**   
+Required: ScanCentral SAST Client Authentication Token for authenticating with ScanCentral SAST Controller.
+
+**`EXTRA_SC_SAST_LOGIN_OPTS`**    
+Optional: Extra ScanCentral SAST login options, for example for disabling SSL checks or changing connection time-outs; see [`fcli sc-sast session login` documentation](https://fortify.github.io/fcli/v2.0.0//manpage/fcli-sc-sast-session-login.html).
+
+<!-- END-INCLUDE:env-sc-sast-login.md -->
+
+
+
+<!-- START-INCLUDE:env-ssc-appversion.md -->
+
+**`SSC_APPVERSION`**    
+Required: Fortify SSC application version to use with this action. This can be specified either as a numeric application version id, or by providing application and version name in the format `<app>:<release>`.
+
+<!-- END-INCLUDE:env-ssc-appversion.md -->
+
+
+
+<!-- START-INCLUDE:env-package.md -->
+
+**`EXTRA_PACKAGE_OPTS`**    
+Optional: By default, this action runs `scancentral package -o package.zip`. The `EXTRA_PACKAGE_OPTS` environment variable can be used to specify additional packaging options like `-bt none` to disable automatic build tool detection, or `-oss` to collect additional files for an open-source scan (FoD only).
+
+<!-- END-INCLUDE:env-package.md -->
+
+
+**`EXTRA_SC_SAST_SCAN_OPTS`**    
+Optional: Extra ScanCentral SAST scan options; see [`fcli sc-sast scan start` documentation](https://fortify.github.io/fcli/v2.0.0//manpage/fcli-sc-sast-scan-start.html)
+
+**`DO_WAIT`**    
+Optional: By default, this action will not wait until the scan has been completed. To have the workflow wait until the scan has been completed, set the `DO_WAIT` environment variable to `true`. Note that `DO_WAIT` is implied if `DO_EXPORT` is set to `true`; see below.
+
+**`DO_EXPORT`**    
+Optional: If set to `true`, this action will export scan results to the GitHub Security Code Scanning dashboard.
+
+<!-- END-INCLUDE:env-sc-sast-scan.md -->
+
 
 ### Sample workflows
 
-TODO
+The sample workflows below demonstrate how to configure the action for running a SAST scan on either Fortify on Demand or ScanCentral SAST.
+
+#### Fortify on Demand
+
+```yaml
+    steps:    
+      - name: Check out source code
+        uses: actions/checkout@v4  
+      - name: Run FoD SAST Scan
+        uses: fortify/github-action@v1
+        with:
+          sast-scan: true
+        env:
+          FOD_URL: https://ams.fortify.com
+          FOD_TENANT: ${{secrets.FOD_TENANT}}
+          FOD_USER: ${{secrets.FOD_USER}}
+          FOD_PASSWORD: ${{secrets.FOD_PAT}}
+          EXTRA_FOD_LOGIN_OPTS: --socket-timeout=60s
+          FOD_RELEASE: MyApp:MyRelease
+          EXTRA_PACKAGE_OPTS: -oss -bt gradle
+          # DO_WAIT: true # Ignored due to DO_EXPORT below
+          DO_EXPORT: true
+```
+
+#### ScanCentral SAST
+
+```yaml
+    steps:    
+      - name: Check out source code
+        uses: actions/checkout@v4  
+      - name: Run ScanCentral SAST Scan
+        uses: fortify/github-action@v1
+        with:
+          sast-scan: true
+        env:
+          SSC_URL: ${{secrets.SSC_URL}}
+          SSC_TOKEN: ${{secrets.SSC_TOKEN}}
+          SC_SAST_CLIENT_AUTH_TOKEN: ${{secrets.CLIENT_AUTH_TOKEN}}
+          EXTRA_SC_SAST_LOGIN_OPTS: --socket-timeout=60s
+          SSC_APPVERSION: MyApp:MyVersion
+          EXTRA_PACKAGE_OPTS: -bt mvn
+          # DO_WAIT: true # Ignored due to DO_EXPORT below
+          DO_EXPORT: true
+```
 
 ## setup action
 

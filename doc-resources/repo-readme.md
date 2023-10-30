@@ -35,14 +35,47 @@ The primary `fortify/github-action@{{var:action-major-version}}` currently allow
 **`sast-scan`**    
 If not specified or when set to false, no SAST scan will be performed. When set to true, the action will run a SAST scan on either Fortify on Demand (if the FOD_URL environment variable has been specified), or on ScanCentral SAST (if the SSC_URL environment variable has been specified). This includes packaging the source code, running the scan, and optionally reporting scan results back into GitHub. 
 
-To successfully perform the SAST scan, additional environment variables will need to be configured on the action as listed in these sections:
+### Action environment variable inputs
 
-* Fortify on Demand: [`fortify/github-action/fod-sast-scan@{{var:action-major-version}}`](#fod-sast-scan-action)
-* ScanCentral SAST: [`fortify/github-action/sc-sast-scan@{{var:action-major-version}}`](#sc-sast-scan-action)
+#### Fortify on Demand
+
+{{include:env-fod-sast-scan.md}}
+
+#### ScanCentral SAST
+
+{{include:env-sc-sast-scan.md}}
 
 ### Sample workflows
 
-TODO
+The sample workflows below demonstrate how to configure the action for running a SAST scan on either Fortify on Demand or ScanCentral SAST.
+
+#### Fortify on Demand
+
+```yaml
+    steps:    
+      - name: Check out source code
+        uses: actions/checkout@v4  
+      - name: Run FoD SAST Scan
+        uses: fortify/github-action@{{var:action-major-version}}
+        with:
+          sast-scan: true
+        env:
+{{include:nocomments.env-fod-sast-scan-sample.md}}
+```
+
+#### ScanCentral SAST
+
+```yaml
+    steps:    
+      - name: Check out source code
+        uses: actions/checkout@v4  
+      - name: Run ScanCentral SAST Scan
+        uses: fortify/github-action@{{var:action-major-version}}
+        with:
+          sast-scan: true
+        env:
+{{include:nocomments.env-sc-sast-scan-sample.md}}
+```
 
 ## setup action
 
