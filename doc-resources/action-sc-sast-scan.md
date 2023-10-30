@@ -11,3 +11,17 @@ Before running this action, please ensure that the appropriate application versi
 ### Action environment variable inputs
 
 {{include:env-sc-sast-scan.md}}
+
+### Sample usage
+
+The sample workflow below demonstrates how to configure the action for running a SAST scan on ScanCentral SAST.
+
+```yaml
+    steps:    
+      - name: Check out source code
+        uses: actions/checkout@v4  
+      - name: Run ScanCentral SAST Scan
+        uses: fortify/github-action/sc-sast-scan@{{var:action-major-version}}
+        env:
+{{include:nocomments.env-sc-sast-scan-sample.md}}
+```

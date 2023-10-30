@@ -138,7 +138,7 @@ The sample workflow below demonstrates how to configure the action for installin
 
 <!-- START-INCLUDE:action-package.md -->
 
-This action packages application source code to be scanned using [ScanCentral Client](https://www.microfocus.com/documentation/fortify-software-security-center/2310/SC_SAST_Help_23.1.0/index.htm#A_Clients.htm).
+This action packages application source code using [ScanCentral Client](https://www.microfocus.com/documentation/fortify-software-security-center/2310/SC_SAST_Help_23.1.0/index.htm#A_Clients.htm). The output package is saved as `package.zip`.
 
 ### Action environment variable inputs
 
@@ -150,6 +150,20 @@ Optional: By default, this action runs `scancentral package -o package.zip`. The
 
 <!-- END-INCLUDE:env-package.md -->
 
+
+### Sample usage
+
+The sample workflow below demonstrates how to configure the action for running a SAST scan on FoD.
+
+```yaml
+    steps:  
+      - name: Check out source code
+        uses: actions/checkout@v4  
+      - name: Package source code
+        uses: fortify/github-action/package@v1
+        env:
+          EXTRA_PACKAGE_OPTS: -bt mvn
+```
 
 <!-- END-INCLUDE:action-package.md -->
 
@@ -178,6 +192,9 @@ Before running this action, please ensure that the appropriate release has been 
 
 <!-- START-INCLUDE:env-fod-login.md -->
 
+
+<!-- START-INCLUDE:env-fod-connection.md -->
+
 **`FOD_URL`**    
 Required: Fortify on Demand URL, for example https://ams.fortify.com
 
@@ -186,6 +203,9 @@ Required when authenticating with an API key: FoD Client ID (API key) and Secret
 
 **`FOD_TENANT`, `FOD_USER` & `FOD_PASSWORD`**   
 Required when authenticating with user credentials: FoD tenant, user and password. It's recommended to use a Personal Access Token instead of an actual user password.
+
+<!-- END-INCLUDE:env-fod-connection.md -->
+
 
 **`EXTRA_FOD_LOGIN_OPTS`**    
 Optional: Extra FoD login options, for example for disabling SSL checks or changing connection time-outs; see [`fcli fod session login` documentation](https://fortify.github.io/fcli/v2.0.0//manpage/fcli-fod-session-login.html)
@@ -223,6 +243,28 @@ Optional: If set to `true`, this action will export scan results to the GitHub S
 <!-- END-INCLUDE:env-fod-sast-scan.md -->
 
 
+### Sample usage
+
+The sample workflow below demonstrates how to configure the action for running a SAST scan on FoD.
+
+```yaml
+    steps:    
+      - name: Check out source code
+        uses: actions/checkout@v4  
+      - name: Run FoD SAST Scan
+        uses: fortify/github-action/fod-sast-scan@v1
+        env:
+          FOD_URL: https://ams.fortify.com
+          FOD_TENANT: ${{secrets.FOD_TENANT}}
+          FOD_USER: ${{secrets.FOD_USER}}
+          FOD_PASSWORD: ${{secrets.FOD_PAT}}
+          EXTRA_FOD_LOGIN_OPTS: --socket-timeout=60s
+          FOD_RELEASE: MyApp:MyRelease
+          EXTRA_PACKAGE_OPTS: -oss -bt gradle
+          # DO_WAIT: true # Ignored due to DO_EXPORT below
+          DO_EXPORT: true
+```
+
 <!-- END-INCLUDE:action-fod-sast-scan.md -->
 
 
@@ -236,7 +278,7 @@ This action exports the latest vulnerability data from an FoD release to the Git
 ### Action environment variable inputs
 
 
-<!-- START-INCLUDE:env-fod-login.md -->
+<!-- START-INCLUDE:env-fod-connection.md -->
 
 **`FOD_URL`**    
 Required: Fortify on Demand URL, for example https://ams.fortify.com
@@ -247,10 +289,7 @@ Required when authenticating with an API key: FoD Client ID (API key) and Secret
 **`FOD_TENANT`, `FOD_USER` & `FOD_PASSWORD`**   
 Required when authenticating with user credentials: FoD tenant, user and password. It's recommended to use a Personal Access Token instead of an actual user password.
 
-**`EXTRA_FOD_LOGIN_OPTS`**    
-Optional: Extra FoD login options, for example for disabling SSL checks or changing connection time-outs; see [`fcli fod session login` documentation](https://fortify.github.io/fcli/v2.0.0//manpage/fcli-fod-session-login.html)
-
-<!-- END-INCLUDE:env-fod-login.md -->
+<!-- END-INCLUDE:env-fod-connection.md -->
 
 
 
@@ -261,6 +300,22 @@ Required: Fortify on Demand release to use with this action. This can be specifi
 
 <!-- END-INCLUDE:env-fod-release.md -->
 
+
+### Sample usage
+
+The sample workflow below demonstrates how to configure the action for exporting FoD vulnerability data to the GitHub Security Code Scanning dashboard.
+
+```yaml
+    steps:    
+      - name: Export FoD vulnerability data to GitHub
+        uses: fortify/github-action/fod-export@v1
+        env:
+          FOD_URL: https://ams.fortify.com
+          FOD_TENANT: ${{secrets.FOD_TENANT}}
+          FOD_USER: ${{secrets.FOD_USER}}
+          FOD_PASSWORD: ${{secrets.FOD_PAT}}
+          FOD_RELEASE: MyApp:MyRelease
+```
 
 <!-- END-INCLUDE:action-fod-export.md -->
 
@@ -343,6 +398,27 @@ Optional: If set to `true`, this action will export scan results to the GitHub S
 <!-- END-INCLUDE:env-sc-sast-scan.md -->
 
 
+### Sample usage
+
+The sample workflow below demonstrates how to configure the action for running a SAST scan on ScanCentral SAST.
+
+```yaml
+    steps:    
+      - name: Check out source code
+        uses: actions/checkout@v4  
+      - name: Run ScanCentral SAST Scan
+        uses: fortify/github-action/sc-sast-scan@v1
+        env:
+          SSC_URL: ${{secrets.SSC_URL}}
+          SSC_TOKEN: ${{secrets.SSC_TOKEN}}
+          SC_SAST_CLIENT_AUTH_TOKEN: ${{secrets.CLIENT_AUTH_TOKEN}}
+          EXTRA_SC_SAST_LOGIN_OPTS: --socket-timeout=60s
+          SSC_APPVERSION: MyApp:MyVersion
+          EXTRA_PACKAGE_OPTS: -bt mvn
+          # DO_WAIT: true # Ignored due to DO_EXPORT below
+          DO_EXPORT: true
+```
+
 <!-- END-INCLUDE:action-sc-sast-scan.md -->
 
 
@@ -354,9 +430,6 @@ Optional: If set to `true`, this action will export scan results to the GitHub S
 This action exports the latest vulnerability data from an SSC application version to the GitHub Code Scanning dashboard.
 
 ### Action environment variable inputs
-
-
-<!-- START-INCLUDE:env-ssc-login.md -->
 
 
 <!-- START-INCLUDE:env-ssc-connection.md -->
@@ -373,12 +446,6 @@ Required when authenticating with user credentials.
 <!-- END-INCLUDE:env-ssc-connection.md -->
 
 
-**`EXTRA_SSC_LOGIN_OPTS`**    
-Optional: Extra SSC login options, for example for disabling SSL checks or changing connection time-outs; see [`fcli ssc session login` documentation](https://fortify.github.io/fcli/v2.0.0//manpage/fcli-ssc-session-login.html).
-
-<!-- END-INCLUDE:env-ssc-login.md -->
-
-
 
 <!-- START-INCLUDE:env-ssc-appversion.md -->
 
@@ -387,6 +454,20 @@ Required: Fortify SSC application version to use with this action. This can be s
 
 <!-- END-INCLUDE:env-ssc-appversion.md -->
 
+
+### Sample usage
+
+The sample workflow below demonstrates how to configure the action for exporting FoD vulnerability data to the GitHub Security Code Scanning dashboard.
+
+```yaml
+    steps:    
+      - name: Export SSC vulnerability data to GitHub
+        uses: fortify/github-action/ssc-export@v1
+        env:
+          SSC_URL: ${{secrets.SSC_URL}}
+          SSC_TOKEN: ${{secrets.SSC_TOKEN}}
+          SSC_APPVERSION: MyApp:MyVersion
+```
 
 <!-- END-INCLUDE:action-ssc-export.md -->
 

@@ -30,6 +30,9 @@ Before running this action, please ensure that the appropriate release has been 
 
 <!-- START-INCLUDE:env-fod-login.md -->
 
+
+<!-- START-INCLUDE:env-fod-connection.md -->
+
 **`FOD_URL`**    
 Required: Fortify on Demand URL, for example https://ams.fortify.com
 
@@ -38,6 +41,9 @@ Required when authenticating with an API key: FoD Client ID (API key) and Secret
 
 **`FOD_TENANT`, `FOD_USER` & `FOD_PASSWORD`**   
 Required when authenticating with user credentials: FoD tenant, user and password. It's recommended to use a Personal Access Token instead of an actual user password.
+
+<!-- END-INCLUDE:env-fod-connection.md -->
+
 
 **`EXTRA_FOD_LOGIN_OPTS`**    
 Optional: Extra FoD login options, for example for disabling SSL checks or changing connection time-outs; see [`fcli fod session login` documentation](https://fortify.github.io/fcli/v2.0.0//manpage/fcli-fod-session-login.html)
@@ -74,6 +80,28 @@ Optional: If set to `true`, this action will export scan results to the GitHub S
 
 <!-- END-INCLUDE:env-fod-sast-scan.md -->
 
+
+### Sample usage
+
+The sample workflow below demonstrates how to configure the action for running a SAST scan on FoD.
+
+```yaml
+    steps:    
+      - name: Check out source code
+        uses: actions/checkout@v4  
+      - name: Run FoD SAST Scan
+        uses: fortify/github-action/fod-sast-scan@v1
+        env:
+          FOD_URL: https://ams.fortify.com
+          FOD_TENANT: ${{secrets.FOD_TENANT}}
+          FOD_USER: ${{secrets.FOD_USER}}
+          FOD_PASSWORD: ${{secrets.FOD_PAT}}
+          EXTRA_FOD_LOGIN_OPTS: --socket-timeout=60s
+          FOD_RELEASE: MyApp:MyRelease
+          EXTRA_PACKAGE_OPTS: -oss -bt gradle
+          # DO_WAIT: true # Ignored due to DO_EXPORT below
+          DO_EXPORT: true
+```
 
 <!-- END-INCLUDE:action-fod-sast-scan.md -->
 

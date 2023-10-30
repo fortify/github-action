@@ -1,0 +1,1 @@
+          EXTRA_PACKAGE_OPTS: -oss -bt gradle

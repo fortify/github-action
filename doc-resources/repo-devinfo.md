@@ -10,6 +10,7 @@ Action documentation is generated from the `doc-resources` directory, using func
 * `templates/<action-name>/README.template.md`: Template for the README.md file for each action
 * `action-<action-name>.md`: Documentation for each action, included by both the corresponding action readme template, and the top-level readme (through `repo-readme.md`)
 * `env-*.md`: Documentation for the environment variables supported by the various actions. Most of these are named after the action that they correspond to, for example `env-fod-login.md` (corresponding to the `internal/fod-login` action), listing action-specific environment variables. Others describe generic environment variables that are shared by multiple actions, for example `env-fod-release.md`.
+* `nocomments.env-*-sample.md`: Most of the `env-*.md` files mentioned above have a corresponding sample file that shows how to configure the variables in a GitHub workflow.
 * `repo-devinfo.md`: Information for developers
 * `repo-readme.md`: Top-level readme contents
 * `repo-usage.md`: Used to generated top-level USAGE.md, just refers to README.md

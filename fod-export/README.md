@@ -16,7 +16,7 @@ This action exports the latest vulnerability data from an FoD release to the Git
 ### Action environment variable inputs
 
 
-<!-- START-INCLUDE:env-fod-login.md -->
+<!-- START-INCLUDE:env-fod-connection.md -->
 
 **`FOD_URL`**    
 Required: Fortify on Demand URL, for example https://ams.fortify.com
@@ -27,10 +27,7 @@ Required when authenticating with an API key: FoD Client ID (API key) and Secret
 **`FOD_TENANT`, `FOD_USER` & `FOD_PASSWORD`**   
 Required when authenticating with user credentials: FoD tenant, user and password. It's recommended to use a Personal Access Token instead of an actual user password.
 
-**`EXTRA_FOD_LOGIN_OPTS`**    
-Optional: Extra FoD login options, for example for disabling SSL checks or changing connection time-outs; see [`fcli fod session login` documentation](https://fortify.github.io/fcli/v2.0.0//manpage/fcli-fod-session-login.html)
-
-<!-- END-INCLUDE:env-fod-login.md -->
+<!-- END-INCLUDE:env-fod-connection.md -->
 
 
 
@@ -41,6 +38,22 @@ Required: Fortify on Demand release to use with this action. This can be specifi
 
 <!-- END-INCLUDE:env-fod-release.md -->
 
+
+### Sample usage
+
+The sample workflow below demonstrates how to configure the action for exporting FoD vulnerability data to the GitHub Security Code Scanning dashboard.
+
+```yaml
+    steps:    
+      - name: Export FoD vulnerability data to GitHub
+        uses: fortify/github-action/fod-export@v1
+        env:
+          FOD_URL: https://ams.fortify.com
+          FOD_TENANT: ${{secrets.FOD_TENANT}}
+          FOD_USER: ${{secrets.FOD_USER}}
+          FOD_PASSWORD: ${{secrets.FOD_PAT}}
+          FOD_RELEASE: MyApp:MyRelease
+```
 
 <!-- END-INCLUDE:action-fod-export.md -->
 

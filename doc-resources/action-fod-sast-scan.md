@@ -11,3 +11,17 @@ Before running this action, please ensure that the appropriate release has been 
 ### Action environment variable inputs
 
 {{include:env-fod-sast-scan.md}}
+
+### Sample usage
+
+The sample workflow below demonstrates how to configure the action for running a SAST scan on FoD.
+
+```yaml
+    steps:    
+      - name: Check out source code
+        uses: actions/checkout@v4  
+      - name: Run FoD SAST Scan
+        uses: fortify/github-action/fod-sast-scan@{{var:action-major-version}}
+        env:
+{{include:nocomments.env-fod-sast-scan-sample.md}}
+```

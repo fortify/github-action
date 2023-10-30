@@ -84,6 +84,27 @@ Optional: If set to `true`, this action will export scan results to the GitHub S
 <!-- END-INCLUDE:env-sc-sast-scan.md -->
 
 
+### Sample usage
+
+The sample workflow below demonstrates how to configure the action for running a SAST scan on ScanCentral SAST.
+
+```yaml
+    steps:    
+      - name: Check out source code
+        uses: actions/checkout@v4  
+      - name: Run ScanCentral SAST Scan
+        uses: fortify/github-action/sc-sast-scan@v1
+        env:
+          SSC_URL: ${{secrets.SSC_URL}}
+          SSC_TOKEN: ${{secrets.SSC_TOKEN}}
+          SC_SAST_CLIENT_AUTH_TOKEN: ${{secrets.CLIENT_AUTH_TOKEN}}
+          EXTRA_SC_SAST_LOGIN_OPTS: --socket-timeout=60s
+          SSC_APPVERSION: MyApp:MyVersion
+          EXTRA_PACKAGE_OPTS: -bt mvn
+          # DO_WAIT: true # Ignored due to DO_EXPORT below
+          DO_EXPORT: true
+```
+
 <!-- END-INCLUDE:action-sc-sast-scan.md -->
 
 

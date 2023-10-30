@@ -16,9 +16,6 @@ This action exports the latest vulnerability data from an SSC application versio
 ### Action environment variable inputs
 
 
-<!-- START-INCLUDE:env-ssc-login.md -->
-
-
 <!-- START-INCLUDE:env-ssc-connection.md -->
 
 **`SSC_URL`**    
@@ -33,12 +30,6 @@ Required when authenticating with user credentials.
 <!-- END-INCLUDE:env-ssc-connection.md -->
 
 
-**`EXTRA_SSC_LOGIN_OPTS`**    
-Optional: Extra SSC login options, for example for disabling SSL checks or changing connection time-outs; see [`fcli ssc session login` documentation](https://fortify.github.io/fcli/v2.0.0//manpage/fcli-ssc-session-login.html).
-
-<!-- END-INCLUDE:env-ssc-login.md -->
-
-
 
 <!-- START-INCLUDE:env-ssc-appversion.md -->
 
@@ -47,6 +38,20 @@ Required: Fortify SSC application version to use with this action. This can be s
 
 <!-- END-INCLUDE:env-ssc-appversion.md -->
 
+
+### Sample usage
+
+The sample workflow below demonstrates how to configure the action for exporting FoD vulnerability data to the GitHub Security Code Scanning dashboard.
+
+```yaml
+    steps:    
+      - name: Export SSC vulnerability data to GitHub
+        uses: fortify/github-action/ssc-export@v1
+        env:
+          SSC_URL: ${{secrets.SSC_URL}}
+          SSC_TOKEN: ${{secrets.SSC_TOKEN}}
+          SSC_APPVERSION: MyApp:MyVersion
+```
 
 <!-- END-INCLUDE:action-ssc-export.md -->
 

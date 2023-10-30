@@ -11,7 +11,7 @@
 
 <!-- START-INCLUDE:action-package.md -->
 
-This action packages application source code to be scanned using [ScanCentral Client](https://www.microfocus.com/documentation/fortify-software-security-center/2310/SC_SAST_Help_23.1.0/index.htm#A_Clients.htm).
+This action packages application source code using [ScanCentral Client](https://www.microfocus.com/documentation/fortify-software-security-center/2310/SC_SAST_Help_23.1.0/index.htm#A_Clients.htm). The output package is saved as `package.zip`.
 
 ### Action environment variable inputs
 
@@ -23,6 +23,20 @@ Optional: By default, this action runs `scancentral package -o package.zip`. The
 
 <!-- END-INCLUDE:env-package.md -->
 
+
+### Sample usage
+
+The sample workflow below demonstrates how to configure the action for running a SAST scan on FoD.
+
+```yaml
+    steps:  
+      - name: Check out source code
+        uses: actions/checkout@v4  
+      - name: Package source code
+        uses: fortify/github-action/package@v1
+        env:
+          EXTRA_PACKAGE_OPTS: -bt mvn
+```
 
 <!-- END-INCLUDE:action-package.md -->
 
