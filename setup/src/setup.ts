@@ -5,9 +5,9 @@ import * as fs from 'node:fs';
 import * as crypto from 'node:crypto';
 
 // IMPORTANT: When updating "action-default" versions in the TOOLS record,
-//            please make sure to update doc-resources/template-values.md
-//            accordingly to allow for proper version-specific links in
-//            the action documentation.  
+//            please make sure to update any corresponding version numbers 
+//            in doc-resources/template-values.md accordingly to allow for 
+//            proper version-specific links in the action documentation.  
 const TOOLS: Record<string, Record<string, Record<string, string>>> = {
 	"fcli": { 
 		"versionAliases": {"action-default": "2.0.0", "latest": "2.0.0"},

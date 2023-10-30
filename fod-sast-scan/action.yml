@@ -8,8 +8,8 @@ runs:
       with:
         export-path: false
         fcli: action-default
-    - uses: fortify-ps/github-action/package@main
     - uses: fortify-ps/github-action/internal/fod-login@main
+    - uses: fortify-ps/github-action/package@main
     - uses: fortify-ps/github-action/internal/run@main
       with:
         cmd: '"${FCLI_CMD}" fod sast-scan start --rel "${FOD_RELEASE}" -f package.zip --store fod_scan ${EXTRA_FOD_SAST_SCAN_OPTS}'

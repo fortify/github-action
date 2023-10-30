@@ -1,0 +1,2 @@
+**`SSC_APPVERSION`**    
+Required: Fortify SSC application version to use with this action. This can be specified either as a numeric application version id, or by providing application and version name in the format `<app>:<release>`.

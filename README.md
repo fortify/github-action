@@ -1,4 +1,4 @@
-# Fortify GitHub Actions 
+# fortify/github-action@v1 
 
 
 <!-- START-INCLUDE:p.marketing-intro.md -->
@@ -9,7 +9,7 @@
 
 
 
-<!-- START-INCLUDE:repo-intro.md -->
+<!-- START-INCLUDE:repo-readme.md -->
 
 The [Fortify github-action repository]({{repo-url}}) hosts various Fortify-related GitHub Actions as listed in the sections below.
 
@@ -58,6 +58,9 @@ To successfully perform the SAST scan, additional environment variables will nee
 TODO
 
 ## setup action
+
+
+<!-- START-INCLUDE:action-setup.md -->
 
 This action allows for setting up the Fortify tools listed below. Which tools and which versions to install, and whether to add the tool bin-directories to the system path, is controlled through action inputs as listed in the next section.
 
@@ -127,62 +130,272 @@ The sample workflow below demonstrates how to configure the action for installin
         run: ${FCLI_CMD} -V
 ```
 
+<!-- END-INCLUDE:action-setup.md -->
+
+
 ## package action
 
-This action packages source code to be scanned on Fortify on Demand or ScanCentral SAST.
 
-TODO
+<!-- START-INCLUDE:action-package.md -->
+
+This action packages application source code to be scanned using [ScanCentral Client](https://www.microfocus.com/documentation/fortify-software-security-center/2310/SC_SAST_Help_23.1.0/index.htm#A_Clients.htm).
 
 ### Action environment variable inputs
 
-TODO
+
+<!-- START-INCLUDE:env-package.md -->
+
+**`EXTRA_PACKAGE_OPTS`**    
+Optional: By default, this action runs `scancentral package -o package.zip`. The `EXTRA_PACKAGE_OPTS` environment variable can be used to specify additional packaging options like `-bt none` to disable automatic build tool detection, or `-oss` to collect additional files for an open-source scan (FoD only).
+
+<!-- END-INCLUDE:env-package.md -->
+
+
+<!-- END-INCLUDE:action-package.md -->
+
 
 ## fod-sast-scan action
 
-TODO
+
+<!-- START-INCLUDE:action-fod-sast-scan.md -->
+
+This action performs a SAST scan (optionally combined with an open-source scan) on Fortify on Demand, consisting of the following steps:
+
+* Login to FoD
+* Package application source code using ScanCentral Client
+* Submit the source code package to be scanned to FoD
+* Optionally wait for the scan to complete
+* Optionally export scan results to the GitHub Code Scanning dashboard
+
+Before running this action, please ensure that the appropriate release has been created on FoD and has been configured for SAST scans. Future versions of this action may add support for automating app/release creation and scan setup. If Open Source scanning has been enabled in the FoD SAST scan configuration, you'll need to pass the `-oss` option through the `EXTRA_PACKAGE_OPTS` environment variable.
 
 ### Action environment variable inputs
 
-TODO
+
+<!-- START-INCLUDE:env-fod-sast-scan.md -->
+
+
+
+<!-- START-INCLUDE:env-fod-login.md -->
+
+**`FOD_URL`**    
+Required: Fortify on Demand URL, for example https://ams.fortify.com
+
+**`FOD_CLIENT_ID` & `FOD_CLIENT_SECRET`**   
+Required when authenticating with an API key: FoD Client ID (API key) and Secret (API secret)
+
+**`FOD_TENANT`, `FOD_USER` & `FOD_PASSWORD`**   
+Required when authenticating with user credentials: FoD tenant, user and password. It's recommended to use a Personal Access Token instead of an actual user password.
+
+**`EXTRA_FOD_LOGIN_OPTS`**    
+Optional: Extra FoD login options, for example for disabling SSL checks or changing connection time-outs; see [`fcli fod session login` documentation](https://fortify.github.io/fcli/v2.0.0//manpage/fcli-fod-session-login.html)
+
+<!-- END-INCLUDE:env-fod-login.md -->
+
+
+
+<!-- START-INCLUDE:env-fod-release.md -->
+
+**`FOD_RELEASE`**    
+Required: Fortify on Demand release to use with this action. This can be specified either as a numeric release id, `<app>:<release>` (for non-microservices applications) or `<app>:<microservice>:<release>` (for microservices applications).
+
+<!-- END-INCLUDE:env-fod-release.md -->
+
+
+
+<!-- START-INCLUDE:env-package.md -->
+
+**`EXTRA_PACKAGE_OPTS`**    
+Optional: By default, this action runs `scancentral package -o package.zip`. The `EXTRA_PACKAGE_OPTS` environment variable can be used to specify additional packaging options like `-bt none` to disable automatic build tool detection, or `-oss` to collect additional files for an open-source scan (FoD only).
+
+<!-- END-INCLUDE:env-package.md -->
+
+
+**`EXTRA_FOD_SAST_SCAN_OPTS`**    
+Optional: Extra FoD SAST scan options; see [`fcli fod sast-scan start` documentation](https://fortify.github.io/fcli/v2.0.0//manpage/fcli-fod-sast-scan-start.html)
+
+**`DO_WAIT`**    
+Optional: By default, this action will not wait until the scan has been completed. To have the workflow wait until the scan has been completed, set the `DO_WAIT` environment variable to `true`. Note that `DO_WAIT` is implied if `DO_EXPORT` is set to `true`; see below.
+
+**`DO_EXPORT`**    
+Optional: If set to `true`, this action will export scan results to the GitHub Security Code Scanning dashboard.
+
+<!-- END-INCLUDE:env-fod-sast-scan.md -->
+
+
+<!-- END-INCLUDE:action-fod-sast-scan.md -->
+
 
 ## fod-export action
 
-TODO
+
+<!-- START-INCLUDE:action-fod-export.md -->
+
+This action exports the latest vulnerability data from an FoD release to the GitHub Code Scanning dashboard.
 
 ### Action environment variable inputs
 
-TODO
+
+<!-- START-INCLUDE:env-fod-login.md -->
+
+**`FOD_URL`**    
+Required: Fortify on Demand URL, for example https://ams.fortify.com
+
+**`FOD_CLIENT_ID` & `FOD_CLIENT_SECRET`**   
+Required when authenticating with an API key: FoD Client ID (API key) and Secret (API secret)
+
+**`FOD_TENANT`, `FOD_USER` & `FOD_PASSWORD`**   
+Required when authenticating with user credentials: FoD tenant, user and password. It's recommended to use a Personal Access Token instead of an actual user password.
+
+**`EXTRA_FOD_LOGIN_OPTS`**    
+Optional: Extra FoD login options, for example for disabling SSL checks or changing connection time-outs; see [`fcli fod session login` documentation](https://fortify.github.io/fcli/v2.0.0//manpage/fcli-fod-session-login.html)
+
+<!-- END-INCLUDE:env-fod-login.md -->
+
+
+
+<!-- START-INCLUDE:env-fod-release.md -->
+
+**`FOD_RELEASE`**    
+Required: Fortify on Demand release to use with this action. This can be specified either as a numeric release id, `<app>:<release>` (for non-microservices applications) or `<app>:<microservice>:<release>` (for microservices applications).
+
+<!-- END-INCLUDE:env-fod-release.md -->
+
+
+<!-- END-INCLUDE:action-fod-export.md -->
+
 
 ## sc-sast-scan action
 
-TODO
+
+<!-- START-INCLUDE:action-sc-sast-scan.md -->
+
+This action performs a SAST scan on ScanCentral SAST, consisting of the following steps:
+
+* Login to ScanCentral SAST Controller
+* Package application source code using ScanCentral Client
+* Submit the source code package to be scanned to ScanCentral SAST Controller
+* Optionally wait for the scan to complete
+* Optionally export scan results to the GitHub Code Scanning dashboard
+
+Before running this action, please ensure that the appropriate application version has been created on SSC. Future versions of this action may add support for automating application version creation.
 
 ### Action environment variable inputs
 
-TODO
+
+<!-- START-INCLUDE:env-sc-sast-scan.md -->
+
+
+
+<!-- START-INCLUDE:env-sc-sast-login.md -->
+
+
+<!-- START-INCLUDE:env-ssc-connection.md -->
+
+**`SSC_URL`**    
+(Required) Fortify Software Security Center URL, for example https://ssc.customer.fortifyhosted.net/
+
+**`SSC_TOKEN`**   
+Required when authenticating with an SSC token (recommended). Most actions should work fine with a `CIToken`.
+
+**`SSC_USER & `SSC_PASSWORD`**   
+Required when authenticating with user credentials.
+
+<!-- END-INCLUDE:env-ssc-connection.md -->
+
+
+**`SC_SAST_CLIENT_AUTH_TOKEN`**   
+Required: ScanCentral SAST Client Authentication Token for authenticating with ScanCentral SAST Controller.
+
+**`EXTRA_SC_SAST_LOGIN_OPTS`**    
+Optional: Extra ScanCentral SAST login options, for example for disabling SSL checks or changing connection time-outs; see [`fcli sc-sast session login` documentation](https://fortify.github.io/fcli/v2.0.0//manpage/fcli-sc-sast-session-login.html).
+
+<!-- END-INCLUDE:env-sc-sast-login.md -->
+
+
+
+<!-- START-INCLUDE:env-ssc-appversion.md -->
+
+**`SSC_APPVERSION`**    
+Required: Fortify SSC application version to use with this action. This can be specified either as a numeric application version id, or by providing application and version name in the format `<app>:<release>`.
+
+<!-- END-INCLUDE:env-ssc-appversion.md -->
+
+
+
+<!-- START-INCLUDE:env-package.md -->
+
+**`EXTRA_PACKAGE_OPTS`**    
+Optional: By default, this action runs `scancentral package -o package.zip`. The `EXTRA_PACKAGE_OPTS` environment variable can be used to specify additional packaging options like `-bt none` to disable automatic build tool detection, or `-oss` to collect additional files for an open-source scan (FoD only).
+
+<!-- END-INCLUDE:env-package.md -->
+
+
+**`EXTRA_SC_SAST_SCAN_OPTS`**    
+Optional: Extra ScanCentral SAST scan options; see [`fcli sc-sast scan start` documentation](https://fortify.github.io/fcli/v2.0.0//manpage/fcli-sc-sast-scan-start.html)
+
+**`DO_WAIT`**    
+Optional: By default, this action will not wait until the scan has been completed. To have the workflow wait until the scan has been completed, set the `DO_WAIT` environment variable to `true`. Note that `DO_WAIT` is implied if `DO_EXPORT` is set to `true`; see below.
+
+**`DO_EXPORT`**    
+Optional: If set to `true`, this action will export scan results to the GitHub Security Code Scanning dashboard.
+
+<!-- END-INCLUDE:env-sc-sast-scan.md -->
+
+
+<!-- END-INCLUDE:action-sc-sast-scan.md -->
+
 
 ## ssc-export action
 
-TODO
+
+<!-- START-INCLUDE:action-ssc-export.md -->
+
+This action exports the latest vulnerability data from an SSC application version to the GitHub Code Scanning dashboard.
 
 ### Action environment variable inputs
 
-TODO
 
-<!-- END-INCLUDE:repo-intro.md -->
-
-
-## Resources
+<!-- START-INCLUDE:env-ssc-login.md -->
 
 
-<!-- START-INCLUDE:repo-resources.md -->
+<!-- START-INCLUDE:env-ssc-connection.md -->
 
-* **Contributing Guidelines**: [CONTRIBUTING.md](https://github.com/fortify-ps/github-action/blob/main/CONTRIBUTING.md)
-* **Code of Conduct**: [CODE_OF_CONDUCT.md](https://github.com/fortify-ps/github-action/blob/main/CODE_OF_CONDUCT.md)
-* **License**: [LICENSE.txt](https://github.com/fortify-ps/github-action/blob/main/LICENSE.txt)
+**`SSC_URL`**    
+(Required) Fortify Software Security Center URL, for example https://ssc.customer.fortifyhosted.net/
 
-<!-- END-INCLUDE:repo-resources.md -->
+**`SSC_TOKEN`**   
+Required when authenticating with an SSC token (recommended). Most actions should work fine with a `CIToken`.
 
+**`SSC_USER & `SSC_PASSWORD`**   
+Required when authenticating with user credentials.
+
+<!-- END-INCLUDE:env-ssc-connection.md -->
+
+
+**`EXTRA_SSC_LOGIN_OPTS`**    
+Optional: Extra SSC login options, for example for disabling SSL checks or changing connection time-outs; see [`fcli ssc session login` documentation](https://fortify.github.io/fcli/v2.0.0//manpage/fcli-ssc-session-login.html).
+
+<!-- END-INCLUDE:env-ssc-login.md -->
+
+
+
+<!-- START-INCLUDE:env-ssc-appversion.md -->
+
+**`SSC_APPVERSION`**    
+Required: Fortify SSC application version to use with this action. This can be specified either as a numeric application version id, or by providing application and version name in the format `<app>:<release>`.
+
+<!-- END-INCLUDE:env-ssc-appversion.md -->
+
+
+<!-- END-INCLUDE:action-ssc-export.md -->
+
+
+<!-- END-INCLUDE:repo-readme.md -->
+
+
+
+<!-- START-INCLUDE:h2.support.md -->
 
 ## Support
 
@@ -194,6 +407,9 @@ Support requests created through the GitHub Issues page may include bug reports,
 
 Support requests on the GitHub Issues page are handled on a best-effort basis; there is no guaranteed response time, no guarantee that reported bugs will be fixed, and no guarantee that enhancement requests will be implemented. If you require dedicated support for this and other Fortify software, please consider purchasing OpenText Fortify Professional Services. OpenText Fortify Professional Services can assist with general usage questions, integration of the software into your processes, and implementing customizations, bug fixes, and feature requests (subject to feasibility analysis). Please contact your OpenText Sales representative or fill in the [Professional Services Contact Form](https://www.microfocus.com/en-us/cyberres/contact/professional-services) to obtain more information on pricing and the services that OpenText Fortify Professional Services can provide.
 
+<!-- END-INCLUDE:h2.support.md -->
+
+
 ---
 
-*[This document was auto-generated from README.template.md; do not edit by hand](https://github.com/fortify/shared-doc-resources/blob/main/USAGE.md)*
+*[This document was auto-generated; do not edit by hand](https://github.com/fortify/shared-doc-resources/blob/main/USAGE.md)*

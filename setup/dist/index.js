@@ -6590,9 +6590,9 @@ const exec = __importStar(__nccwpck_require__(1514));
 const fs = __importStar(__nccwpck_require__(3994));
 const crypto = __importStar(__nccwpck_require__(5764));
 // IMPORTANT: When updating "action-default" versions in the TOOLS record,
-//            please make sure to update doc-resources/template-values.md
-//            accordingly to allow for proper version-specific links in
-//            the action documentation.  
+//            please make sure to update any corresponding version numbers 
+//            in doc-resources/template-values.md accordingly to allow for 
+//            proper version-specific links in the action documentation.  
 const TOOLS = {
     "fcli": {
         "versionAliases": { "action-default": "2.0.0", "latest": "2.0.0" },

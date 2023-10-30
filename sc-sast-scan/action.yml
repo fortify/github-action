@@ -8,8 +8,8 @@ runs:
       with:
         export-path: false
         fcli: action-default
-    - uses: fortify-ps/github-action/package@main
     - uses: fortify-ps/github-action/internal/sc-sast-login@main
+    - uses: fortify-ps/github-action/package@main
     - uses: fortify-ps/github-action/internal/run@main
       with:
         cmd: '"${FCLI_CMD}" sc-sast scan start --publish-to "${SSC_APPVERSION}" -p package.zip -v "${SC_SAST_SENSOR_VERSION}" --store sc_sast_scan ${EXTRA_SC_SAST_SCAN_OPTS}'

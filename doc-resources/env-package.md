@@ -1,0 +1,2 @@
+**`EXTRA_PACKAGE_OPTS`**    
+Optional: By default, this action runs `scancentral package -o package.zip`. The `EXTRA_PACKAGE_OPTS` environment variable can be used to specify additional packaging options like `-bt none` to disable automatic build tool detection, or `-oss` to collect additional files for an open-source scan (FoD only).

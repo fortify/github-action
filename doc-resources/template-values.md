@@ -10,17 +10,8 @@ https://github.com/fortify-ps/github-action
 # action-major-version
 v1
 
-# action-fcli-version
-2.0.0
+# fcli-doc-base-url
+https://fortify.github.io/fcli/v2.0.0/
 
-# action-sc-client-version
-23.1.0
-
-# action-vuln-exporter-version
-2.0.4
-
-# action-fod-uploader-version
-5.4.0
-
-# action-bugtracker-utility-version
-4.12
+# sc-client-doc-base-url
+https://www.microfocus.com/documentation/fortify-software-security-center/2310/SC_SAST_Help_23.1.0/index.htm
