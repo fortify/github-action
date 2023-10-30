@@ -46,13 +46,13 @@ For each tool being installed, the action outputs several environment variables 
 **`PATH`**    
 If the `export-path` action input was set to `true` (default), the bin-directory of the installed tool will be added to the workflow `PATH` environment variable.
 
-**`<TOOL_NAME>_INSTALL_DIR`**
+**`<TOOL_NAME>_INSTALL_DIR`**    
 Directory where the corresponding tool was installed. `<TOOL_NAME>` corresponds to the various action inputs, but converted to uppercase and dashes replaced by underscore, for example `FOD_UPLOADER_INSTALL_DIR`.
 
-**`<TOOL_NAME>_BIN_DIR`**
+**`<TOOL_NAME>_BIN_DIR`**    
 Bin-directory that holds the executables for the corresponding tool. `<TOOL_NAME>` corresponds to the various action inputs, but converted to uppercase and dashes replaced by underscore, for example `FOD_UPLOADER_BIN_DIR`.
 
-**`<TOOL_NAME>_CMD`**
+**`<TOOL_NAME>_CMD`**    
 Fully qualified path to the (primary) executable/script for the corresponding tool. `<TOOL_NAME>` corresponds to the various action inputs, but converted to uppercase and dashes replaced by underscore, for example `FOD_UPLOADER_CMD`.
 
 ### Sample usage
