@@ -1,4 +1,4 @@
-This action exports the latest vulnerability data from an FoD release to the GitHub Code Scanning dashboard.
+This action exports the latest SAST vulnerability data from an FoD release to the GitHub Code Scanning dashboard.
 
 ### Action environment variable inputs
 
@@ -8,7 +8,7 @@ This action exports the latest vulnerability data from an FoD release to the Git
 
 ### Sample usage
 
-The sample workflow below demonstrates how to configure the action for exporting FoD vulnerability data to the GitHub Security Code Scanning dashboard.
+The sample workflow below demonstrates how to configure the action for exporting FoD SAST vulnerability data to the GitHub Security Code Scanning dashboard.
 
 ```yaml
     steps:    
