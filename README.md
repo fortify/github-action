@@ -90,12 +90,18 @@ Fortify on Demand release to use with this action. This can be specified either 
 
 
 
-<!-- START-INCLUDE:env-package.md -->
+<!-- START-INCLUDE:env-fod-package.md -->
 
 **`EXTRA_PACKAGE_OPTS`** - OPTIONAL     
-By default, this action runs `scancentral package -o package.zip`. The `EXTRA_PACKAGE_OPTS` environment variable can be used to specify additional packaging options like `-oss` to collect additional files for an open-source scan (FoD only).
+By default, this action runs `scancentral package -o package.zip` to package application source code. he `EXTRA_PACKAGE_OPTS` environment variable can be used to specify additional packaging options. 
 
-<!-- END-INCLUDE:env-package.md -->
+If the FoD Debricked scanning feature has been purchased and configured on the applicable release, you'll need to pass the `-oss` option through this environment variable to collect additional files required for Open-Source scanning. 
+
+Based on the  automated build tool detection feature provided by ScanCentral Client, this default `scancentral` command is often sufficient to properly package application source code. Depending on your build setup, you may however need to configure the `EXTRA_PACKAGE_OPTS` environment variable to specify additional packaging options. 
+
+As an example, if the build file that you want to use for packaging doesn't adhere  to common naming conventions, you can configure the `-bf <custom build file>` option using the `EXTRA_PACKAGE_OPTS` environment variable. See [Command-line options for the package command]({{var:sc-client-doc-base-url#CLI.htm#Package}}) for more information on available options.
+
+<!-- END-INCLUDE:env-fod-package.md -->
 
 
 **`EXTRA_FOD_SAST_SCAN_OPTS`** - OPTIONAL    
@@ -161,14 +167,16 @@ Fortify SSC application version to use with this action. This can be specified e
 
 <!-- START-INCLUDE:env-package.md -->
 
-**`EXTRA_PACKAGE_OPTS`** - OPTIONAL     
-By default, this action runs `scancentral package -o package.zip`. The `EXTRA_PACKAGE_OPTS` environment variable can be used to specify additional packaging options like `-oss` to collect additional files for an open-source scan (FoD only).
+**`EXTRA_PACKAGE_OPTS`** - OPTIONAL   
+By default, this action runs `scancentral package -o package.zip` to package application source code. Based on the  automated build tool detection feature provided by ScanCentral Client, this default `scancentral` command is often sufficient. Depending on your build setup, you may however need to configure the `EXTRA_PACKAGE_OPTS` environment variable to specify additional packaging options. 
+
+As an example, if the build file that you want to use for packaging doesn't adhere  to common naming conventions, you can configure the `-bf <custom build file>` option using the `EXTRA_PACKAGE_OPTS` environment variable. See [Command-line options for the package command]({{var:sc-client-doc-base-url#CLI.htm#Package}}) for more information on available options.
 
 <!-- END-INCLUDE:env-package.md -->
 
 
 **`EXTRA_SC_SAST_SCAN_OPTS`** - OPTIONAL    
-xtra ScanCentral SAST scan options; see [`fcli sc-sast scan start` documentation](https://fortify.github.io/fcli/v2.0.0//manpage/fcli-sc-sast-scan-start.html)
+Extra ScanCentral SAST scan options; see [`fcli sc-sast scan start` documentation](https://fortify.github.io/fcli/v2.0.0//manpage/fcli-sc-sast-scan-start.html)
 
 
 <!-- START-INCLUDE:env-wait-export.md -->
@@ -231,6 +239,14 @@ The sample workflows below demonstrate how to configure the action for running a
           # DO_WAIT: true
           # DO_EXPORT: true
 ```
+
+### More information
+
+Depending on input, this action delegates to the appropriate sub-action(s). Please refer to the documentation of these actions for a more detailed description of action behavior & requirements:
+
+* FoD SAST & optional Open-Source Scan: [`fortify/github-action/fod-sast-scan@v1`](#fod-sast-scan-action)
+* ScanCentral SAST Scan: [`fortify/github-action/sc-sast-scan@v1`](#sc-sast-scan-action)
+
 
 ## setup action
 
@@ -320,8 +336,10 @@ This action packages application source code using [ScanCentral Client](https://
 
 <!-- START-INCLUDE:env-package.md -->
 
-**`EXTRA_PACKAGE_OPTS`** - OPTIONAL     
-By default, this action runs `scancentral package -o package.zip`. The `EXTRA_PACKAGE_OPTS` environment variable can be used to specify additional packaging options like `-oss` to collect additional files for an open-source scan (FoD only).
+**`EXTRA_PACKAGE_OPTS`** - OPTIONAL   
+By default, this action runs `scancentral package -o package.zip` to package application source code. Based on the  automated build tool detection feature provided by ScanCentral Client, this default `scancentral` command is often sufficient. Depending on your build setup, you may however need to configure the `EXTRA_PACKAGE_OPTS` environment variable to specify additional packaging options. 
+
+As an example, if the build file that you want to use for packaging doesn't adhere  to common naming conventions, you can configure the `-bf <custom build file>` option using the `EXTRA_PACKAGE_OPTS` environment variable. See [Command-line options for the package command]({{var:sc-client-doc-base-url#CLI.htm#Package}}) for more information on available options.
 
 <!-- END-INCLUDE:env-package.md -->
 
@@ -348,7 +366,9 @@ The sample workflow below demonstrates how to configure the action for running a
 
 <!-- START-INCLUDE:action-fod-sast-scan.md -->
 
-This action performs a SAST scan (optionally combined with an open-source scan) on Fortify on Demand, consisting of the following steps:
+This action performs a SAST scan on Fortify on Demand. If the FoD Debricked scanning feature has been purchased and configured on the applicable release, this action can be used to perform a combined SAST and Open-Source scan. 
+
+The SAST and optional OpenSource scan performed by this action consists of the following steps:
 
 * Login to FoD
 * Package application source code using ScanCentral Client
@@ -398,12 +418,18 @@ Fortify on Demand release to use with this action. This can be specified either 
 
 
 
-<!-- START-INCLUDE:env-package.md -->
+<!-- START-INCLUDE:env-fod-package.md -->
 
 **`EXTRA_PACKAGE_OPTS`** - OPTIONAL     
-By default, this action runs `scancentral package -o package.zip`. The `EXTRA_PACKAGE_OPTS` environment variable can be used to specify additional packaging options like `-oss` to collect additional files for an open-source scan (FoD only).
+By default, this action runs `scancentral package -o package.zip` to package application source code. he `EXTRA_PACKAGE_OPTS` environment variable can be used to specify additional packaging options. 
 
-<!-- END-INCLUDE:env-package.md -->
+If the FoD Debricked scanning feature has been purchased and configured on the applicable release, you'll need to pass the `-oss` option through this environment variable to collect additional files required for Open-Source scanning. 
+
+Based on the  automated build tool detection feature provided by ScanCentral Client, this default `scancentral` command is often sufficient to properly package application source code. Depending on your build setup, you may however need to configure the `EXTRA_PACKAGE_OPTS` environment variable to specify additional packaging options. 
+
+As an example, if the build file that you want to use for packaging doesn't adhere  to common naming conventions, you can configure the `-bf <custom build file>` option using the `EXTRA_PACKAGE_OPTS` environment variable. See [Command-line options for the package command]({{var:sc-client-doc-base-url#CLI.htm#Package}}) for more information on available options.
+
+<!-- END-INCLUDE:env-fod-package.md -->
 
 
 **`EXTRA_FOD_SAST_SCAN_OPTS`** - OPTIONAL    
@@ -561,14 +587,16 @@ Fortify SSC application version to use with this action. This can be specified e
 
 <!-- START-INCLUDE:env-package.md -->
 
-**`EXTRA_PACKAGE_OPTS`** - OPTIONAL     
-By default, this action runs `scancentral package -o package.zip`. The `EXTRA_PACKAGE_OPTS` environment variable can be used to specify additional packaging options like `-oss` to collect additional files for an open-source scan (FoD only).
+**`EXTRA_PACKAGE_OPTS`** - OPTIONAL   
+By default, this action runs `scancentral package -o package.zip` to package application source code. Based on the  automated build tool detection feature provided by ScanCentral Client, this default `scancentral` command is often sufficient. Depending on your build setup, you may however need to configure the `EXTRA_PACKAGE_OPTS` environment variable to specify additional packaging options. 
+
+As an example, if the build file that you want to use for packaging doesn't adhere  to common naming conventions, you can configure the `-bf <custom build file>` option using the `EXTRA_PACKAGE_OPTS` environment variable. See [Command-line options for the package command]({{var:sc-client-doc-base-url#CLI.htm#Package}}) for more information on available options.
 
 <!-- END-INCLUDE:env-package.md -->
 
 
 **`EXTRA_SC_SAST_SCAN_OPTS`** - OPTIONAL    
-xtra ScanCentral SAST scan options; see [`fcli sc-sast scan start` documentation](https://fortify.github.io/fcli/v2.0.0//manpage/fcli-sc-sast-scan-start.html)
+Extra ScanCentral SAST scan options; see [`fcli sc-sast scan start` documentation](https://fortify.github.io/fcli/v2.0.0//manpage/fcli-sc-sast-scan-start.html)
 
 
 <!-- START-INCLUDE:env-wait-export.md -->

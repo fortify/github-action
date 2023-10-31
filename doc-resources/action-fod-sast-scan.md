@@ -1,4 +1,6 @@
-This action performs a SAST scan (optionally combined with an open-source scan) on Fortify on Demand, consisting of the following steps:
+This action performs a SAST scan on Fortify on Demand. If the FoD Debricked scanning feature has been purchased and configured on the applicable release, this action can be used to perform a combined SAST and Open-Source scan. 
+
+The SAST and optional OpenSource scan performed by this action consists of the following steps:
 
 * Login to FoD
 * Package application source code using ScanCentral Client
