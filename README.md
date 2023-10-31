@@ -168,7 +168,7 @@ By default, this action runs `scancentral package -o package.zip`. The `EXTRA_PA
 
 
 **`EXTRA_SC_SAST_SCAN_OPTS`** - OPTIONAL    
-xtra ScanCentral SAST scan options; see [`fcli sc-sast scan start` documentation](https://fortify.github.io/fcli/v2.0.0//manpage/fcli-sc-sast-scan-start.html)
+Extra ScanCentral SAST scan options; see [`fcli sc-sast scan start` documentation](https://fortify.github.io/fcli/v2.0.0//manpage/fcli-sc-sast-scan-start.html)
 
 
 <!-- START-INCLUDE:env-wait-export.md -->
@@ -568,7 +568,7 @@ By default, this action runs `scancentral package -o package.zip`. The `EXTRA_PA
 
 
 **`EXTRA_SC_SAST_SCAN_OPTS`** - OPTIONAL    
-xtra ScanCentral SAST scan options; see [`fcli sc-sast scan start` documentation](https://fortify.github.io/fcli/v2.0.0//manpage/fcli-sc-sast-scan-start.html)
+Extra ScanCentral SAST scan options; see [`fcli sc-sast scan start` documentation](https://fortify.github.io/fcli/v2.0.0//manpage/fcli-sc-sast-scan-start.html)
 
 
 <!-- START-INCLUDE:env-wait-export.md -->
