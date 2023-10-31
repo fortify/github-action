@@ -1,7 +1,7 @@
 **`EXTRA_PACKAGE_OPTS`** - OPTIONAL     
 By default, this action runs `scancentral package -o package.zip` to package application source code. he `EXTRA_PACKAGE_OPTS` environment variable can be used to specify additional packaging options. 
 
-If the FoD Debricked scanning feature has been purchased and configured on the applicable release, you'll need to pass the `-oss` option through this environment variable to collect additional files required for Open-Source scanning. 
+If FoD Software Composition Analysis has been purchased and configured on the applicable release, you'll need to pass the `-oss` option through this environment variable to generate and package the additional dependency files required. 
 
 Based on the  automated build tool detection feature provided by ScanCentral Client, this default `scancentral` command is often sufficient to properly package application source code. Depending on your build setup, you may however need to configure the `EXTRA_PACKAGE_OPTS` environment variable to specify additional packaging options. 
 
