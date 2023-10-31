@@ -11,9 +11,9 @@
 
 <!-- START-INCLUDE:action-fod-sast-scan.md -->
 
-This action performs a SAST scan on Fortify on Demand. If the FoD Debricked scanning feature has been purchased and configured on the applicable release, this action can be used to perform a combined SAST and Open-Source scan. 
+This action performs a SAST scan on Fortify on Demand F(FoD). If software composition analysis of open source has been purchased and configured on the applicable release, this action can be used to perform a combined SAST and SCA (open source) scan. 
 
-The SAST and optional OpenSource scan performed by this action consists of the following steps:
+The SAST and optional open source scan performed by this action consists of the following steps:
 
 * Login to FoD
 * Package application source code using ScanCentral Client
@@ -21,7 +21,7 @@ The SAST and optional OpenSource scan performed by this action consists of the f
 * Optionally wait for the scan to complete
 * Optionally export scan results to the GitHub Code Scanning dashboard
 
-Before running this action, please ensure that the appropriate release has been created on FoD and has been configured for SAST scans. Future versions of this action may add support for automating app/release creation and scan setup. If Open Source scanning has been enabled in the FoD SAST scan configuration, you'll need to pass the `-oss` option through the `EXTRA_PACKAGE_OPTS` environment variable.
+Before running this action, please ensure that the appropriate release has been created on FoD and has been configured for SAST scans. Future versions of this action may add support for automating app/release creation and scan setup. If open source scanning has been enabled in the FoD SAST scan configuration, be sure to pass the `-oss` option through the `EXTRA_PACKAGE_OPTS` environment variable.
 
 ### Action environment variable inputs
 
@@ -36,10 +36,10 @@ Before running this action, please ensure that the appropriate release has been 
 <!-- START-INCLUDE:env-fod-connection.md -->
 
 **`FOD_URL`** - REQUIRED   
-(REQUIRED) Fortify on Demand URL, for example https://ams.fortify.com
+Fortify on Demand URL, for example https://ams.fortify.com
 
 **`FOD_CLIENT_ID` & `FOD_CLIENT_SECRET`** - REQUIRED*    
-Required when authenticating with an API key: FoD Client ID (API key) and Secret (API secret)
+Required when authenticating with an API key: FoD Client ID (API key) and Secret (API secret).
 
 **`FOD_TENANT`, `FOD_USER` & `FOD_PASSWORD`** - REQUIRED*    
 Required when authenticating with user credentials: FoD tenant, user and password. It's recommended to use a Personal Access Token instead of an actual user password.
@@ -68,7 +68,7 @@ Fortify on Demand release to use with this action. This can be specified either 
 **`EXTRA_PACKAGE_OPTS`** - OPTIONAL     
 By default, this action runs `scancentral package -o package.zip` to package application source code. he `EXTRA_PACKAGE_OPTS` environment variable can be used to specify additional packaging options. 
 
-If the FoD Debricked scanning feature has been purchased and configured on the applicable release, you'll need to pass the `-oss` option through this environment variable to collect additional files required for Open-Source scanning. 
+If FoD Software Composition Analysis has been purchased and configured on the applicable release, you'll need to pass the `-oss` option through this environment variable to generate and package the additional dependency files required. 
 
 Based on the  automated build tool detection feature provided by ScanCentral Client, this default `scancentral` command is often sufficient to properly package application source code. Depending on your build setup, you may however need to configure the `EXTRA_PACKAGE_OPTS` environment variable to specify additional packaging options. 
 

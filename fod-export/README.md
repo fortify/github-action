@@ -11,7 +11,7 @@
 
 <!-- START-INCLUDE:action-fod-export.md -->
 
-This action exports the latest vulnerability data from an FoD release to the GitHub Code Scanning dashboard.
+This action exports the latest SAST vulnerability data from an FoD release to the GitHub Code Scanning dashboard.
 
 ### Action environment variable inputs
 
@@ -19,10 +19,10 @@ This action exports the latest vulnerability data from an FoD release to the Git
 <!-- START-INCLUDE:env-fod-connection.md -->
 
 **`FOD_URL`** - REQUIRED   
-(REQUIRED) Fortify on Demand URL, for example https://ams.fortify.com
+Fortify on Demand URL, for example https://ams.fortify.com
 
 **`FOD_CLIENT_ID` & `FOD_CLIENT_SECRET`** - REQUIRED*    
-Required when authenticating with an API key: FoD Client ID (API key) and Secret (API secret)
+Required when authenticating with an API key: FoD Client ID (API key) and Secret (API secret).
 
 **`FOD_TENANT`, `FOD_USER` & `FOD_PASSWORD`** - REQUIRED*    
 Required when authenticating with user credentials: FoD tenant, user and password. It's recommended to use a Personal Access Token instead of an actual user password.
@@ -41,7 +41,7 @@ Fortify on Demand release to use with this action. This can be specified either 
 
 ### Sample usage
 
-The sample workflow below demonstrates how to configure the action for exporting FoD vulnerability data to the GitHub Security Code Scanning dashboard.
+The sample workflow below demonstrates how to configure the action for exporting FoD SAST vulnerability data to the GitHub Security Code Scanning dashboard.
 
 ```yaml
     steps:    
