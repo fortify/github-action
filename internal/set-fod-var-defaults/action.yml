@@ -1,0 +1,20 @@
+name: 'Set default values'
+description: 'Set default values for FoD environment variables like FOD_RELEASE'
+author: 'Fortify'
+runs:
+  using: composite
+  steps:
+    - if: ${{ !env.FOD_RELEASE }}
+      run: |
+        export FOD_RELEASE="${APP}:${REL}"
+        echo FOD_RELEASE=$FOD_RELEASE >> $GITHUB_ENV
+        echo "Configured default value for FOD_RELEASE: ${FOD_RELEASE}"
+      shell: bash
+      env:
+        APP: ${{ github.action_repository }}
+        REL: ${{ github.action_ref }}
+                
+branding:
+  icon: 'shield'
+  color: 'blue'
+

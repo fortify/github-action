@@ -4,6 +4,7 @@ author: 'Fortify'
 runs:
   using: composite
   steps:
+    - uses: fortify-ps/github-action/internal/set-fod-var-defaults@main
     - uses: fortify-ps/github-action/setup@main
       with:
         export-path: false
