@@ -81,7 +81,7 @@ The sample workflows below demonstrate how to configure the action for running a
 
 Depending on input, this action delegates to the appropriate sub-action(s). Please refer to the documentation of these actions for a more detailed description of action behavior & requirements:
 
-* FoD SAST & optional Open-Source Scan: [`fortify/github-action/fod-sast-scan@{{var:action-major-version}}`](#fod-sast-scan-action)
+* FoD SAST & optional SCA (open source) Scan: [`fortify/github-action/fod-sast-scan@{{var:action-major-version}}`](#fod-sast-scan-action)
 * ScanCentral SAST Scan: [`fortify/github-action/sc-sast-scan@{{var:action-major-version}}`](#sc-sast-scan-action)
 
 
