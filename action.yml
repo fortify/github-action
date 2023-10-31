@@ -1,5 +1,5 @@
-name: 'Run Fortify Scans'
-description: 'This action allows for running various Fortify scans on Fortify Hosted, Fortify on Demand, and private Fortify SSC/ScanCentral instances.'
+name: 'Fortify AST Scan'
+description: 'Build secure software fast with Fortify code security.'
 author: 'Fortify'
 inputs:
   sast-scan:
