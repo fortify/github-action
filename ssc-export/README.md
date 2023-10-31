@@ -18,13 +18,13 @@ This action exports the latest vulnerability data from an SSC application versio
 
 <!-- START-INCLUDE:env-ssc-connection.md -->
 
-**`SSC_URL`**    
-(Required) Fortify Software Security Center URL, for example https://ssc.customer.fortifyhosted.net/
+**`SSC_URL`** - REQUIRED   
+Fortify Software Security Center URL, for example https://ssc.customer.fortifyhosted.net/
 
-**`SSC_TOKEN`**   
+**`SSC_TOKEN`** - REQUIRED*   
 Required when authenticating with an SSC token (recommended). Most actions should work fine with a `CIToken`.
 
-**`SSC_USER` & `SSC_PASSWORD`**   
+**`SSC_USER` & `SSC_PASSWORD`** - REQUIRED*   
 Required when authenticating with user credentials.
 
 <!-- END-INCLUDE:env-ssc-connection.md -->
@@ -33,8 +33,8 @@ Required when authenticating with user credentials.
 
 <!-- START-INCLUDE:env-ssc-appversion.md -->
 
-**`SSC_APPVERSION`**    
-Required: Fortify SSC application version to use with this action. This can be specified either as a numeric application version id, or by providing application and version name in the format `<app>:<release>`.
+**`SSC_APPVERSION`** - OPTIONAL   
+Fortify SSC application version to use with this action. This can be specified either as a numeric application version id, or by providing application and version name in the format `<app-name>:<version-name>`. Default value is [`${{ github.action_repository }}:${{ github.action_ref }}`](https://docs.github.com/en/actions/learn-github-actions/contexts#github-context), for example `myOrg/myRepo:myBranch`.
 
 <!-- END-INCLUDE:env-ssc-appversion.md -->
 
@@ -50,7 +50,7 @@ The sample workflow below demonstrates how to configure the action for exporting
         env:
           SSC_URL: ${{secrets.SSC_URL}}
           SSC_TOKEN: ${{secrets.SSC_TOKEN}}
-          SSC_APPVERSION: MyApp:MyVersion
+          # SSC_APPVERSION: MyApp:MyVersion
 ```
 
 <!-- END-INCLUDE:action-ssc-export.md -->

@@ -1,1 +1,1 @@
-          SSC_APPVERSION: MyApp:MyVersion
+          # SSC_APPVERSION: MyApp:MyVersion

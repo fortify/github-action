@@ -1,0 +1,20 @@
+name: 'Set default values'
+description: 'Set default values for SSC environment variables like SSC_APPVERSION'
+author: 'Fortify'
+runs:
+  using: composite
+  steps:
+    - if: ${{ !env.SSC_APPVERSION }}
+      run: |
+        export SSC_APPVERSION="${APP}:${V}"
+        echo SSC_APPVERSION=$SSC_APPVERSION >> $GITHUB_ENV
+        echo "Configured default value for SSC_APPVERSION: ${SSC_APPVERSION}"
+      shell: bash
+      env:
+        APP: ${{ github.action_repository }}
+        V: ${{ github.action_ref }}
+                
+branding:
+  icon: 'shield'
+  color: 'blue'
+

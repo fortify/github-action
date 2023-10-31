@@ -1,1 +1,1 @@
-          EXTRA_PACKAGE_OPTS: -bt mvn
+          # EXTRA_PACKAGE_OPTS: -bf custom-pom.xml

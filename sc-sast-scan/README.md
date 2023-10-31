@@ -33,23 +33,23 @@ Before running this action, please ensure that the appropriate application versi
 
 <!-- START-INCLUDE:env-ssc-connection.md -->
 
-**`SSC_URL`**    
-(Required) Fortify Software Security Center URL, for example https://ssc.customer.fortifyhosted.net/
+**`SSC_URL`** - REQUIRED   
+Fortify Software Security Center URL, for example https://ssc.customer.fortifyhosted.net/
 
-**`SSC_TOKEN`**   
+**`SSC_TOKEN`** - REQUIRED*   
 Required when authenticating with an SSC token (recommended). Most actions should work fine with a `CIToken`.
 
-**`SSC_USER` & `SSC_PASSWORD`**   
+**`SSC_USER` & `SSC_PASSWORD`** - REQUIRED*   
 Required when authenticating with user credentials.
 
 <!-- END-INCLUDE:env-ssc-connection.md -->
 
 
-**`SC_SAST_CLIENT_AUTH_TOKEN`**   
+**`SC_SAST_CLIENT_AUTH_TOKEN`** - REQUIRED    
 Required: ScanCentral SAST Client Authentication Token for authenticating with ScanCentral SAST Controller.
 
-**`EXTRA_SC_SAST_LOGIN_OPTS`**    
-Optional: Extra ScanCentral SAST login options, for example for disabling SSL checks or changing connection time-outs; see [`fcli sc-sast session login` documentation](https://fortify.github.io/fcli/v2.0.0//manpage/fcli-sc-sast-session-login.html).
+**`EXTRA_SC_SAST_LOGIN_OPTS`** - OPTIONAL    
+Extra ScanCentral SAST login options, for example for disabling SSL checks or changing connection time-outs; see [`fcli sc-sast session login` documentation](https://fortify.github.io/fcli/v2.0.0//manpage/fcli-sc-sast-session-login.html).
 
 <!-- END-INCLUDE:env-sc-sast-login.md -->
 
@@ -57,8 +57,8 @@ Optional: Extra ScanCentral SAST login options, for example for disabling SSL ch
 
 <!-- START-INCLUDE:env-ssc-appversion.md -->
 
-**`SSC_APPVERSION`**    
-Required: Fortify SSC application version to use with this action. This can be specified either as a numeric application version id, or by providing application and version name in the format `<app>:<release>`.
+**`SSC_APPVERSION`** - OPTIONAL   
+Fortify SSC application version to use with this action. This can be specified either as a numeric application version id, or by providing application and version name in the format `<app-name>:<version-name>`. Default value is [`${{ github.action_repository }}:${{ github.action_ref }}`](https://docs.github.com/en/actions/learn-github-actions/contexts#github-context), for example `myOrg/myRepo:myBranch`.
 
 <!-- END-INCLUDE:env-ssc-appversion.md -->
 
@@ -66,20 +66,26 @@ Required: Fortify SSC application version to use with this action. This can be s
 
 <!-- START-INCLUDE:env-package.md -->
 
-**`EXTRA_PACKAGE_OPTS`**    
-Optional: By default, this action runs `scancentral package -o package.zip`. The `EXTRA_PACKAGE_OPTS` environment variable can be used to specify additional packaging options like `-bt none` to disable automatic build tool detection, or `-oss` to collect additional files for an open-source scan (FoD only).
+**`EXTRA_PACKAGE_OPTS`** - OPTIONAL     
+By default, this action runs `scancentral package -o package.zip`. The `EXTRA_PACKAGE_OPTS` environment variable can be used to specify additional packaging options like `-oss` to collect additional files for an open-source scan (FoD only).
 
 <!-- END-INCLUDE:env-package.md -->
 
 
-**`EXTRA_SC_SAST_SCAN_OPTS`**    
-Optional: Extra ScanCentral SAST scan options; see [`fcli sc-sast scan start` documentation](https://fortify.github.io/fcli/v2.0.0//manpage/fcli-sc-sast-scan-start.html)
+**`EXTRA_SC_SAST_SCAN_OPTS`** - OPTIONAL    
+xtra ScanCentral SAST scan options; see [`fcli sc-sast scan start` documentation](https://fortify.github.io/fcli/v2.0.0//manpage/fcli-sc-sast-scan-start.html)
 
-**`DO_WAIT`**    
-Optional: By default, this action will not wait until the scan has been completed. To have the workflow wait until the scan has been completed, set the `DO_WAIT` environment variable to `true`. Note that `DO_WAIT` is implied if `DO_EXPORT` is set to `true`; see below.
 
-**`DO_EXPORT`**    
-Optional: If set to `true`, this action will export scan results to the GitHub Security Code Scanning dashboard.
+<!-- START-INCLUDE:env-wait-export.md -->
+
+**`DO_WAIT`** - OPTIONAL    
+By default, this action will not wait until the scan has been completed. To have the workflow wait until the scan has been completed, set the `DO_WAIT` environment variable to `true`. Note that `DO_WAIT` is implied if `DO_EXPORT` is set to `true`; see below.
+
+**`DO_EXPORT`** - OPTIONAL    
+If set to `true`, this action will export scan results to the GitHub Security Code Scanning dashboard. Note that this may require a [GitHub Advanced Security](https://docs.github.com/en/get-started/learning-about-github/about-github-advanced-security) subscription, unless you're running this action on a public github.com repository.
+
+<!-- END-INCLUDE:env-wait-export.md -->
+
 
 <!-- END-INCLUDE:env-sc-sast-scan.md -->
 
@@ -98,11 +104,11 @@ The sample workflow below demonstrates how to configure the action for running a
           SSC_URL: ${{secrets.SSC_URL}}
           SSC_TOKEN: ${{secrets.SSC_TOKEN}}
           SC_SAST_CLIENT_AUTH_TOKEN: ${{secrets.CLIENT_AUTH_TOKEN}}
-          EXTRA_SC_SAST_LOGIN_OPTS: --socket-timeout=60s
-          SSC_APPVERSION: MyApp:MyVersion
-          EXTRA_PACKAGE_OPTS: -bt mvn
-          # DO_WAIT: true # Ignored due to DO_EXPORT below
-          DO_EXPORT: true
+          # EXTRA_SC_SAST_LOGIN_OPTS: --socket-timeout=60s
+          # SSC_APPVERSION: MyApp:MyVersion
+          # EXTRA_PACKAGE_OPTS: -bf custom-pom.xml
+          # DO_WAIT: true
+          # DO_EXPORT: true
 ```
 
 <!-- END-INCLUDE:action-sc-sast-scan.md -->

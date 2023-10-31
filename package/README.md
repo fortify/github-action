@@ -18,8 +18,8 @@ This action packages application source code using [ScanCentral Client](https://
 
 <!-- START-INCLUDE:env-package.md -->
 
-**`EXTRA_PACKAGE_OPTS`**    
-Optional: By default, this action runs `scancentral package -o package.zip`. The `EXTRA_PACKAGE_OPTS` environment variable can be used to specify additional packaging options like `-bt none` to disable automatic build tool detection, or `-oss` to collect additional files for an open-source scan (FoD only).
+**`EXTRA_PACKAGE_OPTS`** - OPTIONAL     
+By default, this action runs `scancentral package -o package.zip`. The `EXTRA_PACKAGE_OPTS` environment variable can be used to specify additional packaging options like `-oss` to collect additional files for an open-source scan (FoD only).
 
 <!-- END-INCLUDE:env-package.md -->
 
@@ -35,7 +35,7 @@ The sample workflow below demonstrates how to configure the action for running a
       - name: Package source code
         uses: fortify/github-action/package@v1
         env:
-          EXTRA_PACKAGE_OPTS: -bt mvn
+          # EXTRA_PACKAGE_OPTS: -bf custom-pom.xml
 ```
 
 <!-- END-INCLUDE:action-package.md -->

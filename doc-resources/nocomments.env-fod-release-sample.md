@@ -1,1 +1,1 @@
-          FOD_RELEASE: MyApp:MyRelease
+          # FOD_RELEASE: MyApp:MyRelease

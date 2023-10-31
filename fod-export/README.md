@@ -18,13 +18,13 @@ This action exports the latest vulnerability data from an FoD release to the Git
 
 <!-- START-INCLUDE:env-fod-connection.md -->
 
-**`FOD_URL`**    
-Required: Fortify on Demand URL, for example https://ams.fortify.com
+**`FOD_URL`** - REQUIRED   
+(REQUIRED) Fortify on Demand URL, for example https://ams.fortify.com
 
-**`FOD_CLIENT_ID` & `FOD_CLIENT_SECRET`**   
+**`FOD_CLIENT_ID` & `FOD_CLIENT_SECRET`** - REQUIRED*    
 Required when authenticating with an API key: FoD Client ID (API key) and Secret (API secret)
 
-**`FOD_TENANT`, `FOD_USER` & `FOD_PASSWORD`**   
+**`FOD_TENANT`, `FOD_USER` & `FOD_PASSWORD`** - REQUIRED*    
 Required when authenticating with user credentials: FoD tenant, user and password. It's recommended to use a Personal Access Token instead of an actual user password.
 
 <!-- END-INCLUDE:env-fod-connection.md -->
@@ -33,8 +33,8 @@ Required when authenticating with user credentials: FoD tenant, user and passwor
 
 <!-- START-INCLUDE:env-fod-release.md -->
 
-**`FOD_RELEASE`**    
-Required: Fortify on Demand release to use with this action. This can be specified either as a numeric release id, `<app>:<release>` (for non-microservices applications) or `<app>:<microservice>:<release>` (for microservices applications).
+**`FOD_RELEASE`** - OPTIONAL    
+Fortify on Demand release to use with this action. This can be specified either as a numeric release id, `<app-name>:<release-name>` (for non-microservices applications) or `<app-name>:<microservice-name>:<release-name>` (for microservices applications). Default value is [`${{ github.action_repository }}:${{ github.action_ref }}`](https://docs.github.com/en/actions/learn-github-actions/contexts#github-context), for example `myOrg/myRepo:myBranch`.
 
 <!-- END-INCLUDE:env-fod-release.md -->
 
@@ -52,7 +52,7 @@ The sample workflow below demonstrates how to configure the action for exporting
           FOD_TENANT: ${{secrets.FOD_TENANT}}
           FOD_USER: ${{secrets.FOD_USER}}
           FOD_PASSWORD: ${{secrets.FOD_PAT}}
-          FOD_RELEASE: MyApp:MyRelease
+          # FOD_RELEASE: MyApp:MyRelease
 ```
 
 <!-- END-INCLUDE:action-fod-export.md -->
