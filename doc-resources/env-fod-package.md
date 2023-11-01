@@ -1,5 +1,5 @@
 **`EXTRA_PACKAGE_OPTS`** - OPTIONAL     
-By default, this action runs `scancentral package -o package.zip` to package application source code. he `EXTRA_PACKAGE_OPTS` environment variable can be used to specify additional packaging options. 
+By default, this action runs `scancentral package -o package.zip` to package application source code. The `EXTRA_PACKAGE_OPTS` environment variable can be used to specify additional packaging options. 
 
 If FoD Software Composition Analysis has been purchased and configured on the applicable release, you'll need to pass the `-oss` option through this environment variable to generate and package the additional dependency files required. 
 
