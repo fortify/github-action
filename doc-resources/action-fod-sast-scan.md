@@ -1,4 +1,4 @@
-This action performs a SAST scan on Fortify on Demand F(FoD). If software composition analysis of open source has been purchased and configured on the applicable release, this action can be used to perform a combined SAST and SCA (open source) scan. 
+This action performs a SAST scan on Fortify on Demand (FoD). If software composition analysis of open source has been purchased and configured on the applicable release, this action can be used to perform a combined SAST and SCA (open source) scan. 
 
 The SAST and optional open source scan performed by this action consists of the following steps:
 
