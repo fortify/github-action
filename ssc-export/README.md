@@ -11,7 +11,7 @@
 
 <!-- START-INCLUDE:action-ssc-export.md -->
 
-This action exports the latest SAST vulnerability data from an SSC application version to the GitHub Code Scanning dashboard.
+This action exports the latest vulnerability data from an SSC application version to the GitHub Code Scanning dashboard. Note that this may require a [GitHub Advanced Security](https://docs.github.com/en/get-started/learning-about-github/about-github-advanced-security) subscription, unless you're running this action on a public github.com repository.
 
 ### Action environment variable inputs
 

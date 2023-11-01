@@ -45,8 +45,10 @@ The primary `fortify/github-action@v1` currently allows for running SAST scans o
 
 ### Action inputs
 
-**`sast-scan`**    
-If not specified or when set to false, no SAST scan will be performed. When set to true, the action will run a SAST scan on either Fortify on Demand (if the FOD_URL environment variable has been specified), or on ScanCentral SAST (if the SSC_URL environment variable has been specified). This includes packaging the source code, running the scan, and optionally reporting SAST scan results back into GitHub. 
+**`sast-scan`** - OPTIONAL    
+When set to true, the action will run a SAST scan on either Fortify on Demand (if the FOD_URL environment variable has been specified), or on ScanCentral SAST (if the SSC_URL environment variable has been specified). This includes packaging the source code, running the scan, and optionally reporting SAST scan results back into GitHub. 
+
+If not specified or when set to false, no SAST scan will be performed. For now, this means that the action will complete without doing any work. Future versions of this action may provide additional inputs, for example allowing you to run a dynamic application security testing (DAST) scan instead of a SAST scan.
 
 ### Action environment variable inputs
 
@@ -263,22 +265,22 @@ This action allows for setting up the Fortify tools listed below. Which tools an
 
 ### Action inputs
 
-**`export-path`**    
+**`export-path`** - OPTIONAL    
 Whether to add the installed tools to the system PATH variable. Allowed values: `true` (default) or `false`
 
-**`fcli`**    
+**`fcli`** - OPTIONAL    
 The fcli version to install. Allowed values: `skip` (default value, do not install fcli), `latest`, or specific version number. Supports semantic versioning, for example `v2` will install the latest known `2.x.y` version. Version may be specified either with or without the `v` prefix, for example `v2.0.0` and `2.0.0` are semantically the same.
 
-**`sc-client`**    
+**`sc-client`** - OPTIONAL    
 The ScanCentral Client version to install. Allowed values: `skip` (default value, do not install), `latest`, or specific version number. Supports semantic versioning, for example `23.1` will install the latest known `23.1.y` patch version. Version may be specified either with or without the `v` prefix, for example `v23.1` and `23.1` are semantically the same.
 
-**`fod-uploader`**    
+**`fod-uploader`** - OPTIONAL    
 The FoDUploader version to install. Allowed values: `skip` (default value, do not install), `latest`, or specific version number. Supports semantic versioning, for example `v5` will install the latest known `5.x.y` version. Version may be specified either with or without the `v` prefix, for example `v5.4.0` and `5.4.0` are semantically the same.
 
-**`vuln-exporter`**    
+**`vuln-exporter`** - OPTIONAL    
 The FortifyVulnerabilityExporter version to install. Allowed values: `skip` (default value, do not install), `latest`, or specific version number. Supports semantic versioning, for example `v2` will install the latest known `2.x.y` version. Version may be specified either with or without the `v` prefix, for example `v2.0.4` and `2.0.4` are semantically the same.
 
-**`bugtracker-utility`**    
+**`bugtracker-utility`** - OPTIONAL    
 The FortifyBugTrackerUtility version to install. Allowed values: `skip` (default value, do not install), `latest`, or specific version number. Supports semantic versioning, for example `v4` will install the latest known `4.x` version. Version may be specified either with or without the `v` prefix, for example `v4.12` and `4.12` are semantically the same.
 
 ### Action outputs
@@ -366,7 +368,7 @@ The sample workflow below demonstrates how to configure the action for running a
 
 <!-- START-INCLUDE:action-fod-sast-scan.md -->
 
-This action performs a SAST scan on Fortify on Demand F(FoD). If software composition analysis of open source has been purchased and configured on the applicable release, this action can be used to perform a combined SAST and SCA (open source) scan. 
+This action performs a SAST scan on Fortify on Demand (FoD). If software composition analysis of open source has been purchased and configured on the applicable release, this action can be used to perform a combined SAST and SCA (open source) scan. 
 
 The SAST and optional open source scan performed by this action consists of the following steps:
 
@@ -480,7 +482,7 @@ The sample workflow below demonstrates how to configure the action for running a
 
 <!-- START-INCLUDE:action-fod-export.md -->
 
-This action exports the latest SAST vulnerability data from an FoD release to the GitHub Code Scanning dashboard.
+This action exports the latest vulnerability data from an FoD release to the GitHub Code Scanning dashboard. Note that this may require a [GitHub Advanced Security](https://docs.github.com/en/get-started/learning-about-github/about-github-advanced-security) subscription, unless you're running this action on a public github.com repository.
 
 ### Action environment variable inputs
 
@@ -642,7 +644,7 @@ The sample workflow below demonstrates how to configure the action for running a
 
 <!-- START-INCLUDE:action-ssc-export.md -->
 
-This action exports the latest SAST vulnerability data from an SSC application version to the GitHub Code Scanning dashboard.
+This action exports the latest vulnerability data from an SSC application version to the GitHub Code Scanning dashboard. Note that this may require a [GitHub Advanced Security](https://docs.github.com/en/get-started/learning-about-github/about-github-advanced-security) subscription, unless you're running this action on a public github.com repository.
 
 ### Action environment variable inputs
 
