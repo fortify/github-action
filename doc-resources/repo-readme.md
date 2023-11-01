@@ -1,4 +1,4 @@
-The [Fortify github-action repository]({{repo-url}}) hosts various Fortify-related GitHub Actions as listed in the sections below.
+The [Fortify github-action repository]({{var:repo-url}}) hosts various Fortify-related GitHub Actions as listed in the sections below.
 
 **Fortify on Demand**
 
@@ -87,26 +87,26 @@ Depending on input, this action delegates to the appropriate sub-action(s). Plea
 * ScanCentral SAST Scan: [`fortify/github-action/sc-sast-scan@{{var:action-major-version}}`](#sc-sast-scan-action)
 
 
-## setup action
+## <a name="setup-action"></a>fortify/github-action/setup@{{var:action-major-version}}
 
 {{include:action-setup.md}}
 
-## package action
+## <a name="package-action"></a>fortify/github-action/fortify/github-action/package@{{var:action-major-version}}
 
 {{include:action-package.md}}
 
-## fod-sast-scan action
+## <a name="fod-sast-scan-action"></a>fortify/github-action/fod-sast-scan@{{var:action-major-version}}
 
 {{include:action-fod-sast-scan.md}}
 
-## fod-export action
+## <a name="fod-export"></a>fortify/github-action/fod-export@{{var:action-major-version}}
 
 {{include:action-fod-export.md}}
 
-## sc-sast-scan action
+## <a name="sc-sast-scan"></a>fortify/github-action/sc-sast-scan@{{var:action-major-version}}
 
 {{include:action-sc-sast-scan.md}}
 
-## ssc-export action
+## <a name="ssc-export-action"></a>ssc-export action
 
 {{include:action-ssc-export.md}}

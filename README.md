@@ -11,7 +11,7 @@
 
 <!-- START-INCLUDE:repo-readme.md -->
 
-The [Fortify github-action repository]({{repo-url}}) hosts various Fortify-related GitHub Actions as listed in the sections below.
+The [Fortify github-action repository](https://github.com/fortify-ps/github-action) hosts various Fortify-related GitHub Actions as listed in the sections below.
 
 **Fortify on Demand**
 
@@ -86,7 +86,7 @@ Extra FoD login options, for example for disabling SSL checks or changing connec
 <!-- START-INCLUDE:env-fod-release.md -->
 
 **`FOD_RELEASE`** - OPTIONAL    
-Fortify on Demand release to use with this action. This can be specified either as a numeric release id, `<app-name>:<release-name>` (for non-microservices applications) or `<app-name>:<microservice-name>:<release-name>` (for microservices applications). Default value is [`${{ github.action_repository }}:${{ github.action_ref }}`](https://docs.github.com/en/actions/learn-github-actions/contexts#github-context), for example `myOrg/myRepo:myBranch`.
+Fortify on Demand release to use with this action. This can be specified either as a numeric release id, `<app-name>:<release-name>` (for non-microservices applications) or `<app-name>:<microservice-name>:<release-name>` (for microservices applications). Default value is [`<github.action_repository>:<github.action_ref>`](https://docs.github.com/en/actions/learn-github-actions/contexts#github-context), for example `myOrg/myRepo:myBranch`.
 
 <!-- END-INCLUDE:env-fod-release.md -->
 
@@ -161,7 +161,7 @@ Extra ScanCentral SAST login options, for example for disabling SSL checks or ch
 <!-- START-INCLUDE:env-ssc-appversion.md -->
 
 **`SSC_APPVERSION`** - OPTIONAL   
-Fortify SSC application version to use with this action. This can be specified either as a numeric application version id, or by providing application and version name in the format `<app-name>:<version-name>`. Default value is [`${{ github.action_repository }}:${{ github.action_ref }}`](https://docs.github.com/en/actions/learn-github-actions/contexts#github-context), for example `myOrg/myRepo:myBranch`.
+Fortify SSC application version to use with this action. This can be specified either as a numeric application version id, or by providing application and version name in the format `<app-name>:<version-name>`. Default value is [`<github.action_repository>:<github.action_ref>`](https://docs.github.com/en/actions/learn-github-actions/contexts#github-context), for example `myOrg/myRepo:myBranch`.
 
 <!-- END-INCLUDE:env-ssc-appversion.md -->
 
@@ -250,7 +250,7 @@ Depending on input, this action delegates to the appropriate sub-action(s). Plea
 * ScanCentral SAST Scan: [`fortify/github-action/sc-sast-scan@v1`](#sc-sast-scan-action)
 
 
-## setup action
+## <a name="setup-action"></a>fortify/github-action/setup@v1
 
 
 <!-- START-INCLUDE:action-setup.md -->
@@ -326,7 +326,7 @@ The sample workflow below demonstrates how to configure the action for installin
 <!-- END-INCLUDE:action-setup.md -->
 
 
-## package action
+## <a name="package-action"></a>fortify/github-action/fortify/github-action/package@v1
 
 
 <!-- START-INCLUDE:action-package.md -->
@@ -363,7 +363,7 @@ The sample workflow below demonstrates how to configure the action for running a
 <!-- END-INCLUDE:action-package.md -->
 
 
-## fod-sast-scan action
+## <a name="fod-sast-scan-action"></a>fortify/github-action/fod-sast-scan@v1
 
 
 <!-- START-INCLUDE:action-fod-sast-scan.md -->
@@ -414,7 +414,7 @@ Extra FoD login options, for example for disabling SSL checks or changing connec
 <!-- START-INCLUDE:env-fod-release.md -->
 
 **`FOD_RELEASE`** - OPTIONAL    
-Fortify on Demand release to use with this action. This can be specified either as a numeric release id, `<app-name>:<release-name>` (for non-microservices applications) or `<app-name>:<microservice-name>:<release-name>` (for microservices applications). Default value is [`${{ github.action_repository }}:${{ github.action_ref }}`](https://docs.github.com/en/actions/learn-github-actions/contexts#github-context), for example `myOrg/myRepo:myBranch`.
+Fortify on Demand release to use with this action. This can be specified either as a numeric release id, `<app-name>:<release-name>` (for non-microservices applications) or `<app-name>:<microservice-name>:<release-name>` (for microservices applications). Default value is [`<github.action_repository>:<github.action_ref>`](https://docs.github.com/en/actions/learn-github-actions/contexts#github-context), for example `myOrg/myRepo:myBranch`.
 
 <!-- END-INCLUDE:env-fod-release.md -->
 
@@ -477,7 +477,7 @@ The sample workflow below demonstrates how to configure the action for running a
 <!-- END-INCLUDE:action-fod-sast-scan.md -->
 
 
-## fod-export action
+## <a name="fod-export"></a>fortify/github-action/fod-export@v1
 
 
 <!-- START-INCLUDE:action-fod-export.md -->
@@ -505,7 +505,7 @@ Required when authenticating with user credentials: FoD tenant, user and passwor
 <!-- START-INCLUDE:env-fod-release.md -->
 
 **`FOD_RELEASE`** - OPTIONAL    
-Fortify on Demand release to use with this action. This can be specified either as a numeric release id, `<app-name>:<release-name>` (for non-microservices applications) or `<app-name>:<microservice-name>:<release-name>` (for microservices applications). Default value is [`${{ github.action_repository }}:${{ github.action_ref }}`](https://docs.github.com/en/actions/learn-github-actions/contexts#github-context), for example `myOrg/myRepo:myBranch`.
+Fortify on Demand release to use with this action. This can be specified either as a numeric release id, `<app-name>:<release-name>` (for non-microservices applications) or `<app-name>:<microservice-name>:<release-name>` (for microservices applications). Default value is [`<github.action_repository>:<github.action_ref>`](https://docs.github.com/en/actions/learn-github-actions/contexts#github-context), for example `myOrg/myRepo:myBranch`.
 
 <!-- END-INCLUDE:env-fod-release.md -->
 
@@ -529,7 +529,7 @@ The sample workflow below demonstrates how to configure the action for exporting
 <!-- END-INCLUDE:action-fod-export.md -->
 
 
-## sc-sast-scan action
+## <a name="sc-sast-scan"></a>fortify/github-action/sc-sast-scan@v1
 
 
 <!-- START-INCLUDE:action-sc-sast-scan.md -->
@@ -581,7 +581,7 @@ Extra ScanCentral SAST login options, for example for disabling SSL checks or ch
 <!-- START-INCLUDE:env-ssc-appversion.md -->
 
 **`SSC_APPVERSION`** - OPTIONAL   
-Fortify SSC application version to use with this action. This can be specified either as a numeric application version id, or by providing application and version name in the format `<app-name>:<version-name>`. Default value is [`${{ github.action_repository }}:${{ github.action_ref }}`](https://docs.github.com/en/actions/learn-github-actions/contexts#github-context), for example `myOrg/myRepo:myBranch`.
+Fortify SSC application version to use with this action. This can be specified either as a numeric application version id, or by providing application and version name in the format `<app-name>:<version-name>`. Default value is [`<github.action_repository>:<github.action_ref>`](https://docs.github.com/en/actions/learn-github-actions/contexts#github-context), for example `myOrg/myRepo:myBranch`.
 
 <!-- END-INCLUDE:env-ssc-appversion.md -->
 
@@ -639,7 +639,7 @@ The sample workflow below demonstrates how to configure the action for running a
 <!-- END-INCLUDE:action-sc-sast-scan.md -->
 
 
-## ssc-export action
+## <a name="ssc-export-action"></a>ssc-export action
 
 
 <!-- START-INCLUDE:action-ssc-export.md -->
@@ -667,7 +667,7 @@ Required when authenticating with user credentials.
 <!-- START-INCLUDE:env-ssc-appversion.md -->
 
 **`SSC_APPVERSION`** - OPTIONAL   
-Fortify SSC application version to use with this action. This can be specified either as a numeric application version id, or by providing application and version name in the format `<app-name>:<version-name>`. Default value is [`${{ github.action_repository }}:${{ github.action_ref }}`](https://docs.github.com/en/actions/learn-github-actions/contexts#github-context), for example `myOrg/myRepo:myBranch`.
+Fortify SSC application version to use with this action. This can be specified either as a numeric application version id, or by providing application and version name in the format `<app-name>:<version-name>`. Default value is [`<github.action_repository>:<github.action_ref>`](https://docs.github.com/en/actions/learn-github-actions/contexts#github-context), for example `myOrg/myRepo:myBranch`.
 
 <!-- END-INCLUDE:env-ssc-appversion.md -->
 
