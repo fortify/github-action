@@ -366,7 +366,7 @@ The sample workflow below demonstrates how to configure the action for running a
 
 <!-- START-INCLUDE:action-fod-sast-scan.md -->
 
-This action performs a SAST scan on Fortify on Demand F(FoD). If software composition analysis of open source has been purchased and configured on the applicable release, this action can be used to perform a combined SAST and SCA (open source) scan. 
+This action performs a SAST scan on Fortify on Demand (FoD). If software composition analysis of open source has been purchased and configured on the applicable release, this action can be used to perform a combined SAST and SCA (open source) scan. 
 
 The SAST and optional open source scan performed by this action consists of the following steps:
 
@@ -480,7 +480,7 @@ The sample workflow below demonstrates how to configure the action for running a
 
 <!-- START-INCLUDE:action-fod-export.md -->
 
-This action exports the latest SAST vulnerability data from an FoD release to the GitHub Code Scanning dashboard.
+This action exports the latest vulnerability data from an FoD release to the GitHub Code Scanning dashboard. Note that this may require a [GitHub Advanced Security](https://docs.github.com/en/get-started/learning-about-github/about-github-advanced-security) subscription, unless you're running this action on a public github.com repository.
 
 ### Action environment variable inputs
 
@@ -642,7 +642,7 @@ The sample workflow below demonstrates how to configure the action for running a
 
 <!-- START-INCLUDE:action-ssc-export.md -->
 
-This action exports the latest SAST vulnerability data from an SSC application version to the GitHub Code Scanning dashboard.
+This action exports the latest vulnerability data from an SSC application version to the GitHub Code Scanning dashboard. Note that this may require a [GitHub Advanced Security](https://docs.github.com/en/get-started/learning-about-github/about-github-advanced-security) subscription, unless you're running this action on a public github.com repository.
 
 ### Action environment variable inputs
 
