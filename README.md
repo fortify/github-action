@@ -15,28 +15,28 @@ The [Fortify github-action repository](https://github.com/fortify-ps/github-acti
 
 **Fortify on Demand**
 
-* [`fortify/github-action@v1`](#fortify-github-action)  
+* [`fortify/github-action`](#fortify-github-action)  
   For now, this action provides the same functionality as the `fod-sast-scan` action listed below. Future versions may add support for running other types of scans or performing other FoD actions.
-* [`fortify/github-action/fod-sast-scan@v1`](#fortify-github-action-fod-sast-scan)  
+* [`fortify/github-action/fod-sast-scan`](#fortify-github-action-fod-sast-scan)  
   Package source code, submit static application security testing (SAST) scan request to Fortify on Demand, optionally wait for completion and export results back to the GitHub Security dashboard.
-* [`fortify/github-action/package@v1`](#fortify-github-action-package)  
+* [`fortify/github-action/package`](#fortify-github-action-package)  
   Package source code for running a SAST scan, using the latest version of ScanCentral Client. Optionally resolve dependencies for Software Composition Analysis (SCA) of open source components with integrated Debricked analysis via Fortify on Demand.
-* [`fortify/github-action/fod-export@v1`](#fortify-github-action-fod-export)  
+* [`fortify/github-action/fod-export`](#fortify-github-action-fod-export)  
   Export SAST vulnerability data from Fortify on Demand to the GitHub Security dashboard.
-* [`fortify/github-action/setup@v1`](#fortify-github-action-setup)  
+* [`fortify/github-action/setup`](#fortify-github-action-setup)  
   Install various Fortify tools like [fcli](https://github.com/fortify/fcli), [ScanCentral Client](https://www.microfocus.com/documentation/fortify-software-security-center/2310/SC_SAST_Help_23.1.0/index.htm#A_Clients.htm), [FortifyVulnerabilityExporter](https://github.com/fortify/FortifyVulnerabilityExporter) and [FortifyBugTrackerUtility](https://github.com/fortify-ps/FortifyBugTrackerUtility) for use in your pipeline
   
 **Fortify Sofware Security Center (SSC) / ScanCentral SAST**
 
-* [`fortify/github-action@v1`](#fortify-github-action)  
+* [`fortify/github-action`](#fortify-github-action)  
   For now, this action provides the same functionality as the `ssc-sast-scan` action listed below. Future versions may add support for running other types of scans or performing other SSC / ScanCentral actions.
-* [`fortify/github-action/sc-sast-scan@v1`](#fortify-github-action-sc-sast-scan)  
+* [`fortify/github-action/sc-sast-scan`](#fortify-github-action-sc-sast-scan)  
   Package source code, submit SAST scan request to ScanCentral SAST, optionally wait for completion and export results back to the GitHub Security dashboard.
-* [`fortify/github-action/package@v1`](#fortify-github-action-package)  
+* [`fortify/github-action/package`](#fortify-github-action-package)  
   Package source code for running a SAST scan, using the latest version of ScanCentral Client.
-* [`fortify/github-action/ssc-export@v1`](#fortify-github-action-ssc-export)  
+* [`fortify/github-action/ssc-export`](#fortify-github-action-ssc-export)  
   Export SAST vulnerability data from Fortify SSC to the GitHub Security dashboard.
-* [`fortify/github-action/setup@v1`](#fortify-github-action-setup)  
+* [`fortify/github-action/setup`](#fortify-github-action-setup)  
   Install various Fortify tools like [fcli](https://github.com/fortify/fcli), [ScanCentral Client](https://www.microfocus.com/documentation/fortify-software-security-center/2310/SC_SAST_Help_23.1.0/index.htm#A_Clients.htm), [FortifyVulnerabilityExporter](https://github.com/fortify/FortifyVulnerabilityExporter) and [FortifyBugTrackerUtility](https://github.com/fortify-ps/FortifyBugTrackerUtility) for use in your pipeline
 
 <a name="fortify-github-action"></a>
