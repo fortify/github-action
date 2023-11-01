@@ -39,6 +39,8 @@ The [Fortify github-action repository](https://github.com/fortify-ps/github-acti
 * [`fortify/github-action/setup@v1`](#fortify-github-action-setup)  
   Install various Fortify tools like [fcli](https://github.com/fortify/fcli), [ScanCentral Client](https://www.microfocus.com/documentation/fortify-software-security-center/2310/SC_SAST_Help_23.1.0/index.htm#A_Clients.htm), [FortifyVulnerabilityExporter](https://github.com/fortify/FortifyVulnerabilityExporter) and [FortifyBugTrackerUtility](https://github.com/fortify-ps/FortifyBugTrackerUtility) for use in your pipeline
 
+<a name="fortify-github-action"></a>
+
 ## fortify/github-action
 
 The primary `fortify/github-action@v1` currently allows for running SAST scans on either Fortify on Demand or ScanCentral SAST.  Which activities to perform is controlled through action inputs, the input for those activities is provided through environment variables.  Software composition analysis of open source components may also be performed in conjunction with the Fortify on Demand SAST scan for customers who have purchased the functionality.
@@ -250,6 +252,8 @@ Depending on input, this action delegates to the appropriate sub-action(s). Plea
 * ScanCentral SAST Scan: [`fortify/github-action/sc-sast-scan@v1`](#fortify-github-action-sc-sast-scan)
 
 
+<a name="fortify-github-action-setup"></a>
+
 ## fortify/github-action/setup
 
 
@@ -326,6 +330,9 @@ The sample workflow below demonstrates how to configure the action for installin
 <!-- END-INCLUDE:action-setup.md -->
 
 
+
+<a name="fortify-github-action-package"></a>
+
 ## fortify/github-action/package
 
 
@@ -362,6 +369,9 @@ The sample workflow below demonstrates how to configure the action for running a
 
 <!-- END-INCLUDE:action-package.md -->
 
+
+
+<a name="fortify-github-action-fod-sast-scan"></a>
 
 ## fortify/github-action/fod-sast-scan
 
@@ -477,6 +487,9 @@ The sample workflow below demonstrates how to configure the action for running a
 <!-- END-INCLUDE:action-fod-sast-scan.md -->
 
 
+
+<a name="fortify-github-action-fod-export"></a>
+
 ## fortify/github-action/fod-export
 
 
@@ -528,6 +541,9 @@ The sample workflow below demonstrates how to configure the action for exporting
 
 <!-- END-INCLUDE:action-fod-export.md -->
 
+
+
+<a name="fortify-github-action-sc-sast-scan"></a>
 
 ## fortify/github-action/sc-sast-scan
 
@@ -638,6 +654,9 @@ The sample workflow below demonstrates how to configure the action for running a
 
 <!-- END-INCLUDE:action-sc-sast-scan.md -->
 
+
+
+<a name="fortify-github-action-ssc-export"></a>
 
 ## fortify/github-action/ssc-export
 
