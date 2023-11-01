@@ -1,5 +1,5 @@
 name: 'Fortify AST Scan'
-description: 'Build secure software fast with Fortify code security.'
+description: 'Find and fix vulnerabilities to build secure software with Fortify Code Security.'
 author: 'Fortify'
 inputs:
   sast-scan:
