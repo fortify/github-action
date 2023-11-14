@@ -12,7 +12,7 @@ runs:
       shell: bash
       env:
         APP: ${{ github.repository }}
-        REL: ${{ github.ref_name }}
+        REL: ${{ github.head_ref || github.ref_name }}
                 
 branding:
   icon: 'shield'
