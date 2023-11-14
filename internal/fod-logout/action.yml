@@ -5,7 +5,7 @@ runs:
   using: composite
   steps:
     # Run fcli logout command; note that the calling action/workflow is responsible for installing fcli
-    - uses: fortify-ps/github-action/internal/run@main
+    - uses: fortify/github-action/internal/run@main
       with:
         cmd: '"${FCLI_CMD}" fod session logout'        
 branding:

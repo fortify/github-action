@@ -2,7 +2,7 @@
 Fortify GitHub Actions
 
 # repo-url
-https://github.com/fortify-ps/github-action
+https://github.com/fortify/github-action
 
 # copyright-years
 {{var:current-year}}

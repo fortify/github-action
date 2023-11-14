@@ -3,7 +3,7 @@
 This action can run arbitrary commands, as in the following example:
 
 ```yaml
-    - uses: fortify-ps/github-action/internal/run@main
+    - uses: fortify/github-action/internal/run@main
       with:
         cmd: '"${FCLI_CMD}" sc-sast session login ${_SC_SAST_LOGIN_OPTS}' 
 ```
