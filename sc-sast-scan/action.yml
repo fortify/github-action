@@ -4,22 +4,22 @@ author: 'Fortify'
 runs:
   using: composite
   steps:
-    - uses: fortify/github-action/setup@${{github.action_ref}}
+    - uses: fortify/github-action/setup
       with:
         export-path: false
         fcli: action-default
-    - uses: fortify/github-action/internal/sc-sast-login@${{github.action_ref}}
-    - uses: fortify/github-action/package@${{github.action_ref}}
-    - uses: fortify/github-action/internal/run@${{github.action_ref}}
+    - uses: fortify/github-action/internal/sc-sast-login
+    - uses: fortify/github-action/package
+    - uses: fortify/github-action/internal/run
       with:
         cmd: '"${FCLI_CMD}" sc-sast scan start --publish-to "${SSC_APPVERSION}" -p package.zip -v "${SC_SAST_SENSOR_VERSION}" --store sc_sast_scan ${EXTRA_SC_SAST_SCAN_OPTS}'
-    - uses: fortify/github-action/internal/run@${{github.action_ref}}
+    - uses: fortify/github-action/internal/run
       if: env.DO_WAIT == 'true' || env.DO_EXPORT == 'true'
       with:
         cmd: '"${FCLI_CMD}" sc-sast scan wait-for ::sc_sast_scan::'
-    - uses: fortify/github-action/internal/sc-sast-logout@${{github.action_ref}}       
+    - uses: fortify/github-action/internal/sc-sast-logout       
     - if: env.DO_EXPORT == 'true'
-      uses: fortify/github-action/ssc-export@${{github.action_ref}}
+      uses: fortify/github-action/ssc-export
         
 branding:
   icon: 'shield'
