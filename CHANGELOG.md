@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.3](https://github.com/fortify/github-action/compare/v1.0.2...v1.0.3) (2023-11-14)
+
+
+### Bug Fixes
+
+* Partial fix to use proper sub-action versions ([7272d0d](https://github.com/fortify/github-action/commit/7272d0d5a7fa67ba3a2eed960818c40f1667e8ab))
+
 ## [1.0.2](https://github.com/fortify/github-action/compare/v1.0.1...v1.0.2) (2023-11-14)
 
 
