@@ -11,8 +11,8 @@ runs:
         echo "Configured default value for FOD_RELEASE: ${FOD_RELEASE}"
       shell: bash
       env:
-        APP: ${{ github.action_repository }}
-        REL: ${{ github.action_ref }}
+        APP: ${{ github.repository }}
+        REL: ${{ github.ref_name }}
                 
 branding:
   icon: 'shield'
