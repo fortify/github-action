@@ -11,7 +11,7 @@ runs:
         vuln-exporter: action-default
     - run: |
         case ${FOD_RELEASE} in
-          ''|*[!0-9]*) echo '_RELEASE_OPT="--fod.release.name=${FOD_RELEASE}"' >> $GITHUB_ENV ;;
+          ''|*[!0-9]*) echo '_RELEASE_OPT=--fod.release.name="'${FOD_RELEASE}'"' >> $GITHUB_ENV ;;
           *) echo '_RELEASE_OPT="--fod.release.id=${FOD_RELEASE}"' >> $GITHUB_ENV ;;
         esac
       shell: bash
@@ -21,18 +21,18 @@ runs:
     # Uploaded the generated file containing Fortify vulnerabilities to GitHub.
     - run: |
         echo '_RELEASE_OPT=""' >> $GITHUB_ENV
-      shell: bash 
+      shell: bash
     - uses: github/codeql-action/upload-sarif@v2
       with:
         sarif_file: ./gh-fortify-sast.sarif
-          
+
     # Optionally store the generated file for troubleshooting purposes.
     - uses: actions/upload-artifact@v3
       if: always()
       with:
         name: sarif-files
-        path: ./gh-fortify-sast.sarif  
-        
+        path: ./gh-fortify-sast.sarif
+
 branding:
   icon: 'shield'
   color: 'blue'
