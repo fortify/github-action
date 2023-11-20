@@ -11,7 +11,7 @@ runs:
         vuln-exporter: action-default
     - run: |
         case ${FOD_RELEASE} in
-          ''|*[!0-9]*) echo '_RELEASE_OPT=--fod.release.name="'${FOD_RELEASE}'"' >> $GITHUB_ENV ;;
+          ''|*[!0-9]*) echo '_RELEASE_OPT=--fod.release.name='''${FOD_RELEASE}'''' >> $GITHUB_ENV ;;
           *) echo '_RELEASE_OPT="--fod.release.id=${FOD_RELEASE}"' >> $GITHUB_ENV ;;
         esac
       shell: bash
