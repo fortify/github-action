@@ -10,7 +10,7 @@ import * as crypto from 'node:crypto';
 //            proper version-specific links in the action documentation.  
 const TOOLS: Record<string, Record<string, Record<string, string>>> = {
 	"fcli": { 
-		"versionAliases": {"action-default": "2.0.0", "latest": "2.0.0"},
+		"versionAliases": {"action-default": "2.1.0", "latest": "2.1.0"},
 		"cmds": {"win32": "fcli.exe", "linux": "fcli", "darwin": "fcli"}
 	},
 	"sc-client": { 
@@ -32,6 +32,9 @@ const TOOLS: Record<string, Record<string, Record<string, string>>> = {
 };
 const INTERNAL_FCLI_VERSION = TOOLS["fcli"]["versionAliases"]["action-default"];
 const FCLI_SHA256: Record<string, string> = {
+	"v2.1.0/fcli-linux.tgz": "9c2b9be904c4464ca44483051d05d711d995ea3ae393c2a388f4eb1b8f394c4f",
+	"v2.1.0/fcli-mac.tgz": "dcd9d8262cad9def21788a3138bdd34f205f1e0634b9cd4ec6890f3b4550d491",
+	"v2.1.0/fcli-windows.zip": "9c135425e9e2888658651edeeed59a7efb1fed5a78e105bdc14704181ac52835",
 	"v2.0.0/fcli-linux.tgz": "6af0327561890bf46e97fab309eb69cd9b877f976f687740364a08d83fc7e020",
 	"v2.0.0/fcli-mac.tgz": "9416074065b4e27557a9323bc41534b11689003a464fc92ac17ca49c1d25c6c6",
 	"v2.0.0/fcli-windows.zip": "1abef1f55fb586efdc8eb63ed25575e1ee25e63aa1e59f56216d8e38699fa608",
