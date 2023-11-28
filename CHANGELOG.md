@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.0](https://github.com/fortify/github-action/compare/v1.0.4...v1.1.0) (2023-11-28)
+
+
+### Features
+
+* Add support for fcli 2.1.0 ([7aafc0e](https://github.com/fortify/github-action/commit/7aafc0e7f3ab68a3e2cc010a570981ac38afb5b8))
+
 ## [1.0.4](https://github.com/fortify/github-action/compare/v1.0.3...v1.0.4) (2023-11-28)
 
 
