@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.0.4](https://github.com/fortify/github-action/compare/v1.0.3...v1.0.4) (2023-11-28)
+
+
+### Bug Fixes
+
+* Properly handle app/release/version names containing spaces ([c04ac28](https://github.com/fortify/github-action/commit/c04ac28398685799fb76a7b02acbcb18af034231))
+* Use proper branch names / versions for sub-action invocations ([d4eb955](https://github.com/fortify/github-action/commit/d4eb955478b251aa76d6c81a29d09db090387bde))
+
 ## [1.0.3](https://github.com/fortify/github-action/compare/v1.0.2...v1.0.3) (2023-11-14)
 
 
