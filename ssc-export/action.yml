@@ -4,7 +4,7 @@ author: 'Fortify'
 runs:
   using: composite
   steps:
-    - uses: fortify/github-action/setup@v1.1.0
+    - uses: fortify/github-action/setup@main
       with:
         export-path: false
         vuln-exporter: action-default
@@ -14,7 +14,7 @@ runs:
           *) echo '_APPVERSION_OPT="--ssc.version.id=${SSC_APPVERSION}"' >> $GITHUB_ENV ;;
         esac
       shell: bash
-    - uses: fortify/github-action/internal/run@v1.1.0
+    - uses: fortify/github-action/internal/run@main
       with:
         cmd: '"${VULN_EXPORTER_CMD}" SSCToGitHub "--ssc.baseUrl=${SSC_URL}" "--ssc.user=${SSC_USER}" "--ssc.password=${SSC_PASSWORD}" "--ssc.authToken=${SSC_TOKEN}" "${_APPVERSION_OPT}"'
     - run: |

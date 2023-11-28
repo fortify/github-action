@@ -4,23 +4,23 @@ author: 'Fortify'
 runs:
   using: composite
   steps:
-    - uses: fortify/github-action/internal/set-fod-var-defaults@v1.1.0
-    - uses: fortify/github-action/setup@v1.1.0
+    - uses: fortify/github-action/internal/set-fod-var-defaults@main
+    - uses: fortify/github-action/setup@main
       with:
         export-path: false
         fcli: action-default
-    - uses: fortify/github-action/internal/fod-login@v1.1.0
-    - uses: fortify/github-action/package@v1.1.0
-    - uses: fortify/github-action/internal/run@v1.1.0
+    - uses: fortify/github-action/internal/fod-login@main
+    - uses: fortify/github-action/package@main
+    - uses: fortify/github-action/internal/run@main
       with:
         cmd: '"${FCLI_CMD}" fod sast-scan start --rel "${FOD_RELEASE}" -f package.zip --store fod_scan ${EXTRA_FOD_SAST_SCAN_OPTS}'
-    - uses: fortify/github-action/internal/run@v1.1.0
+    - uses: fortify/github-action/internal/run@main
       if: env.DO_WAIT == 'true' || env.DO_EXPORT == 'true'
       with:
         cmd: '"${FCLI_CMD}" fod sast-scan wait-for ::fod_scan::'
-    - uses: fortify/github-action/internal/fod-logout@v1.1.0
+    - uses: fortify/github-action/internal/fod-logout@main
     - if: env.DO_EXPORT == 'true'
-      uses: fortify/github-action/fod-export@v1.1.0
+      uses: fortify/github-action/fod-export@main
         
 branding:
   icon: 'shield'
