@@ -5,7 +5,7 @@ runs:
   using: composite
   steps:
     # Run fcli logout command; note that the calling action/workflow is responsible for installing fcli
-    - uses: fortify/github-action/internal/run@main
+    - uses: fortify/github-action/internal/run@v1.0.4
       with:
         # TODO If we add functionality for generating a CIToken in the sc-sast-login
         #      action, we should clean it up here. 
