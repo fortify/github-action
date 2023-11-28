@@ -1,0 +1,73 @@
+on:
+  push:
+      
+permissions:
+  contents: write
+  pull-requests: write
+      
+name: Publish release
+jobs:
+  update-action-references:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check-out source code
+        uses: actions/checkout@v4
+      - name: Configure git
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@fortify.com
+      - name: Update documentation resources
+        run: |
+          ./doc-resources/update-repo-docs.sh
+          git add . && git commit -m "docs: Update documentation resources" && git push || \
+            echo "No update needed or update failed" 
+      - name: Update action version references to match branch
+        run: |
+          ./update-action-refs.sh "${GITHUB_REF#refs/heads/}"
+          git add . && git commit -m "chore: Update action references" && git push || \
+            echo "No update needed or update failed" 
+            
+  release:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    needs: update-action-references
+    steps:
+      - name: Check-out source code
+        uses: actions/checkout@v4
+      
+      - name: Generate and process release PR
+        id: release_please
+        uses: google-github-actions/release-please-action@v3
+        with:
+          release-type: simple
+          package-name: ${{ github.event.repository.name }}
+          
+      - name: Publish v{major}.{minor} tag
+        if: steps.release_please.outputs.release_created
+        uses: richardsimko/update-tag@v1
+        with:
+          tag_name: v${{steps.release_please.outputs.major}}.${{steps.release_please.outputs.minor}}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
+          
+      - name: Publish v{major} tag
+        if: steps.release_please.outputs.release_created
+        uses: richardsimko/update-tag@v1
+        with:
+          tag_name: v${{steps.release_please.outputs.major}}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          
+      - name: Update release PR
+        if: steps.release_please.outputs.pr
+        shell: bash
+        run: |
+          prBranch=${{ fromJSON(steps.release_please.outputs.pr).headBranchName }}
+          git fetch origin "${prBranch}"
+          git checkout "${prBranch}"
+          version=v$(cat version.txt)
+          ./update-action-refs.sh "${version}"
+          git config user.name github-actions
+          git config user.email github-actions@fortify.com
+          git add . && git commit -m "chore: Update action references" && git push || echo "No update needed"
+          

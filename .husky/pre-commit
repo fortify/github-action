@@ -1,4 +1,0 @@
-#!/bin/sh
-. "$(dirname "$0")/_/husky.sh"
-(cd internal/run && NODE_OPTIONS=--openssl-legacy-provider npm run build && git add dist/)
-(cd setup && NODE_OPTIONS=--openssl-legacy-provider npm run build && git add dist/)

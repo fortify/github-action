@@ -18,7 +18,7 @@ runs:
         fi
       shell: bash
     # Run fcli login command; note that the calling action/workflow is responsible for installing fcli
-    - uses: fortify/github-action/internal/run@v1
+    - uses: fortify/github-action/internal/run@main
       with:
         cmd: '"${FCLI_CMD}" fod session login ${_FOD_LOGIN_OPTS}'  
     # Clean up temporary environment variables
