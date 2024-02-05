@@ -14,6 +14,7 @@
 This action allows for setting up the Fortify tools listed below. Which tools and which versions to install, and whether to add the tool bin-directories to the system path, is controlled through action inputs as listed in the next section.
 
 * [fcli](https://github.com/fortify/fcli)
+* [Debricked CLI](https://github.com/debricked/cli)
 * [ScanCentral Client](https://www.microfocus.com/documentation/fortify-software-security-center/2310/SC_SAST_Help_23.1.0/index.htm#A_Clients.htm)
 * [FoDUploader](https://github.com/fod-dev/fod-uploader-java)
 * [FortifyVulnerabilityExporter](https://github.com/fortify/FortifyVulnerabilityExporter)
@@ -23,6 +24,9 @@ This action allows for setting up the Fortify tools listed below. Which tools an
 
 **`export-path`** - OPTIONAL    
 Whether to add the installed tools to the system PATH variable. Allowed values: `true` (default) or `false`
+
+**`tool-definitions`** - OPTIONAL
+Allows for overriding the location of the Fortify tool definitions bundle. This can be specified either as an action input or through the `TOOL_DEFINITIONS` environment variable; see the 'Action environment variable inputs' section below for details.
 
 **`fcli`** - OPTIONAL    
 The fcli version to install. Allowed values: `skip` (default value, do not install fcli), `latest`, or specific version number. Supports semantic versioning, for example `v2` will install the latest known `2.x.y` version. Version may be specified either with or without the `v` prefix, for example `v2.0.0` and `2.0.0` are semantically the same.
@@ -38,6 +42,22 @@ The FortifyVulnerabilityExporter version to install. Allowed values: `skip` (def
 
 **`bugtracker-utility`** - OPTIONAL    
 The FortifyBugTrackerUtility version to install. Allowed values: `skip` (default value, do not install), `latest`, or specific version number. Supports semantic versioning, for example `v4` will install the latest known `4.x` version. Version may be specified either with or without the `v` prefix, for example `v4.12` and `4.12` are semantically the same.
+
+**`debricked-cli`** - OPTIONAL    
+The Debricked CLI version to install. Allowed values: `skip` (default value, do not install), `latest`, or specific version number. Supports semantic versioning, for example `v1` will install the latest known `1.x` version. Version may be specified either with or without the `v` prefix, for example `v1` and `1` are semantically the same.
+
+### Action environment variable inputs
+
+
+<!-- START-INCLUDE:env-setup.md -->
+
+**`TOOL_DEFINITIONS`** - OPTIONAL   
+Fortify tool definitions are used by this GitHub Action to determine available versions, download location and other details of various Fortify-related tools, as required for action execution. By default, the Fortify-provided tool definitions hosted at https://github.com/fortify/tool-definitions/releases/tag/v1 will be used. 
+
+This environment variable allows for overriding the default tool definitions, pointing to either a URL or local (workspace) file. For example, if GitHub workflows are not allowed to download tools from their public internet locations, customers may host the tool installation bundles on an internal server, together with a customized tool definitions bundle that lists the alternative download URLs.
+
+<!-- END-INCLUDE:env-setup.md -->
+
 
 ### Action outputs
 
@@ -67,12 +87,14 @@ The sample workflow below demonstrates how to configure the action for installin
       - name: Setup Fortify tools
         uses: fortify/github-action/setup@v1
         with:
+          tool-definitions: https://github.com/fortify/tool-definitions/releases/download/v1/tool-definitions.yaml.zip
           export-path: true
           fcli: latest
           sc-client: 23.1.0
           fod-uploader: latest
           vuln-exporter: v2
           bugtracker-utility: skip
+          debricked-cli: skip
       - name: Run fcli from PATH
         run: fcli -V
       - name: Run fcli using FCLI_CMD environment variable

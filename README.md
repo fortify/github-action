@@ -79,7 +79,7 @@ Required when authenticating with user credentials: FoD tenant, user and passwor
 
 
 **`EXTRA_FOD_LOGIN_OPTS`** - OPTIONAL   
-Extra FoD login options, for example for disabling SSL checks or changing connection time-outs; see [`fcli fod session login` documentation](https://fortify.github.io/fcli/v2.0.0//manpage/fcli-fod-session-login.html)
+Extra FoD login options, for example for disabling SSL checks or changing connection time-outs; see [`fcli fod session login` documentation](https://fortify.github.io/fcli/v2.2.0//manpage/fcli-fod-session-login.html)
 
 <!-- END-INCLUDE:env-fod-login.md -->
 
@@ -109,7 +109,7 @@ As an example, if the build file that you want to use for packaging doesn't adhe
 
 
 **`EXTRA_FOD_SAST_SCAN_OPTS`** - OPTIONAL    
-Extra FoD SAST scan options; see [`fcli fod sast-scan start` documentation](https://fortify.github.io/fcli/v2.0.0//manpage/fcli-fod-sast-scan-start.html)
+Extra FoD SAST scan options; see [`fcli fod sast-scan start` documentation](https://fortify.github.io/fcli/v2.2.0//manpage/fcli-fod-sast-scan-start.html)
 
 
 <!-- START-INCLUDE:env-wait-export.md -->
@@ -124,6 +124,17 @@ If set to `true`, this action will export scan results to the GitHub Security Co
 
 
 <!-- END-INCLUDE:env-fod-sast-scan.md -->
+
+
+
+<!-- START-INCLUDE:env-setup.md -->
+
+**`TOOL_DEFINITIONS`** - OPTIONAL   
+Fortify tool definitions are used by this GitHub Action to determine available versions, download location and other details of various Fortify-related tools, as required for action execution. By default, the Fortify-provided tool definitions hosted at https://github.com/fortify/tool-definitions/releases/tag/v1 will be used. 
+
+This environment variable allows for overriding the default tool definitions, pointing to either a URL or local (workspace) file. For example, if GitHub workflows are not allowed to download tools from their public internet locations, customers may host the tool installation bundles on an internal server, together with a customized tool definitions bundle that lists the alternative download URLs.
+
+<!-- END-INCLUDE:env-setup.md -->
 
 
 #### ScanCentral SAST
@@ -154,7 +165,7 @@ Required when authenticating with SSC user credentials.
 Required: ScanCentral SAST Client Authentication Token for authenticating with ScanCentral SAST Controller.
 
 **`EXTRA_SC_SAST_LOGIN_OPTS`** - OPTIONAL    
-Extra ScanCentral SAST login options, for example for disabling SSL checks or changing connection time-outs; see [`fcli sc-sast session login` documentation](https://fortify.github.io/fcli/v2.0.0//manpage/fcli-sc-sast-session-login.html).
+Extra ScanCentral SAST login options, for example for disabling SSL checks or changing connection time-outs; see [`fcli sc-sast session login` documentation](https://fortify.github.io/fcli/v2.2.0//manpage/fcli-sc-sast-session-login.html).
 
 <!-- END-INCLUDE:env-sc-sast-login.md -->
 
@@ -180,7 +191,7 @@ As an example, if the build file that you want to use for packaging doesn't adhe
 
 
 **`EXTRA_SC_SAST_SCAN_OPTS`** - OPTIONAL    
-Extra ScanCentral SAST scan options; see [`fcli sc-sast scan start` documentation](https://fortify.github.io/fcli/v2.0.0//manpage/fcli-sc-sast-scan-start.html)
+Extra ScanCentral SAST scan options; see [`fcli sc-sast scan start` documentation](https://fortify.github.io/fcli/v2.2.0//manpage/fcli-sc-sast-scan-start.html)
 
 
 <!-- START-INCLUDE:env-wait-export.md -->
@@ -195,6 +206,17 @@ If set to `true`, this action will export scan results to the GitHub Security Co
 
 
 <!-- END-INCLUDE:env-sc-sast-scan.md -->
+
+
+
+<!-- START-INCLUDE:env-setup.md -->
+
+**`TOOL_DEFINITIONS`** - OPTIONAL   
+Fortify tool definitions are used by this GitHub Action to determine available versions, download location and other details of various Fortify-related tools, as required for action execution. By default, the Fortify-provided tool definitions hosted at https://github.com/fortify/tool-definitions/releases/tag/v1 will be used. 
+
+This environment variable allows for overriding the default tool definitions, pointing to either a URL or local (workspace) file. For example, if GitHub workflows are not allowed to download tools from their public internet locations, customers may host the tool installation bundles on an internal server, together with a customized tool definitions bundle that lists the alternative download URLs.
+
+<!-- END-INCLUDE:env-setup.md -->
 
 
 ### Sample workflows
@@ -221,6 +243,7 @@ The sample workflows below demonstrate how to configure the action for running a
           # EXTRA_PACKAGE_OPTS: -oss
           # DO_WAIT: true
           # DO_EXPORT: true
+          # TOOL_DEFINITIONS: https://ftfy.mycompany.com/tool-definitions/v1/tool-definitions.yaml.zip
 ```
 
 #### ScanCentral SAST
@@ -242,6 +265,7 @@ The sample workflows below demonstrate how to configure the action for running a
           # EXTRA_PACKAGE_OPTS: -bf custom-pom.xml
           # DO_WAIT: true
           # DO_EXPORT: true
+          # TOOL_DEFINITIONS: https://ftfy.mycompany.com/tool-definitions/v1/tool-definitions.yaml.zip
 ```
 
 ### More information
@@ -262,6 +286,7 @@ Depending on input, this action delegates to the appropriate sub-action(s). Plea
 This action allows for setting up the Fortify tools listed below. Which tools and which versions to install, and whether to add the tool bin-directories to the system path, is controlled through action inputs as listed in the next section.
 
 * [fcli](https://github.com/fortify/fcli)
+* [Debricked CLI](https://github.com/debricked/cli)
 * [ScanCentral Client](https://www.microfocus.com/documentation/fortify-software-security-center/2310/SC_SAST_Help_23.1.0/index.htm#A_Clients.htm)
 * [FoDUploader](https://github.com/fod-dev/fod-uploader-java)
 * [FortifyVulnerabilityExporter](https://github.com/fortify/FortifyVulnerabilityExporter)
@@ -271,6 +296,9 @@ This action allows for setting up the Fortify tools listed below. Which tools an
 
 **`export-path`** - OPTIONAL    
 Whether to add the installed tools to the system PATH variable. Allowed values: `true` (default) or `false`
+
+**`tool-definitions`** - OPTIONAL
+Allows for overriding the location of the Fortify tool definitions bundle. This can be specified either as an action input or through the `TOOL_DEFINITIONS` environment variable; see the 'Action environment variable inputs' section below for details.
 
 **`fcli`** - OPTIONAL    
 The fcli version to install. Allowed values: `skip` (default value, do not install fcli), `latest`, or specific version number. Supports semantic versioning, for example `v2` will install the latest known `2.x.y` version. Version may be specified either with or without the `v` prefix, for example `v2.0.0` and `2.0.0` are semantically the same.
@@ -286,6 +314,22 @@ The FortifyVulnerabilityExporter version to install. Allowed values: `skip` (def
 
 **`bugtracker-utility`** - OPTIONAL    
 The FortifyBugTrackerUtility version to install. Allowed values: `skip` (default value, do not install), `latest`, or specific version number. Supports semantic versioning, for example `v4` will install the latest known `4.x` version. Version may be specified either with or without the `v` prefix, for example `v4.12` and `4.12` are semantically the same.
+
+**`debricked-cli`** - OPTIONAL    
+The Debricked CLI version to install. Allowed values: `skip` (default value, do not install), `latest`, or specific version number. Supports semantic versioning, for example `v1` will install the latest known `1.x` version. Version may be specified either with or without the `v` prefix, for example `v1` and `1` are semantically the same.
+
+### Action environment variable inputs
+
+
+<!-- START-INCLUDE:env-setup.md -->
+
+**`TOOL_DEFINITIONS`** - OPTIONAL   
+Fortify tool definitions are used by this GitHub Action to determine available versions, download location and other details of various Fortify-related tools, as required for action execution. By default, the Fortify-provided tool definitions hosted at https://github.com/fortify/tool-definitions/releases/tag/v1 will be used. 
+
+This environment variable allows for overriding the default tool definitions, pointing to either a URL or local (workspace) file. For example, if GitHub workflows are not allowed to download tools from their public internet locations, customers may host the tool installation bundles on an internal server, together with a customized tool definitions bundle that lists the alternative download URLs.
+
+<!-- END-INCLUDE:env-setup.md -->
+
 
 ### Action outputs
 
@@ -315,12 +359,14 @@ The sample workflow below demonstrates how to configure the action for installin
       - name: Setup Fortify tools
         uses: fortify/github-action/setup@v1
         with:
+          tool-definitions: https://github.com/fortify/tool-definitions/releases/download/v1/tool-definitions.yaml.zip
           export-path: true
           fcli: latest
           sc-client: 23.1.0
           fod-uploader: latest
           vuln-exporter: v2
           bugtracker-utility: skip
+          debricked-cli: skip
       - name: Run fcli from PATH
         run: fcli -V
       - name: Run fcli using FCLI_CMD environment variable
@@ -353,6 +399,17 @@ As an example, if the build file that you want to use for packaging doesn't adhe
 <!-- END-INCLUDE:env-package.md -->
 
 
+
+<!-- START-INCLUDE:env-setup.md -->
+
+**`TOOL_DEFINITIONS`** - OPTIONAL   
+Fortify tool definitions are used by this GitHub Action to determine available versions, download location and other details of various Fortify-related tools, as required for action execution. By default, the Fortify-provided tool definitions hosted at https://github.com/fortify/tool-definitions/releases/tag/v1 will be used. 
+
+This environment variable allows for overriding the default tool definitions, pointing to either a URL or local (workspace) file. For example, if GitHub workflows are not allowed to download tools from their public internet locations, customers may host the tool installation bundles on an internal server, together with a customized tool definitions bundle that lists the alternative download URLs.
+
+<!-- END-INCLUDE:env-setup.md -->
+
+
 ### Sample usage
 
 The sample workflow below demonstrates how to configure the action for running a SAST scan on FoD.
@@ -365,6 +422,7 @@ The sample workflow below demonstrates how to configure the action for running a
         uses: fortify/github-action/package@v1
         env:
           # EXTRA_PACKAGE_OPTS: -bf custom-pom.xml
+          # TOOL_DEFINITIONS: https://ftfy.mycompany.com/tool-definitions/v1/tool-definitions.yaml.zip
 ```
 
 <!-- END-INCLUDE:action-package.md -->
@@ -415,7 +473,7 @@ Required when authenticating with user credentials: FoD tenant, user and passwor
 
 
 **`EXTRA_FOD_LOGIN_OPTS`** - OPTIONAL   
-Extra FoD login options, for example for disabling SSL checks or changing connection time-outs; see [`fcli fod session login` documentation](https://fortify.github.io/fcli/v2.0.0//manpage/fcli-fod-session-login.html)
+Extra FoD login options, for example for disabling SSL checks or changing connection time-outs; see [`fcli fod session login` documentation](https://fortify.github.io/fcli/v2.2.0//manpage/fcli-fod-session-login.html)
 
 <!-- END-INCLUDE:env-fod-login.md -->
 
@@ -445,7 +503,7 @@ As an example, if the build file that you want to use for packaging doesn't adhe
 
 
 **`EXTRA_FOD_SAST_SCAN_OPTS`** - OPTIONAL    
-Extra FoD SAST scan options; see [`fcli fod sast-scan start` documentation](https://fortify.github.io/fcli/v2.0.0//manpage/fcli-fod-sast-scan-start.html)
+Extra FoD SAST scan options; see [`fcli fod sast-scan start` documentation](https://fortify.github.io/fcli/v2.2.0//manpage/fcli-fod-sast-scan-start.html)
 
 
 <!-- START-INCLUDE:env-wait-export.md -->
@@ -460,6 +518,17 @@ If set to `true`, this action will export scan results to the GitHub Security Co
 
 
 <!-- END-INCLUDE:env-fod-sast-scan.md -->
+
+
+
+<!-- START-INCLUDE:env-setup.md -->
+
+**`TOOL_DEFINITIONS`** - OPTIONAL   
+Fortify tool definitions are used by this GitHub Action to determine available versions, download location and other details of various Fortify-related tools, as required for action execution. By default, the Fortify-provided tool definitions hosted at https://github.com/fortify/tool-definitions/releases/tag/v1 will be used. 
+
+This environment variable allows for overriding the default tool definitions, pointing to either a URL or local (workspace) file. For example, if GitHub workflows are not allowed to download tools from their public internet locations, customers may host the tool installation bundles on an internal server, together with a customized tool definitions bundle that lists the alternative download URLs.
+
+<!-- END-INCLUDE:env-setup.md -->
 
 
 ### Sample usage
@@ -482,6 +551,7 @@ The sample workflow below demonstrates how to configure the action for running a
           # EXTRA_PACKAGE_OPTS: -oss
           # DO_WAIT: true
           # DO_EXPORT: true
+          # TOOL_DEFINITIONS: https://ftfy.mycompany.com/tool-definitions/v1/tool-definitions.yaml.zip
 ```
 
 <!-- END-INCLUDE:action-fod-sast-scan.md -->
@@ -523,6 +593,17 @@ Fortify on Demand release to use with this action. This can be specified either 
 <!-- END-INCLUDE:env-fod-release.md -->
 
 
+
+<!-- START-INCLUDE:env-setup.md -->
+
+**`TOOL_DEFINITIONS`** - OPTIONAL   
+Fortify tool definitions are used by this GitHub Action to determine available versions, download location and other details of various Fortify-related tools, as required for action execution. By default, the Fortify-provided tool definitions hosted at https://github.com/fortify/tool-definitions/releases/tag/v1 will be used. 
+
+This environment variable allows for overriding the default tool definitions, pointing to either a URL or local (workspace) file. For example, if GitHub workflows are not allowed to download tools from their public internet locations, customers may host the tool installation bundles on an internal server, together with a customized tool definitions bundle that lists the alternative download URLs.
+
+<!-- END-INCLUDE:env-setup.md -->
+
+
 ### Sample usage
 
 The sample workflow below demonstrates how to configure the action for exporting FoD SAST vulnerability data to the GitHub Security Code Scanning dashboard.
@@ -537,6 +618,7 @@ The sample workflow below demonstrates how to configure the action for exporting
           FOD_USER: ${{secrets.FOD_USER}}
           FOD_PASSWORD: ${{secrets.FOD_PAT}}
           # FOD_RELEASE: MyApp:MyRelease
+          # TOOL_DEFINITIONS: https://ftfy.mycompany.com/tool-definitions/v1/tool-definitions.yaml.zip
 ```
 
 <!-- END-INCLUDE:action-fod-export.md -->
@@ -588,7 +670,7 @@ Required when authenticating with SSC user credentials.
 Required: ScanCentral SAST Client Authentication Token for authenticating with ScanCentral SAST Controller.
 
 **`EXTRA_SC_SAST_LOGIN_OPTS`** - OPTIONAL    
-Extra ScanCentral SAST login options, for example for disabling SSL checks or changing connection time-outs; see [`fcli sc-sast session login` documentation](https://fortify.github.io/fcli/v2.0.0//manpage/fcli-sc-sast-session-login.html).
+Extra ScanCentral SAST login options, for example for disabling SSL checks or changing connection time-outs; see [`fcli sc-sast session login` documentation](https://fortify.github.io/fcli/v2.2.0//manpage/fcli-sc-sast-session-login.html).
 
 <!-- END-INCLUDE:env-sc-sast-login.md -->
 
@@ -614,7 +696,7 @@ As an example, if the build file that you want to use for packaging doesn't adhe
 
 
 **`EXTRA_SC_SAST_SCAN_OPTS`** - OPTIONAL    
-Extra ScanCentral SAST scan options; see [`fcli sc-sast scan start` documentation](https://fortify.github.io/fcli/v2.0.0//manpage/fcli-sc-sast-scan-start.html)
+Extra ScanCentral SAST scan options; see [`fcli sc-sast scan start` documentation](https://fortify.github.io/fcli/v2.2.0//manpage/fcli-sc-sast-scan-start.html)
 
 
 <!-- START-INCLUDE:env-wait-export.md -->
@@ -629,6 +711,17 @@ If set to `true`, this action will export scan results to the GitHub Security Co
 
 
 <!-- END-INCLUDE:env-sc-sast-scan.md -->
+
+
+
+<!-- START-INCLUDE:env-setup.md -->
+
+**`TOOL_DEFINITIONS`** - OPTIONAL   
+Fortify tool definitions are used by this GitHub Action to determine available versions, download location and other details of various Fortify-related tools, as required for action execution. By default, the Fortify-provided tool definitions hosted at https://github.com/fortify/tool-definitions/releases/tag/v1 will be used. 
+
+This environment variable allows for overriding the default tool definitions, pointing to either a URL or local (workspace) file. For example, if GitHub workflows are not allowed to download tools from their public internet locations, customers may host the tool installation bundles on an internal server, together with a customized tool definitions bundle that lists the alternative download URLs.
+
+<!-- END-INCLUDE:env-setup.md -->
 
 
 ### Sample usage
@@ -650,6 +743,7 @@ The sample workflow below demonstrates how to configure the action for running a
           # EXTRA_PACKAGE_OPTS: -bf custom-pom.xml
           # DO_WAIT: true
           # DO_EXPORT: true
+          # TOOL_DEFINITIONS: https://ftfy.mycompany.com/tool-definitions/v1/tool-definitions.yaml.zip
 ```
 
 <!-- END-INCLUDE:action-sc-sast-scan.md -->
@@ -691,6 +785,17 @@ Fortify SSC application version to use with this action. This can be specified e
 <!-- END-INCLUDE:env-ssc-appversion.md -->
 
 
+
+<!-- START-INCLUDE:env-setup.md -->
+
+**`TOOL_DEFINITIONS`** - OPTIONAL   
+Fortify tool definitions are used by this GitHub Action to determine available versions, download location and other details of various Fortify-related tools, as required for action execution. By default, the Fortify-provided tool definitions hosted at https://github.com/fortify/tool-definitions/releases/tag/v1 will be used. 
+
+This environment variable allows for overriding the default tool definitions, pointing to either a URL or local (workspace) file. For example, if GitHub workflows are not allowed to download tools from their public internet locations, customers may host the tool installation bundles on an internal server, together with a customized tool definitions bundle that lists the alternative download URLs.
+
+<!-- END-INCLUDE:env-setup.md -->
+
+
 ### Sample usage
 
 The sample workflow below demonstrates how to configure the action for exporting SSC SAST vulnerability data to the GitHub Security Code Scanning dashboard.
@@ -703,6 +808,7 @@ The sample workflow below demonstrates how to configure the action for exporting
           SSC_URL: ${{secrets.SSC_URL}}
           SSC_TOKEN: ${{secrets.SSC_TOKEN}}
           # SSC_APPVERSION: MyApp:MyVersion
+          # TOOL_DEFINITIONS: https://ftfy.mycompany.com/tool-definitions/v1/tool-definitions.yaml.zip
 ```
 
 <!-- END-INCLUDE:action-ssc-export.md -->

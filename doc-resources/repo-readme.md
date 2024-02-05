@@ -45,9 +45,13 @@ If not specified or when set to false, no SAST scan will be performed. For now, 
 
 {{include:env-fod-sast-scan.md}}
 
+{{include:env-setup.md}}
+
 #### ScanCentral SAST
 
 {{include:env-sc-sast-scan.md}}
+
+{{include:env-setup.md}}
 
 ### Sample workflows
 
@@ -65,6 +69,7 @@ The sample workflows below demonstrate how to configure the action for running a
           sast-scan: true
         env:
 {{include:nocomments.env-fod-sast-scan-sample.md}}
+{{include:nocomments.env-setup-sample.md}}
 ```
 
 #### ScanCentral SAST
@@ -79,6 +84,7 @@ The sample workflows below demonstrate how to configure the action for running a
           sast-scan: true
         env:
 {{include:nocomments.env-sc-sast-scan-sample.md}}
+{{include:nocomments.env-setup-sample.md}}
 ```
 
 ### More information

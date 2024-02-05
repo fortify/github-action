@@ -14,6 +14,8 @@ Before running this action, please ensure that the appropriate release has been 
 
 {{include:env-fod-sast-scan.md}}
 
+{{include:env-setup.md}}
+
 ### Sample usage
 
 The sample workflow below demonstrates how to configure the action for running a SAST scan on FoD.
@@ -26,4 +28,5 @@ The sample workflow below demonstrates how to configure the action for running a
         uses: fortify/github-action/fod-sast-scan@{{var:action-major-version}}
         env:
 {{include:nocomments.env-fod-sast-scan-sample.md}}
+{{include:nocomments.env-setup-sample.md}}
 ```

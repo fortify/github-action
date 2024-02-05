@@ -6,6 +6,8 @@ This action exports the latest vulnerability data from an FoD release to the Git
 
 {{include:env-fod-release.md}}
 
+{{include:env-setup.md}}
+
 ### Sample usage
 
 The sample workflow below demonstrates how to configure the action for exporting FoD SAST vulnerability data to the GitHub Security Code Scanning dashboard.
@@ -17,4 +19,5 @@ The sample workflow below demonstrates how to configure the action for exporting
         env:
 {{include:nocomments.env-fod-connection-sample.md}}
 {{include:nocomments.env-fod-release-sample.md}}
+{{include:nocomments.env-setup-sample.md}}
 ```
