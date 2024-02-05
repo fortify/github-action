@@ -161,7 +161,7 @@ Required when authenticating with SSC user credentials.
 <!-- END-INCLUDE:env-ssc-connection.md -->
 
 
-**`SC_SAST_CLIENT_AUTH_TOKEN`** - REQUIRED    
+**`SC_SAST_TOKEN`** - REQUIRED    
 Required: ScanCentral SAST Client Authentication Token for authenticating with ScanCentral SAST Controller.
 
 **`EXTRA_SC_SAST_LOGIN_OPTS`** - OPTIONAL    
@@ -189,6 +189,9 @@ As an example, if the build file that you want to use for packaging doesn't adhe
 
 <!-- END-INCLUDE:env-package.md -->
 
+
+**`SC_SAST_SENSOR_VERSION`** - REQUIRED     
+Version of the ScanCentral SAST sensor on which the scan should be performed. See [`fcli sc-sast scan start` documentation](https://fortify.github.io/fcli/v2.2.0//manpage/fcli-sc-sast-scan-start.html#_options_for_scanning_a_package_file) for details.
 
 **`EXTRA_SC_SAST_SCAN_OPTS`** - OPTIONAL    
 Extra ScanCentral SAST scan options; see [`fcli sc-sast scan start` documentation](https://fortify.github.io/fcli/v2.2.0//manpage/fcli-sc-sast-scan-start.html)
@@ -259,10 +262,11 @@ The sample workflows below demonstrate how to configure the action for running a
         env:
           SSC_URL: ${{secrets.SSC_URL}}
           SSC_TOKEN: ${{secrets.SSC_TOKEN}}
-          SC_SAST_CLIENT_AUTH_TOKEN: ${{secrets.CLIENT_AUTH_TOKEN}}
+          SC_SAST_TOKEN: ${{secrets.CLIENT_AUTH_TOKEN}}
           # EXTRA_SC_SAST_LOGIN_OPTS: --socket-timeout=60s
           # SSC_APPVERSION: MyApp:MyVersion
           # EXTRA_PACKAGE_OPTS: -bf custom-pom.xml
+          SC_SAST_SENSOR_VERSION: 23.2
           # DO_WAIT: true
           # DO_EXPORT: true
           # TOOL_DEFINITIONS: https://ftfy.mycompany.com/tool-definitions/v1/tool-definitions.yaml.zip
@@ -666,7 +670,7 @@ Required when authenticating with SSC user credentials.
 <!-- END-INCLUDE:env-ssc-connection.md -->
 
 
-**`SC_SAST_CLIENT_AUTH_TOKEN`** - REQUIRED    
+**`SC_SAST_TOKEN`** - REQUIRED    
 Required: ScanCentral SAST Client Authentication Token for authenticating with ScanCentral SAST Controller.
 
 **`EXTRA_SC_SAST_LOGIN_OPTS`** - OPTIONAL    
@@ -694,6 +698,9 @@ As an example, if the build file that you want to use for packaging doesn't adhe
 
 <!-- END-INCLUDE:env-package.md -->
 
+
+**`SC_SAST_SENSOR_VERSION`** - REQUIRED     
+Version of the ScanCentral SAST sensor on which the scan should be performed. See [`fcli sc-sast scan start` documentation](https://fortify.github.io/fcli/v2.2.0//manpage/fcli-sc-sast-scan-start.html#_options_for_scanning_a_package_file) for details.
 
 **`EXTRA_SC_SAST_SCAN_OPTS`** - OPTIONAL    
 Extra ScanCentral SAST scan options; see [`fcli sc-sast scan start` documentation](https://fortify.github.io/fcli/v2.2.0//manpage/fcli-sc-sast-scan-start.html)
@@ -737,10 +744,11 @@ The sample workflow below demonstrates how to configure the action for running a
         env:
           SSC_URL: ${{secrets.SSC_URL}}
           SSC_TOKEN: ${{secrets.SSC_TOKEN}}
-          SC_SAST_CLIENT_AUTH_TOKEN: ${{secrets.CLIENT_AUTH_TOKEN}}
+          SC_SAST_TOKEN: ${{secrets.CLIENT_AUTH_TOKEN}}
           # EXTRA_SC_SAST_LOGIN_OPTS: --socket-timeout=60s
           # SSC_APPVERSION: MyApp:MyVersion
           # EXTRA_PACKAGE_OPTS: -bf custom-pom.xml
+          SC_SAST_SENSOR_VERSION: 23.2
           # DO_WAIT: true
           # DO_EXPORT: true
           # TOOL_DEFINITIONS: https://ftfy.mycompany.com/tool-definitions/v1/tool-definitions.yaml.zip
