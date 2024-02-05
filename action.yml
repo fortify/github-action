@@ -9,9 +9,9 @@ inputs:
 runs:
   using: composite
   steps:
-    - uses: fortify/github-action/fod-sast-scan@feat-tool-definitions
+    - uses: fortify/github-action/fod-sast-scan@main
       if: inputs['sast-scan']=='true' && env.FOD_URL
-    - uses: fortify/github-action/sc-sast-scan@feat-tool-definitions
+    - uses: fortify/github-action/sc-sast-scan@main
       if: inputs['sast-scan']=='true' && env.SSC_URL  
         
 branding:
