@@ -21,7 +21,7 @@ runs:
         echo '_SC_SAST_LOGIN_OPTS=--ssc-url "${SSC_URL}" -t "${SSC_TOKEN}" -c "${SC_SAST_TOKEN}" ${EXTRA_SC_SAST_LOGIN_OPTS}' >> $GITHUB_ENV
       shell: bash
     # Run fcli login command; note that the calling action/workflow is responsible for installing fcli
-    - uses: fortify/github-action/internal/run@v1.2.0
+    - uses: fortify/github-action/internal/run@main
       with:
         cmd: '"${FCLI_CMD}" sc-sast session login ${_SC_SAST_LOGIN_OPTS}' 
     # Clean up temporary environment variables
