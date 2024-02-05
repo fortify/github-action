@@ -4,11 +4,11 @@ author: 'Fortify'
 runs:
   using: composite
   steps:
-    - uses: fortify/github-action/setup@main
+    - uses: fortify/github-action/setup@v1.2.0
       with:
         export-path: false
         sc-client: action-default
-    - uses: fortify/github-action/internal/run@main
+    - uses: fortify/github-action/internal/run@v1.2.0
       with: 
         cmd: '"${SC_CLIENT_CMD}" package ${EXTRA_PACKAGE_OPTS} -o package.zip'
 branding:
