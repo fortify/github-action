@@ -43,6 +43,9 @@ The FortifyVulnerabilityExporter version to install. Allowed values: `skip` (def
 **`bugtracker-utility`** - OPTIONAL    
 The FortifyBugTrackerUtility version to install. Allowed values: `skip` (default value, do not install), `latest`, or specific version number. Supports semantic versioning, for example `v4` will install the latest known `4.x` version. Version may be specified either with or without the `v` prefix, for example `v4.12` and `4.12` are semantically the same.
 
+**`debricked-cli`** - OPTIONAL    
+The Debricked CLI version to install. Allowed values: `skip` (default value, do not install), `latest`, or specific version number. Supports semantic versioning, for example `v1` will install the latest known `1.x` version. Version may be specified either with or without the `v` prefix, for example `v1` and `1` are semantically the same.
+
 ### Action environment variable inputs
 
 
@@ -91,6 +94,7 @@ The sample workflow below demonstrates how to configure the action for installin
           fod-uploader: latest
           vuln-exporter: v2
           bugtracker-utility: skip
+          debricked-cli: skip
       - name: Run fcli from PATH
         run: fcli -V
       - name: Run fcli using FCLI_CMD environment variable
