@@ -12,6 +12,8 @@ Before running this action, please ensure that the appropriate application versi
 
 {{include:env-sc-sast-scan.md}}
 
+{{include:env-setup.md}}
+
 ### Sample usage
 
 The sample workflow below demonstrates how to configure the action for running a SAST scan on ScanCentral SAST.
@@ -24,4 +26,5 @@ The sample workflow below demonstrates how to configure the action for running a
         uses: fortify/github-action/sc-sast-scan@{{var:action-major-version}}
         env:
 {{include:nocomments.env-sc-sast-scan-sample.md}}
+{{include:nocomments.env-setup-sample.md}}
 ```

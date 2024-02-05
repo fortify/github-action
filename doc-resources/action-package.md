@@ -4,6 +4,8 @@ This action packages application source code using [ScanCentral Client]({{var:sc
 
 {{include:env-package.md}}
 
+{{include:env-setup.md}}
+
 ### Sample usage
 
 The sample workflow below demonstrates how to configure the action for running a SAST scan on FoD.
@@ -16,4 +18,5 @@ The sample workflow below demonstrates how to configure the action for running a
         uses: fortify/github-action/package@{{var:action-major-version}}
         env:
 {{include:nocomments.env-package-sample.md}}
+{{include:nocomments.env-setup-sample.md}}
 ```

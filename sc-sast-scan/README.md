@@ -49,7 +49,7 @@ Required when authenticating with SSC user credentials.
 Required: ScanCentral SAST Client Authentication Token for authenticating with ScanCentral SAST Controller.
 
 **`EXTRA_SC_SAST_LOGIN_OPTS`** - OPTIONAL    
-Extra ScanCentral SAST login options, for example for disabling SSL checks or changing connection time-outs; see [`fcli sc-sast session login` documentation](https://fortify.github.io/fcli/v2.0.0//manpage/fcli-sc-sast-session-login.html).
+Extra ScanCentral SAST login options, for example for disabling SSL checks or changing connection time-outs; see [`fcli sc-sast session login` documentation](https://fortify.github.io/fcli/v2.2.0//manpage/fcli-sc-sast-session-login.html).
 
 <!-- END-INCLUDE:env-sc-sast-login.md -->
 
@@ -75,7 +75,7 @@ As an example, if the build file that you want to use for packaging doesn't adhe
 
 
 **`EXTRA_SC_SAST_SCAN_OPTS`** - OPTIONAL    
-Extra ScanCentral SAST scan options; see [`fcli sc-sast scan start` documentation](https://fortify.github.io/fcli/v2.0.0//manpage/fcli-sc-sast-scan-start.html)
+Extra ScanCentral SAST scan options; see [`fcli sc-sast scan start` documentation](https://fortify.github.io/fcli/v2.2.0//manpage/fcli-sc-sast-scan-start.html)
 
 
 <!-- START-INCLUDE:env-wait-export.md -->
@@ -90,6 +90,17 @@ If set to `true`, this action will export scan results to the GitHub Security Co
 
 
 <!-- END-INCLUDE:env-sc-sast-scan.md -->
+
+
+
+<!-- START-INCLUDE:env-setup.md -->
+
+**`TOOL_DEFINITIONS`** - OPTIONAL   
+Fortify tool definitions are used by this GitHub Action to determine available versions, download location and other details of various Fortify-related tools, as required for action execution. By default, the Fortify-provided tool definitions hosted at https://github.com/fortify/tool-definitions/releases/tag/v1 will be used. 
+
+This environment variable allows for overriding the default tool definitions, pointing to either a URL or local (workspace) file. For example, if GitHub workflows are not allowed to download tools from their public internet locations, customers may host the tool installation bundles on an internal server, together with a customized tool definitions bundle that lists the alternative download URLs.
+
+<!-- END-INCLUDE:env-setup.md -->
 
 
 ### Sample usage
@@ -111,6 +122,7 @@ The sample workflow below demonstrates how to configure the action for running a
           # EXTRA_PACKAGE_OPTS: -bf custom-pom.xml
           # DO_WAIT: true
           # DO_EXPORT: true
+          # TOOL_DEFINITIONS: https://ftfy.mycompany.com/tool-definitions/v1/tool-definitions.yaml.zip
 ```
 
 <!-- END-INCLUDE:action-sc-sast-scan.md -->

@@ -1,6 +1,7 @@
 This action allows for setting up the Fortify tools listed below. Which tools and which versions to install, and whether to add the tool bin-directories to the system path, is controlled through action inputs as listed in the next section.
 
 * [fcli](https://github.com/fortify/fcli)
+* [Debricked CLI](https://github.com/debricked/cli)
 * [ScanCentral Client]({{var:sc-client-doc-base-url}}#A_Clients.htm)
 * [FoDUploader](https://github.com/fod-dev/fod-uploader-java)
 * [FortifyVulnerabilityExporter](https://github.com/fortify/FortifyVulnerabilityExporter)
@@ -10,6 +11,9 @@ This action allows for setting up the Fortify tools listed below. Which tools an
 
 **`export-path`** - OPTIONAL    
 Whether to add the installed tools to the system PATH variable. Allowed values: `true` (default) or `false`
+
+**`tool-definitions`** - OPTIONAL
+Allows for overriding the location of the Fortify tool definitions bundle. This can be specified either as an action input or through the `TOOL_DEFINITIONS` environment variable; see the 'Action environment variable inputs' section below for details.
 
 **`fcli`** - OPTIONAL    
 The fcli version to install. Allowed values: `skip` (default value, do not install fcli), `latest`, or specific version number. Supports semantic versioning, for example `v2` will install the latest known `2.x.y` version. Version may be specified either with or without the `v` prefix, for example `v2.0.0` and `2.0.0` are semantically the same.
@@ -25,6 +29,13 @@ The FortifyVulnerabilityExporter version to install. Allowed values: `skip` (def
 
 **`bugtracker-utility`** - OPTIONAL    
 The FortifyBugTrackerUtility version to install. Allowed values: `skip` (default value, do not install), `latest`, or specific version number. Supports semantic versioning, for example `v4` will install the latest known `4.x` version. Version may be specified either with or without the `v` prefix, for example `v4.12` and `4.12` are semantically the same.
+
+**`debricked-cli`** - OPTIONAL    
+The Debricked CLI version to install. Allowed values: `skip` (default value, do not install), `latest`, or specific version number. Supports semantic versioning, for example `v1` will install the latest known `1.x` version. Version may be specified either with or without the `v` prefix, for example `v1` and `1` are semantically the same.
+
+### Action environment variable inputs
+
+{{include:env-setup.md}}
 
 ### Action outputs
 
@@ -54,12 +65,14 @@ The sample workflow below demonstrates how to configure the action for installin
       - name: Setup Fortify tools
         uses: fortify/github-action/setup@{{var:action-major-version}}
         with:
+          tool-definitions: https://github.com/fortify/tool-definitions/releases/download/v1/tool-definitions.yaml.zip
           export-path: true
           fcli: latest
           sc-client: 23.1.0
           fod-uploader: latest
           vuln-exporter: v2
           bugtracker-utility: skip
+          debricked-cli: skip
       - name: Run fcli from PATH
         run: fcli -V
       - name: Run fcli using FCLI_CMD environment variable

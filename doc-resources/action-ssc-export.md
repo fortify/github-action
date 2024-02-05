@@ -6,6 +6,8 @@ This action exports the latest vulnerability data from an SSC application versio
 
 {{include:env-ssc-appversion.md}}
 
+{{include:env-setup.md}}
+
 ### Sample usage
 
 The sample workflow below demonstrates how to configure the action for exporting SSC SAST vulnerability data to the GitHub Security Code Scanning dashboard.
@@ -17,4 +19,5 @@ The sample workflow below demonstrates how to configure the action for exporting
         env:
 {{include:nocomments.env-ssc-connection-sample.md}}
 {{include:nocomments.env-ssc-appversion-sample.md}}
+{{include:nocomments.env-setup-sample.md}}
 ```
