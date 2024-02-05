@@ -74,8 +74,8 @@ As an example, if the build file that you want to use for packaging doesn't adhe
 <!-- END-INCLUDE:env-package.md -->
 
 
-**`SC_SAST_SENSOR_VERSION`** - REQUIRED
-Version of the ScanCentral SAST sensor on which the scan should be performed. See [`fcli sc-sast scan start` documentation](https://fortify.github.io/fcli/v2.2.0//manpage/fcli-sc-sast-scan-start.html) for details.
+**`SC_SAST_SENSOR_VERSION`** - REQUIRED     
+Version of the ScanCentral SAST sensor on which the scan should be performed. See [`fcli sc-sast scan start` documentation](https://fortify.github.io/fcli/v2.2.0//manpage/fcli-sc-sast-scan-start.html#_options_for_scanning_a_package_file) for details.
 
 **`EXTRA_SC_SAST_SCAN_OPTS`** - OPTIONAL    
 Extra ScanCentral SAST scan options; see [`fcli sc-sast scan start` documentation](https://fortify.github.io/fcli/v2.2.0//manpage/fcli-sc-sast-scan-start.html)
