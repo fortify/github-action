@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.2.0](https://github.com/fortify/github-action/compare/v1.1.0...v1.2.0) (2024-02-05)
+
+
+### Features
+
+* Add support for Debricked CLI on fortify/github-action/setup ([2c7c1e7](https://github.com/fortify/github-action/commit/2c7c1e703af0d7b0f56adf456bf8fa019a51f72a))
+* Add support for updateable/customizable tool definitions ([2c7c1e7](https://github.com/fortify/github-action/commit/2c7c1e703af0d7b0f56adf456bf8fa019a51f72a))
+
+
+### Bug Fixes
+
+* Fix documentation on ScanCentral SAST inputs (fixes [#23](https://github.com/fortify/github-action/issues/23)) ([3a20c7c](https://github.com/fortify/github-action/commit/3a20c7c27810a16129a63b2d7b244072f673d73a))
+
 ## [1.1.0](https://github.com/fortify/github-action/compare/v1.0.4...v1.1.0) (2023-11-28)
 
 
