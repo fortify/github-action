@@ -4,8 +4,8 @@ author: 'Fortify'
 runs:
   using: composite
   steps:
-    - uses: fortify/github-action/internal/set-fod-var-defaults@main
-    - uses: fortify/github-action/setup@main
+    - uses: fortify/github-action/internal/set-fod-var-defaults@fix-23
+    - uses: fortify/github-action/setup@fix-23
       with:
         export-path: false
         vuln-exporter: action-default
@@ -15,7 +15,7 @@ runs:
           *) echo '_RELEASE_OPT="--fod.release.id=${FOD_RELEASE}"' >> $GITHUB_ENV ;;
         esac
       shell: bash
-    - uses: fortify/github-action/internal/run@main
+    - uses: fortify/github-action/internal/run@fix-23
       with:
         cmd: '"${VULN_EXPORTER_CMD}" FoDToGitHub "--fod.baseUrl=${FOD_URL}" "--fod.tenant=${FOD_TENANT}" "--fod.user=${FOD_USER}" "--fod.password=${FOD_PASSWORD}" "--fod.clientID=${FOD_CLIENT_ID}" "--fod.clientSecret=${FOD_CLIENT_SECRET}" "${_RELEASE_OPT}"'
     # Uploaded the generated file containing Fortify vulnerabilities to GitHub.
