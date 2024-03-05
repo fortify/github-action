@@ -48,7 +48,7 @@ Required when authenticating with user credentials: FoD tenant, user and passwor
 
 
 **`EXTRA_FOD_LOGIN_OPTS`** - OPTIONAL   
-Extra FoD login options, for example for disabling SSL checks or changing connection time-outs; see [`fcli fod session login` documentation](https://fortify.github.io/fcli/v2.2.0//manpage/fcli-fod-session-login.html)
+Extra FoD login options, for example for disabling SSL checks or changing connection time-outs; see [`fcli fod session login` documentation](https://fortify.github.io/fcli/v2.3.0//manpage/fcli-fod-session-login.html)
 
 <!-- END-INCLUDE:env-fod-login.md -->
 
@@ -78,7 +78,7 @@ As an example, if the build file that you want to use for packaging doesn't adhe
 
 
 **`EXTRA_FOD_SAST_SCAN_OPTS`** - OPTIONAL    
-Extra FoD SAST scan options; see [`fcli fod sast-scan start` documentation](https://fortify.github.io/fcli/v2.2.0//manpage/fcli-fod-sast-scan-start.html)
+Extra FoD SAST scan options; see [`fcli fod sast-scan start` documentation](https://fortify.github.io/fcli/v2.3.0//manpage/fcli-fod-sast-scan-start.html)
 
 
 <!-- START-INCLUDE:env-wait-export.md -->
