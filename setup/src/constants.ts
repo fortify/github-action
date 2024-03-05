@@ -14,7 +14,7 @@ import * as core from '@actions/core';
  */ 
 export const TOOLS: Record<string, Record<string, Record<string, string>>> = {
     "fcli": { 
-        "versionAliases": {"action-default": "2.2.0"},
+        "versionAliases": {"action-default": "2.3.0"},
         "cmds": {"windows": "fcli.exe", "linux": "fcli", "darwin": "fcli"}
     },
     "sc-client": { 

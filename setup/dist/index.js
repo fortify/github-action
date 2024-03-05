@@ -18951,7 +18951,7 @@ const core = __importStar(__nccwpck_require__(2186));
  */
 exports.TOOLS = {
     "fcli": {
-        "versionAliases": { "action-default": "2.2.0" },
+        "versionAliases": { "action-default": "2.3.0" },
         "cmds": { "windows": "fcli.exe", "linux": "fcli", "darwin": "fcli" }
     },
     "sc-client": {
