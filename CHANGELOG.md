@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.2.1](https://github.com/fortify/github-action/compare/v1.2.0...v1.2.1) (2024-03-05)
+
+
+### Bug Fixes
+
+* Fix ScanCentral SAST documentation link to point to right version ([3b5cd8b](https://github.com/fortify/github-action/commit/3b5cd8bc279d25264d4afbc9a66f9b26144e68f9))
+* Update internal fcli version to honor GitHub proxy settings ([3b5cd8b](https://github.com/fortify/github-action/commit/3b5cd8bc279d25264d4afbc9a66f9b26144e68f9))
+
 ## [1.2.0](https://github.com/fortify/github-action/compare/v1.1.0...v1.2.0) (2024-02-05)
 
 
