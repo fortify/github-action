@@ -11,7 +11,7 @@
 
 <!-- START-INCLUDE:repo-readme.md -->
 
-The [Fortify github-action repository](https://github.com/fortify/github-action) hosts various Fortify-related GitHub Actions as listed in the sections below.
+The [Fortify github-action repository](https://github.com/fortify/github-action) hosts various Fortify-related GitHub Actions as listed in the sections below. 
 
 **Fortify on Demand**
 
@@ -44,6 +44,21 @@ The [Fortify github-action repository](https://github.com/fortify/github-action)
 ## fortify/github-action
 
 The primary `fortify/github-action` action currently allows for running SAST scans on either Fortify on Demand or ScanCentral SAST.  Which activities to perform is controlled through action inputs, the input for those activities is provided through environment variables. With Fortify on Demand, software composition analysis of open source components may also be performed in conjunction with the SAST scan for customers who have purchased the functionality.
+
+
+<!-- START-INCLUDE:action-prerequisites.md -->
+
+** Prerequisites **
+
+This action assumes the standard software packages as provided by GitHub-hosted runners to be available. If you are using self-hosted runners, you may need to install some of these software packages in order to successfully use this action. In particular, not having the following software installed is known to cause issues when running `fortify/github-action` or one of its sub-actions:
+
+* Node.js
+* Visual C++ Redistributable (Windows-based runners only)
+* Bash shell   
+  If using Windows runners, this must be a Windows-based `bash` variant, for example as provided by MSYS2. You must make sure that this Windows-based `bash` variant is used for `run` steps that specify `shell: bash`. Actions will fail if the GitHub runner executes `bash` commands on the WSL-provided `bash.exe`
+
+<!-- END-INCLUDE:action-prerequisites.md -->
+
 
 ### Action inputs
 
@@ -296,6 +311,21 @@ This action allows for setting up the Fortify tools listed below. Which tools an
 * [FortifyVulnerabilityExporter](https://github.com/fortify/FortifyVulnerabilityExporter)
 * [FortifyBugTrackerUtility](https://github.com/fortify-ps/FortifyBugTrackerUtility)
 
+
+<!-- START-INCLUDE:action-prerequisites.md -->
+
+** Prerequisites **
+
+This action assumes the standard software packages as provided by GitHub-hosted runners to be available. If you are using self-hosted runners, you may need to install some of these software packages in order to successfully use this action. In particular, not having the following software installed is known to cause issues when running `fortify/github-action` or one of its sub-actions:
+
+* Node.js
+* Visual C++ Redistributable (Windows-based runners only)
+* Bash shell   
+  If using Windows runners, this must be a Windows-based `bash` variant, for example as provided by MSYS2. You must make sure that this Windows-based `bash` variant is used for `run` steps that specify `shell: bash`. Actions will fail if the GitHub runner executes `bash` commands on the WSL-provided `bash.exe`
+
+<!-- END-INCLUDE:action-prerequisites.md -->
+
+
 ### Action inputs
 
 **`export-path`** - OPTIONAL    
@@ -390,6 +420,21 @@ The sample workflow below demonstrates how to configure the action for installin
 
 This action packages application source code using [ScanCentral Client](https://www.microfocus.com/documentation/fortify-software-security-center/2310/SC_SAST_Help_23.1.0/index.htm#A_Clients.htm). The output package is saved as `package.zip`.
 
+
+<!-- START-INCLUDE:action-prerequisites.md -->
+
+** Prerequisites **
+
+This action assumes the standard software packages as provided by GitHub-hosted runners to be available. If you are using self-hosted runners, you may need to install some of these software packages in order to successfully use this action. In particular, not having the following software installed is known to cause issues when running `fortify/github-action` or one of its sub-actions:
+
+* Node.js
+* Visual C++ Redistributable (Windows-based runners only)
+* Bash shell   
+  If using Windows runners, this must be a Windows-based `bash` variant, for example as provided by MSYS2. You must make sure that this Windows-based `bash` variant is used for `run` steps that specify `shell: bash`. Actions will fail if the GitHub runner executes `bash` commands on the WSL-provided `bash.exe`
+
+<!-- END-INCLUDE:action-prerequisites.md -->
+
+
 ### Action environment variable inputs
 
 
@@ -451,6 +496,21 @@ The SAST and optional open source scan performed by this action consists of the 
 * Optionally export scan results to the GitHub Code Scanning dashboard
 
 Before running this action, please ensure that the appropriate release has been created on FoD and has been configured for SAST scans. Future versions of this action may add support for automating app/release creation and scan setup. If open source scanning has been enabled in the FoD SAST scan configuration, be sure to pass the `-oss` option through the `EXTRA_PACKAGE_OPTS` environment variable.
+
+
+<!-- START-INCLUDE:action-prerequisites.md -->
+
+** Prerequisites **
+
+This action assumes the standard software packages as provided by GitHub-hosted runners to be available. If you are using self-hosted runners, you may need to install some of these software packages in order to successfully use this action. In particular, not having the following software installed is known to cause issues when running `fortify/github-action` or one of its sub-actions:
+
+* Node.js
+* Visual C++ Redistributable (Windows-based runners only)
+* Bash shell   
+  If using Windows runners, this must be a Windows-based `bash` variant, for example as provided by MSYS2. You must make sure that this Windows-based `bash` variant is used for `run` steps that specify `shell: bash`. Actions will fail if the GitHub runner executes `bash` commands on the WSL-provided `bash.exe`
+
+<!-- END-INCLUDE:action-prerequisites.md -->
+
 
 ### Action environment variable inputs
 
@@ -571,6 +631,21 @@ The sample workflow below demonstrates how to configure the action for running a
 
 This action exports the latest vulnerability data from an FoD release to the GitHub Code Scanning dashboard. Note that this may require a [GitHub Advanced Security](https://docs.github.com/en/get-started/learning-about-github/about-github-advanced-security) subscription, unless you're running this action on a public github.com repository.
 
+
+<!-- START-INCLUDE:action-prerequisites.md -->
+
+** Prerequisites **
+
+This action assumes the standard software packages as provided by GitHub-hosted runners to be available. If you are using self-hosted runners, you may need to install some of these software packages in order to successfully use this action. In particular, not having the following software installed is known to cause issues when running `fortify/github-action` or one of its sub-actions:
+
+* Node.js
+* Visual C++ Redistributable (Windows-based runners only)
+* Bash shell   
+  If using Windows runners, this must be a Windows-based `bash` variant, for example as provided by MSYS2. You must make sure that this Windows-based `bash` variant is used for `run` steps that specify `shell: bash`. Actions will fail if the GitHub runner executes `bash` commands on the WSL-provided `bash.exe`
+
+<!-- END-INCLUDE:action-prerequisites.md -->
+
+
 ### Action environment variable inputs
 
 
@@ -645,6 +720,21 @@ This action performs a SAST scan on ScanCentral SAST, consisting of the followin
 * Optionally export scan results to the GitHub Code Scanning dashboard
 
 Before running this action, please ensure that the appropriate application version has been created on SSC. Future versions of this action may add support for automating application version creation.
+
+
+<!-- START-INCLUDE:action-prerequisites.md -->
+
+** Prerequisites **
+
+This action assumes the standard software packages as provided by GitHub-hosted runners to be available. If you are using self-hosted runners, you may need to install some of these software packages in order to successfully use this action. In particular, not having the following software installed is known to cause issues when running `fortify/github-action` or one of its sub-actions:
+
+* Node.js
+* Visual C++ Redistributable (Windows-based runners only)
+* Bash shell   
+  If using Windows runners, this must be a Windows-based `bash` variant, for example as provided by MSYS2. You must make sure that this Windows-based `bash` variant is used for `run` steps that specify `shell: bash`. Actions will fail if the GitHub runner executes `bash` commands on the WSL-provided `bash.exe`
+
+<!-- END-INCLUDE:action-prerequisites.md -->
+
 
 ### Action environment variable inputs
 
@@ -766,6 +856,21 @@ The sample workflow below demonstrates how to configure the action for running a
 <!-- START-INCLUDE:action-ssc-export.md -->
 
 This action exports the latest vulnerability data from an SSC application version to the GitHub Code Scanning dashboard. Note that this may require a [GitHub Advanced Security](https://docs.github.com/en/get-started/learning-about-github/about-github-advanced-security) subscription, unless you're running this action on a public github.com repository.
+
+
+<!-- START-INCLUDE:action-prerequisites.md -->
+
+** Prerequisites **
+
+This action assumes the standard software packages as provided by GitHub-hosted runners to be available. If you are using self-hosted runners, you may need to install some of these software packages in order to successfully use this action. In particular, not having the following software installed is known to cause issues when running `fortify/github-action` or one of its sub-actions:
+
+* Node.js
+* Visual C++ Redistributable (Windows-based runners only)
+* Bash shell   
+  If using Windows runners, this must be a Windows-based `bash` variant, for example as provided by MSYS2. You must make sure that this Windows-based `bash` variant is used for `run` steps that specify `shell: bash`. Actions will fail if the GitHub runner executes `bash` commands on the WSL-provided `bash.exe`
+
+<!-- END-INCLUDE:action-prerequisites.md -->
+
 
 ### Action environment variable inputs
 

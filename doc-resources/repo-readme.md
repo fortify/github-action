@@ -1,4 +1,4 @@
-The [Fortify github-action repository]({{var:repo-url}}) hosts various Fortify-related GitHub Actions as listed in the sections below.
+The [Fortify github-action repository]({{var:repo-url}}) hosts various Fortify-related GitHub Actions as listed in the sections below. 
 
 **Fortify on Demand**
 
@@ -31,6 +31,8 @@ The [Fortify github-action repository]({{var:repo-url}}) hosts various Fortify-r
 ## fortify/github-action
 
 The primary `fortify/github-action` action currently allows for running SAST scans on either Fortify on Demand or ScanCentral SAST.  Which activities to perform is controlled through action inputs, the input for those activities is provided through environment variables. With Fortify on Demand, software composition analysis of open source components may also be performed in conjunction with the SAST scan for customers who have purchased the functionality.
+
+{{include:action-prerequisites.md}}
 
 ### Action inputs
 

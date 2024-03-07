@@ -7,6 +7,8 @@ This action allows for setting up the Fortify tools listed below. Which tools an
 * [FortifyVulnerabilityExporter](https://github.com/fortify/FortifyVulnerabilityExporter)
 * [FortifyBugTrackerUtility](https://github.com/fortify-ps/FortifyBugTrackerUtility)
 
+{{include:action-prerequisites.md}}
+
 ### Action inputs
 
 **`export-path`** - OPTIONAL    

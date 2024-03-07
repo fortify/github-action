@@ -1,5 +1,7 @@
 This action packages application source code using [ScanCentral Client]({{var:sc-client-doc-base-url}}#A_Clients.htm). The output package is saved as `package.zip`.
 
+{{include:action-prerequisites.md}}
+
 ### Action environment variable inputs
 
 {{include:env-package.md}}

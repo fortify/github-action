@@ -8,6 +8,8 @@ This action performs a SAST scan on ScanCentral SAST, consisting of the followin
 
 Before running this action, please ensure that the appropriate application version has been created on SSC. Future versions of this action may add support for automating application version creation.
 
+{{include:action-prerequisites.md}}
+
 ### Action environment variable inputs
 
 {{include:env-sc-sast-scan.md}}

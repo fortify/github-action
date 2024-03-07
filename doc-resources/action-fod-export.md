@@ -1,5 +1,7 @@
 This action exports the latest vulnerability data from an FoD release to the GitHub Code Scanning dashboard. Note that this may require a [GitHub Advanced Security](https://docs.github.com/en/get-started/learning-about-github/about-github-advanced-security) subscription, unless you're running this action on a public github.com repository.
 
+{{include:action-prerequisites.md}}
+
 ### Action environment variable inputs
 
 {{include:env-fod-connection.md}}
