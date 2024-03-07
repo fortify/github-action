@@ -48,7 +48,7 @@ The primary `fortify/github-action` action currently allows for running SAST sca
 
 <!-- START-INCLUDE:action-prerequisites.md -->
 
-** Prerequisites **
+### Prerequisites
 
 This action assumes the standard software packages as provided by GitHub-hosted runners to be available. If you are using self-hosted runners, you may need to install some of these software packages in order to successfully use this action. In particular, not having the following software installed is known to cause issues when running `fortify/github-action` or one of its sub-actions:
 
@@ -314,7 +314,7 @@ This action allows for setting up the Fortify tools listed below. Which tools an
 
 <!-- START-INCLUDE:action-prerequisites.md -->
 
-** Prerequisites **
+### Prerequisites
 
 This action assumes the standard software packages as provided by GitHub-hosted runners to be available. If you are using self-hosted runners, you may need to install some of these software packages in order to successfully use this action. In particular, not having the following software installed is known to cause issues when running `fortify/github-action` or one of its sub-actions:
 
@@ -423,7 +423,7 @@ This action packages application source code using [ScanCentral Client](https://
 
 <!-- START-INCLUDE:action-prerequisites.md -->
 
-** Prerequisites **
+### Prerequisites
 
 This action assumes the standard software packages as provided by GitHub-hosted runners to be available. If you are using self-hosted runners, you may need to install some of these software packages in order to successfully use this action. In particular, not having the following software installed is known to cause issues when running `fortify/github-action` or one of its sub-actions:
 
@@ -500,7 +500,7 @@ Before running this action, please ensure that the appropriate release has been 
 
 <!-- START-INCLUDE:action-prerequisites.md -->
 
-** Prerequisites **
+### Prerequisites
 
 This action assumes the standard software packages as provided by GitHub-hosted runners to be available. If you are using self-hosted runners, you may need to install some of these software packages in order to successfully use this action. In particular, not having the following software installed is known to cause issues when running `fortify/github-action` or one of its sub-actions:
 
@@ -634,7 +634,7 @@ This action exports the latest vulnerability data from an FoD release to the Git
 
 <!-- START-INCLUDE:action-prerequisites.md -->
 
-** Prerequisites **
+### Prerequisites
 
 This action assumes the standard software packages as provided by GitHub-hosted runners to be available. If you are using self-hosted runners, you may need to install some of these software packages in order to successfully use this action. In particular, not having the following software installed is known to cause issues when running `fortify/github-action` or one of its sub-actions:
 
@@ -724,7 +724,7 @@ Before running this action, please ensure that the appropriate application versi
 
 <!-- START-INCLUDE:action-prerequisites.md -->
 
-** Prerequisites **
+### Prerequisites
 
 This action assumes the standard software packages as provided by GitHub-hosted runners to be available. If you are using self-hosted runners, you may need to install some of these software packages in order to successfully use this action. In particular, not having the following software installed is known to cause issues when running `fortify/github-action` or one of its sub-actions:
 
@@ -860,7 +860,7 @@ This action exports the latest vulnerability data from an SSC application versio
 
 <!-- START-INCLUDE:action-prerequisites.md -->
 
-** Prerequisites **
+### Prerequisites
 
 This action assumes the standard software packages as provided by GitHub-hosted runners to be available. If you are using self-hosted runners, you may need to install some of these software packages in order to successfully use this action. In particular, not having the following software installed is known to cause issues when running `fortify/github-action` or one of its sub-actions:
 
