@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.2](https://github.com/fortify/github-action/compare/v1.2.1...v1.2.2) (2024-03-11)
+
+
+### Bug Fixes
+
+* Use `github/codeql-action/upload-sarif@v3` to remove deprecation warning ([15bc159](https://github.com/fortify/github-action/commit/15bc159ac31679d18a88e6de1f1c2b4637236067))
+
 ## [1.2.1](https://github.com/fortify/github-action/compare/v1.2.0...v1.2.1) (2024-03-05)
 
 
