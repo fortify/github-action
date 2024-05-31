@@ -14,27 +14,27 @@ import * as core from '@actions/core';
  */ 
 export const TOOLS: Record<string, Record<string, Record<string, string>>> = {
     "fcli": { 
-        "versionAliases": {"action-default": "2.3.0"},
+        "versionAliases": {"action-default": "2.4.0"},
         "cmds": {"windows": "fcli.exe", "linux": "fcli", "darwin": "fcli"}
     },
     "sc-client": { 
-        "versionAliases": {"action-default": "23.2.1"},
+        "versionAliases": {"action-default": "24.2.0"},
         "cmds": {"windows": "scancentral.bat", "linux": "scancentral", "darwin": "scancentral"}
     },
     "vuln-exporter": { 
-        "versionAliases": {"action-default": "2.0.4"},
+        "versionAliases": {"action-default": "2.0.5"},
         "cmds": {"windows": "FortifyVulnerabilityExporter.bat", "linux": "FortifyVulnerabilityExporter", "darwin": "FortifyVulnerabilityExporter"}
     },
     "fod-uploader": { 
-        "versionAliases": {"action-default": "5.4.0"},
+        "versionAliases": {"action-default": "5.4.1"},
         "cmds": {"windows": "FoDUploader.bat", "linux": "FoDUploader", "darwin": "FoDUploader"}
     },
     "bugtracker-utility": { 
-        "versionAliases": {"action-default": "4.12.0"},
+        "versionAliases": {"action-default": "4.14.0"},
         "cmds": {"windows": "FortifyBugTrackerUtility.bat", "linux": "FortifyBugTrackerUtility", "darwin": "FortifyBugTrackerUtility"}
     },
     "debricked-cli": { 
-        "versionAliases": {"action-default": "1.7.13"},
+        "versionAliases": {"action-default": "1.9.5"},
         "cmds": {"windows": "debricked.exe", "linux": "debricked", "darwin": "debricked"}
     }
 };
