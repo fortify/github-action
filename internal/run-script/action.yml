@@ -1,0 +1,23 @@
+name: Run a script with optional post-job cleanup
+
+description: 'Action to execute a bash script, optionally executing another script on job completion.'
+
+inputs:
+  script:
+    description: 'Script to run'
+    required: true
+  post:
+    description: 'Script to run on job completion'
+    required: false
+  cwd:
+    description: 'Script working directory'
+    required: false
+  key:
+    description: 'Name of the state variable used to detect the post step.'
+    required: false
+    default: POST
+
+runs:
+  using: 'node20'
+  main: 'main.js'
+  post: 'main.js'

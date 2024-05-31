@@ -18,7 +18,6 @@ runs:
       if: env.DO_WAIT == 'true' || env.DO_EXPORT == 'true'
       with:
         cmd: '"${FCLI_CMD}" fod sast-scan wait-for ::fod_scan::'
-    - uses: fortify/github-action/internal/fod-logout@feat-1.3.0
     - if: env.DO_EXPORT == 'true'
       uses: fortify/github-action/fod-export@feat-1.3.0
         

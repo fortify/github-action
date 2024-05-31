@@ -17,7 +17,6 @@ runs:
       if: env.DO_WAIT == 'true' || env.DO_EXPORT == 'true'
       with:
         cmd: '"${FCLI_CMD}" sc-sast scan wait-for ::sc_sast_scan::'
-    - uses: fortify/github-action/internal/sc-sast-logout@feat-1.3.0
     - if: env.DO_EXPORT == 'true'
       uses: fortify/github-action/ssc-export@feat-1.3.0
         
