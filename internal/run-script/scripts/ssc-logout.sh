@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 . ${UTIL_DIR}/common.sh
 
 if [[ "${_SSC_LOGGED_IN}" == "true" ]]; then
@@ -10,6 +10,7 @@ if [[ "${_SSC_LOGGED_IN}" == "true" ]]; then
   else
     echo "ERROR: Either SSC_TOKEN, or SSC_USER and SSC_PASSWORD environment variables must be set"; exit 1;
   fi
-  run ${FCLI_CMD} ssc session logout "${_SSC_LOGOUT_OPTS[@]}" \
-    || exit 1
+  run "SSC_LOGOUT" ${FCLI_CMD} ssc session logout "${_SSC_LOGOUT_OPTS[@]}" 
+  printRunSummary
+  failOnError
 fi

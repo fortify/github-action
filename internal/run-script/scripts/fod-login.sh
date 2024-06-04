@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 . ${UTIL_DIR}/common.sh
 
 if [ -z "$FOD_URL" ]; then
@@ -12,6 +12,9 @@ else
   echo "ERROR: Either FOD_CLIENT_ID and FOD_CLIENT_SECRET, or FOD_TENANT, FOD_USER and FOD_PASSWORD environment variables must be set"
   exit 1;
 fi
-run ${FCLI_CMD} fod session login --url "${FOD_URL}" "${_FOD_AUTH_OPTS[@]}" ${EXTRA_FOD_LOGIN_OPTS} \
-  || exit 1
+run "FOD_LOGIN" ${FCLI_CMD} fod session login --url "${FOD_URL}" "${_FOD_AUTH_OPTS[@]}" ${EXTRA_FOD_LOGIN_OPTS}
+
+printRunSummary
+failOnError
+
 echo '_FOD_LOGGED_IN=true' >> $GITHUB_ENV 

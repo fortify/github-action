@@ -12,6 +12,14 @@ inputs:
 runs:
   using: composite
   steps:
+    # Upgrade bash on MacOS
+    - name: Install current Bash on macOS
+      if: runner.os == 'macOS' && !env.BASH_UPGRADED
+      run: |
+        brew install bash
+        echo "/usr/local/bin" >> $GITHUB_PATH
+        echo "BASH_UPGRADED=true" >> $GITHUB_ENV
+      shell: bash
     # Define directory where scripts are located. This MUST be a static path which doesn't
     # change during job execution, otherwise post-job scripts will fail. As such, all scripts
     # must be in the same directory; we can't use github.action_path from the calling action.
@@ -24,6 +32,8 @@ runs:
         dir:    ${{ env._RUN_SCRIPTS_DIR }}
         script: ${{ inputs.script }}
         post:   ${{ inputs.post }}
+      env:
+        TEMP_DIR: ${{ env.RUNNER_TEMP }}
 
 branding:
   icon: 'shield'
