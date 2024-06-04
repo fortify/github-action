@@ -1,5 +1,3 @@
-{{include:env-ssc-connection.md}}
-
 **`SC_SAST_TOKEN`** - REQUIRED    
 Required: ScanCentral SAST Client Authentication Token for authenticating with ScanCentral SAST Controller.
 

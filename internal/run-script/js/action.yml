@@ -1,0 +1,19 @@
+name: JavaScript action to run a script with optional post-job cleanup
+
+description: 'Action to execute a bash script, optionally executing another script on job completion. This action should not be used directly, but through internal/run-script.'
+
+inputs:
+  script:
+    description: 'Script to run'
+    required: true
+  post:
+    description: 'Script to run on job completion'
+    required: false
+  dir:
+    description: 'Directory where scripts are located, set automatically by internal/run-script action'
+    required: true
+
+runs:
+  using: 'node20'
+  main: 'main.js'
+  post: 'post.js'

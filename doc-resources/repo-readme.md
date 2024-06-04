@@ -3,7 +3,7 @@ The [Fortify github-action repository]({{var:repo-url}}) hosts various Fortify-r
 **Fortify on Demand**
 
 * [`fortify/github-action`](#fortify-github-action)  
-  For now, this action provides the same functionality as the `fod-sast-scan` action listed below. Future versions may add support for running other types of scans or performing other FoD actions.
+  For now, this action provides the same functionality as the `fod-sast-scan` action listed below. Future versions may add support for running other types of scans or performing other FoD operations.
 * [`fortify/github-action/fod-sast-scan`](#fortify-github-action-fod-sast-scan)  
   Package source code, submit static application security testing (SAST) scan request to Fortify on Demand, optionally wait for completion and export results back to the GitHub Security dashboard.
 * [`fortify/github-action/package`](#fortify-github-action-package)  
@@ -13,12 +13,14 @@ The [Fortify github-action repository]({{var:repo-url}}) hosts various Fortify-r
 * [`fortify/github-action/setup`](#fortify-github-action-setup)  
   Install various Fortify tools like [fcli](https://github.com/fortify/fcli), [ScanCentral Client]({{var:sc-client-doc-base-url}}#A_Clients.htm), [FortifyVulnerabilityExporter](https://github.com/fortify/FortifyVulnerabilityExporter) and [FortifyBugTrackerUtility](https://github.com/fortify-ps/FortifyBugTrackerUtility) for use in your pipeline
   
-**Fortify Sofware Security Center (SSC) / ScanCentral SAST**
+**Fortify Sofware Security Center (SSC) / ScanCentral SAST / Debricked**
 
 * [`fortify/github-action`](#fortify-github-action)  
-  For now, this action provides the same functionality as the `sc-sast-scan` action listed below. Future versions may add support for running other types of scans or performing other SSC / ScanCentral actions.
+  Depending on inputs, this action will run either or both a ScanCentral SAST and Debricked Software Composition Analysis (SCA) scan and publish scan results to SSC. Future versions may add support for running other types of scans or performing other SSC / ScanCentral operations.
 * [`fortify/github-action/sc-sast-scan`](#fortify-github-action-sc-sast-scan)  
-  Package source code, submit SAST scan request to ScanCentral SAST, optionally wait for completion and export results back to the GitHub Security dashboard.
+  Run a ScanCentral SAST and optionally Debricked Software Composition Analysis scan by packaging source code, submitting ScanCentral SAST scan and optional Debricked scan request, and optionally waiting for completion and exporting SAST results back to the GitHub Security dashboard.
+* [`fortify/github-action/ssc-debricked-scan`](#fortify-github-action-ssc-debricked-scan)  
+  Run a Debricked Software Composition Analysis scan and publish scan results to SSC, optionally waiting for scan results to be fully processed on SSC.
 * [`fortify/github-action/package`](#fortify-github-action-package)  
   Package source code for running a SAST scan, using the latest version of ScanCentral Client.
 * [`fortify/github-action/ssc-export`](#fortify-github-action-ssc-export)  
@@ -30,16 +32,31 @@ The [Fortify github-action repository]({{var:repo-url}}) hosts various Fortify-r
 
 ## fortify/github-action
 
-The primary `fortify/github-action` action currently allows for running SAST scans on either Fortify on Demand or ScanCentral SAST.  Which activities to perform is controlled through action inputs, the input for those activities is provided through environment variables. With Fortify on Demand, software composition analysis of open source components may also be performed in conjunction with the SAST scan for customers who have purchased the functionality.
+The primary `fortify/github-action` action currently allows for running SAST and optional Software Composition Analysis scans on either Fortify on Demand or ScanCentral SAST / Debricked.  Which activities to perform is controlled through action inputs, the input for those activities is provided through environment variables.
+
+Based on inputs and environment variables, this action will simply configure and run one of the following sub-actions:
+
+| Conditions | Sub-action |
+| ---------- | ---------- |
+| `sast-scan: true`<br>`FOD_URL` specified | [`fortify/github-action/fod-sast-scan`](#fortify-github-action-fod-sast-scan) |
+| `sast-scan: true`<br>`SSC_URL` specified | [`fortify/github-action/sc-sast-scan`](#fortify-github-action-sc-sast-scan) |
+| `sast-scan: false`<br>`debricked-sca-scan: true`<br>`SSC_URL` specified | [`fortify/github-action/ssc-debricked-scan`](#fortify-github-action-ssc-debricked-scan) |
+
+If none of the conditions listed above are met, this action will complete without performing any work.
 
 {{include:action-prerequisites.md}}
+
+Depending on inputs, additional prerequisites may apply as listed in the documentation for the sub-actions listed in the table above.
 
 ### Action inputs
 
 **`sast-scan`** - OPTIONAL    
 When set to true, the action will run a SAST scan on either Fortify on Demand (if the `FOD_URL` environment variable has been specified), or on ScanCentral SAST (if the `SSC_URL` environment variable has been specified). This includes packaging the source code, running the scan, and optionally reporting SAST scan results back into GitHub. 
 
-If not specified or when set to false, no SAST scan will be performed. For now, this means that the action will complete without doing any work. Future versions of this action may provide additional inputs, for example allowing you to run a dynamic application security testing (DAST) scan instead of a SAST scan.
+If not specified or when set to false, no SAST scan will be performed. For FoD, this means that the action will complete without doing any work. For SSC, the action could still run a Debricked-only scan based on the `debricked-sca-scan` input as listed below. Future versions of this action may provide additional inputs, for example allowing you to run a dynamic application security testing (DAST) scan instead of (or in combination with) a SAST scan.
+
+**`debricked-sca-scan`** - OPTIONAL    
+(Not applicable to Fortify on Demand) When set to true, the action will run a Debricked Software Composition Analysis (SCA) scan and publish the results to Fortify SSC. You can either run a Debricked-only scan (`sast-scan` set to `false`), or both SAST and Debricked SCA scan if both inputs are set to `true`.
 
 ### Action environment variable inputs
 
@@ -49,9 +66,15 @@ If not specified or when set to false, no SAST scan will be performed. For now, 
 
 {{include:env-setup.md}}
 
-#### ScanCentral SAST
+#### ScanCentral SAST with optional Debricked scan
 
 {{include:env-sc-sast-scan.md}}
+
+{{include:env-setup.md}}
+
+#### Debricked-only scan and publish to SSC
+
+{{include:env-ssc-debricked-scan.md}}
 
 {{include:env-setup.md}}
 
@@ -74,7 +97,7 @@ The sample workflows below demonstrate how to configure the action for running a
 {{include:nocomments.env-setup-sample.md}}
 ```
 
-#### ScanCentral SAST
+#### ScanCentral SAST with optional Debricked scan
 
 ```yaml
     steps:    
@@ -84,8 +107,25 @@ The sample workflows below demonstrate how to configure the action for running a
         uses: fortify/github-action@{{var:action-major-version}}
         with:
           sast-scan: true
+          # debricked-sca-scan: true
         env:
 {{include:nocomments.env-sc-sast-scan-sample.md}}
+{{include:nocomments.env-setup-sample.md}}
+```
+
+#### Debricked-only scan and publish to SSC
+
+```yaml
+    steps:    
+      - name: Check out source code
+        uses: actions/checkout@v4  
+      - name: Run Debricked Scan
+        uses: fortify/github-action@{{var:action-major-version}}
+        with:
+          sast-scan: false
+          debricked-sca-scan: true
+        env:
+{{include:nocomments.env-ssc-debricked-scan-sample.md}}
 {{include:nocomments.env-setup-sample.md}}
 ```
 
@@ -130,6 +170,13 @@ Depending on input, this action delegates to the appropriate sub-action(s). Plea
 ## fortify/github-action/sc-sast-scan
 
 {{include:action-sc-sast-scan.md}}
+
+
+<a name="fortify-github-action-ssc-debricked-scan"></a>
+
+## fortify/github-action/ssc-debricked-scan
+
+{{include:action-ssc-debricked-scan.md}}
 
 
 <a name="fortify-github-action-ssc-export"></a>

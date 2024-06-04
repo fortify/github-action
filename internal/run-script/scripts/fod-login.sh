@@ -1,14 +1,5 @@
 #!/bin/bash
-
-### Start common code
-if [ -n "$RUNNER_DEBUG" ]; then
-  set -v -x
-fi
-if [ -z "$FCLI_CMD" ]; then
-  echo "ERROR: fortify/github-action/setup must be run to set up fcli before running this action"
-  exit 1;
-fi
-### End common code
+. ${UTIL_DIR}/common.sh
 
 if [ -z "$FOD_URL" ]; then
   echo "ERROR: FOD_URL environment variable must be set"; exit 1;
@@ -21,5 +12,6 @@ else
   echo "ERROR: Either FOD_CLIENT_ID and FOD_CLIENT_SECRET, or FOD_TENANT, FOD_USER and FOD_PASSWORD environment variables must be set"
   exit 1;
 fi
-${FCLI_CMD} fod session login --url "${FOD_URL}" "${_FOD_AUTH_OPTS[@]}" ${EXTRA_FOD_LOGIN_OPTS} || exit 1
+run ${FCLI_CMD} fod session login --url "${FOD_URL}" "${_FOD_AUTH_OPTS[@]}" ${EXTRA_FOD_LOGIN_OPTS} \
+  || exit 1
 echo '_FOD_LOGGED_IN=true' >> $GITHUB_ENV 

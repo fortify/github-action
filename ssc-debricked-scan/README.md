@@ -1,4 +1,4 @@
-# fortify/github-action/fod-sast-scan@v1 
+# fortify/github-action/ssc-debricked-scan@v1 
 
 
 <!-- START-INCLUDE:p.marketing-intro.md -->
@@ -9,17 +9,16 @@
 
 
 
-<!-- START-INCLUDE:action-fod-sast-scan.md -->
+<!-- START-INCLUDE:action-ssc-debricked-scan.md -->
 
-This action performs a SAST scan on Fortify on Demand (FoD). If software composition analysis of open source has been purchased and configured on the applicable release, this action can be used to perform a combined SAST and SCA (open source) scan. 
+This action performs a Debricked Software Composition Analysis (SCA) scan, consisting of the following steps:
 
-The SAST and optional open source scan performed by this action consists of the following steps:
+* Login to Fortify SSC
+* Run Debricked scan
+* Publish Debricked scan results to Fortify SSC
+* Optionally wait for SSC artifact processing to complete
 
-* Login to FoD
-* Package application source code using ScanCentral Client
-* Submit the source code package to be scanned to FoD
-* Optionally wait for the scan to complete
-* Optionally export scan results to the GitHub Code Scanning dashboard
+Note that this action is explicitly meant for Debricked/SSC integration. If you wish to run a Debricked scan without publishing the results to SSC, please see the [Debricked GitHub Integration documentation](https://portal.debricked.com/integrations-48/integration-with-github-214#github-actions)
 
 
 <!-- START-INCLUDE:action-prerequisites.md -->
@@ -38,79 +37,56 @@ This action assumes the standard software packages as provided by GitHub-hosted 
 
 Apart from the generic action prerequisites listed above, the following prerequisites apply to this specific action:
 
-* The appropriate application release exists on FoD and has been configured for SAST scans. Future versions of this action may add support for automating app/release creation and scan setup.
-* If open source scanning has been enabled in the FoD SAST scan configuration, be sure to pass the `-oss` option through the `EXTRA_PACKAGE_OPTS` environment variable.
+* The appropriate application version must exist on SSC. Future versions of this action may add support for automating application version creation.
+* The [Fortify SSC Parser Plugin for Debricked results](https://github.com/fortify/fortify-ssc-parser-debricked-cyclonedx) must be installed on Fortify SSC, to allow for SSC to accept and process the Debricked scan results submitted by this action.
 
 ### Action environment variable inputs
 
 
-<!-- START-INCLUDE:env-fod-sast-scan.md -->
+<!-- START-INCLUDE:env-ssc-debricked-scan.md -->
+
+
+<!-- START-INCLUDE:env-ssc-connection.md -->
+
+**`SSC_URL`** - REQUIRED   
+Fortify Software Security Center URL, for example https://ssc.customer.fortifyhosted.net/
+
+**`SSC_TOKEN`** - REQUIRED*   
+Required when authenticating with an SSC token (recommended). Most actions should work fine with a `CIToken`.
+
+**`SSC_USER` & `SSC_PASSWORD`** - REQUIRED*   
+Required when authenticating with SSC user credentials.
+
+<!-- END-INCLUDE:env-ssc-connection.md -->
 
 
 
-<!-- START-INCLUDE:env-fod-login.md -->
+<!-- START-INCLUDE:env-ssc-login.md -->
+
+**`EXTRA_SSC_LOGIN_OPTS`** - OPTIONAL    
+Extra SSC login options, for example for disabling SSL checks or changing connection time-outs; see [`fcli ssc session login` documentation](https://fortify.github.io/fcli/v2.3.0//manpage/fcli-ssc-session-login.html).
+
+<!-- END-INCLUDE:env-ssc-login.md -->
 
 
-<!-- START-INCLUDE:env-fod-connection.md -->
-
-**`FOD_URL`** - REQUIRED   
-Fortify on Demand URL, for example https://ams.fortify.com
-
-**`FOD_CLIENT_ID` & `FOD_CLIENT_SECRET`** - REQUIRED*    
-Required when authenticating with an API key: FoD Client ID (API key) and Secret (API secret).
-
-**`FOD_TENANT`, `FOD_USER` & `FOD_PASSWORD`** - REQUIRED*    
-Required when authenticating with user credentials: FoD tenant, user and password. It's recommended to use a Personal Access Token instead of an actual user password.
-
-<!-- END-INCLUDE:env-fod-connection.md -->
+**`DEBRICKED_TOKEN`** - REQUIRED          
+See the [Generate access token](https://docs.debricked.com/product/administration/generate-access-token) section in the Debricked documentation for details on how to generate this token.
 
 
-**`EXTRA_FOD_LOGIN_OPTS`** - OPTIONAL   
-Extra FoD login options, for example for disabling SSL checks or changing connection time-outs; see [`fcli fod session login` documentation](https://fortify.github.io/fcli/v2.3.0//manpage/fcli-fod-session-login.html)
+<!-- START-INCLUDE:env-ssc-appversion.md -->
 
-<!-- END-INCLUDE:env-fod-login.md -->
+**`SSC_APPVERSION`** - OPTIONAL   
+Fortify SSC application version to use with this action. This can be specified either as a numeric application version id, or by providing application and version name in the format `<app-name>:<version-name>`. Default value is [`<github.action_repository>:<github.action_ref>`](https://docs.github.com/en/actions/learn-github-actions/contexts#github-context), for example `myOrg/myRepo:myBranch`.
 
+<!-- END-INCLUDE:env-ssc-appversion.md -->
 
-
-<!-- START-INCLUDE:env-fod-release.md -->
-
-**`FOD_RELEASE`** - OPTIONAL    
-Fortify on Demand release to use with this action. This can be specified either as a numeric release id, `<app-name>:<release-name>` (for non-microservices applications) or `<app-name>:<microservice-name>:<release-name>` (for microservices applications). Default value is [`<github.action_repository>:<github.action_ref>`](https://docs.github.com/en/actions/learn-github-actions/contexts#github-context), for example `myOrg/myRepo:myBranch`.
-
-<!-- END-INCLUDE:env-fod-release.md -->
-
-
-
-<!-- START-INCLUDE:env-fod-package.md -->
-
-**`EXTRA_PACKAGE_OPTS`** - OPTIONAL     
-By default, this action runs `scancentral package -o package.zip` to package application source code. The `EXTRA_PACKAGE_OPTS` environment variable can be used to specify additional packaging options. 
-
-If FoD Software Composition Analysis has been purchased and configured on the applicable release, you'll need to pass the `-oss` option through this environment variable to generate and package the additional dependency files required. 
-
-Based on the  automated build tool detection feature provided by ScanCentral Client, this default `scancentral` command is often sufficient to properly package application source code. Depending on your build setup, you may however need to configure the `EXTRA_PACKAGE_OPTS` environment variable to specify additional packaging options. 
-
-As an example, if the build file that you want to use for packaging doesn't adhere  to common naming conventions, you can configure the `-bf <custom build file>` option using the `EXTRA_PACKAGE_OPTS` environment variable. See [Command-line options for the package command]({{var:sc-client-doc-base-url#CLI.htm#Package}}) for more information on available options.
-
-<!-- END-INCLUDE:env-fod-package.md -->
-
-
-**`EXTRA_FOD_SAST_SCAN_OPTS`** - OPTIONAL    
-Extra FoD SAST scan options; see [`fcli fod sast-scan start` documentation](https://fortify.github.io/fcli/v2.3.0//manpage/fcli-fod-sast-scan-start.html)
-
-
-<!-- START-INCLUDE:env-wait-export.md -->
 
 **`DO_WAIT`** - OPTIONAL    
-By default, this action will not wait until the scan has been completed. To have the workflow wait until the scan has been completed, set the `DO_WAIT` environment variable to `true`. Note that `DO_WAIT` is implied if `DO_EXPORT` is set to `true`; see below.
+By default, this action will complete immediately after Debricked scan results have been uploaded to SSC. To have the workflow wait until the Debricked results have been processed by SSC (potentially failing if the results cannot be successfully processed), set the `DO_WAIT` environment variable to `true`.
 
-**`DO_EXPORT`** - OPTIONAL    
-If set to `true`, this action will export scan results to the GitHub Security Code Scanning dashboard. Note that this may require a [GitHub Advanced Security](https://docs.github.com/en/get-started/learning-about-github/about-github-advanced-security) subscription, unless you're running this action on a public github.com repository. Note that GitHub only supports importing SAST results; other results will not exported to GitHub.
+For consistency with other actions, `DO_WAIT` is implied if `DO_EXPORT` is set to `true`, but since GitHub doesn't support importing Software Composition Analysis results, Debricked results will not be published to GitHub even if `DO_EXPORT` is set to `true`.
 
-<!-- END-INCLUDE:env-wait-export.md -->
-
-
-<!-- END-INCLUDE:env-fod-sast-scan.md -->
+<!-- END-INCLUDE:env-ssc-debricked-scan.md -->
 
 
 
@@ -126,28 +102,25 @@ This environment variable allows for overriding the default tool definitions, po
 
 ### Sample usage
 
-The sample workflow below demonstrates how to configure the action for running a SAST scan on FoD.
+The sample workflow below demonstrates how to configure the action for running a Debricked scan and publishing the results to Fortify SSC.
 
 ```yaml
     steps:    
       - name: Check out source code
         uses: actions/checkout@v4  
-      - name: Run FoD SAST Scan
-        uses: fortify/github-action/fod-sast-scan@v1
+      - name: Run Debricked Scan
+        uses: fortify/github-action/ssc-debricked-scan@v1
         env:
-          FOD_URL: https://ams.fortify.com
-          FOD_TENANT: ${{secrets.FOD_TENANT}}
-          FOD_USER: ${{secrets.FOD_USER}}
-          FOD_PASSWORD: ${{secrets.FOD_PAT}}
-          # EXTRA_FOD_LOGIN_OPTS: --socket-timeout=60s
-          # FOD_RELEASE: MyApp:MyRelease
-          # EXTRA_PACKAGE_OPTS: -oss
+          SSC_URL: ${{secrets.SSC_URL}}
+          SSC_TOKEN: ${{secrets.SSC_TOKEN}}
+          # EXTRA_SSC_LOGIN_OPTS: --socket-timeout=60s
+          # SSC_APPVERSION: MyApp:MyVersion
+          DEBRICKED_TOKEN: ${{secrets.DEBRICKED_TOKEN}}
           # DO_WAIT: true
-          # DO_EXPORT: true
           # TOOL_DEFINITIONS: https://ftfy.mycompany.com/tool-definitions/v1/tool-definitions.yaml.zip
 ```
 
-<!-- END-INCLUDE:action-fod-sast-scan.md -->
+<!-- END-INCLUDE:action-ssc-debricked-scan.md -->
 
 
 

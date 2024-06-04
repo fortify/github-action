@@ -1,6 +1,6 @@
 name: Run a script with optional post-job cleanup
-
 description: 'Action to execute a bash script, optionally executing another script on job completion.'
+author: Fortify
 
 inputs:
   script:
@@ -9,15 +9,22 @@ inputs:
   post:
     description: 'Script to run on job completion'
     required: false
-  cwd:
-    description: 'Script working directory'
-    required: false
-  key:
-    description: 'Name of the state variable used to detect the post step.'
-    required: false
-    default: POST
-
 runs:
-  using: 'node20'
-  main: 'main.js'
-  post: 'main.js'
+  using: composite
+  steps:
+    # Define directory where scripts are located. This MUST be a static path which doesn't
+    # change during job execution, otherwise post-job scripts will fail. As such, all scripts
+    # must be in the same directory; we can't use github.action_path from the calling action.
+    # See README.md for details.
+    - run: echo "_RUN_SCRIPTS_DIR=$(pwd)/scripts" >> $GITHUB_ENV
+      shell: bash
+      working-directory: ${{ github.action_path }}
+    - uses: fortify/github-action/internal/run-script/js@feat-1.3.0
+      with: 
+        dir:    ${{ env._RUN_SCRIPTS_DIR }}
+        script: ${{ inputs.script }}
+        post:   ${{ inputs.post }}
+
+branding:
+  icon: 'shield'
+  color: 'blue'

@@ -6,13 +6,21 @@ inputs:
     description: 'Run a SAST scan, takes either true or false (default)'
     default: 'false'
     required: false
+  debricked-sca-scan:
+    description: 'Run a Debricked Software Composition Analysis, takes either true or false (default)'
+    default: 'false'
+    required: false
 runs:
   using: composite
   steps:
     - uses: fortify/github-action/fod-sast-scan@feat-1.3.0
-      if: inputs['sast-scan']=='true' && env.FOD_URL
+      if: inputs['sast-scan']=='true' && env.FOD_URL 
     - uses: fortify/github-action/sc-sast-scan@feat-1.3.0
-      if: inputs['sast-scan']=='true' && env.SSC_URL  
+      if: inputs['sast-scan']=='true' && env.SSC_URL 
+      env:
+        DO_DEBRICKED_SCAN: ${{ inputs['debricked-sca-scan'] }}
+    - uses: fortify/github-action/ssc-debricked-scan@feat-1.3.0
+      if: inputs['sast-scan']=='false' && inputs['debricked-sca-scan']=='true' && env.SSC_URL 
         
 branding:
   icon: 'shield'
