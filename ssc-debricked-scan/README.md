@@ -76,7 +76,7 @@ See the [Generate access token](https://docs.debricked.com/product/administratio
 <!-- START-INCLUDE:env-ssc-appversion.md -->
 
 **`SSC_APPVERSION`** - OPTIONAL   
-Fortify SSC application version to use with this action. This can be specified either as a numeric application version id, or by providing application and version name in the format `<app-name>:<version-name>`. Default value is [`<github.action_repository>:<github.action_ref>`](https://docs.github.com/en/actions/learn-github-actions/contexts#github-context), for example `myOrg/myRepo:myBranch`.
+Fortify SSC application version to use with this action. This can be specified either as a numeric application version id, or by providing application and version name in the format `<app-name>:<version-name>`. Default value is [`<github.repository>:<github.head_ref || github.ref_name>`](https://docs.github.com/en/actions/learn-github-actions/contexts#github-context), for example `myOrg/myRepo:myBranch`.
 
 <!-- END-INCLUDE:env-ssc-appversion.md -->
 
