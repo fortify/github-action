@@ -243,6 +243,15 @@ Version of the ScanCentral SAST sensor on which the scan should be performed. Se
 Extra ScanCentral SAST scan options; see [`fcli sc-sast scan start` documentation](https://fortify.github.io/fcli/v2.3.0//manpage/fcli-sc-sast-scan-start.html)
 
 
+<!-- START-INCLUDE:env-ssc-export.md -->
+
+**`EXTRA_EXPORT_OPTS`** - OPTIONAL   
+This environment variable allows for passing extra options to the `fcli ssc action run github-sast-report` command. Please see the `fcli ssc action help github-sast-report` command for supported options. With the current fcli version, the most interesting option is `--fs` to specify an alternative SSC filter set, for example: `EXTRA_EXPORT_OPTS: --fs "Quick View"`.
+
+<!-- END-INCLUDE:env-ssc-export.md -->
+
+
+
 <!-- START-INCLUDE:env-wait-export.md -->
 
 **`DO_WAIT`** - OPTIONAL    
@@ -933,6 +942,15 @@ Version of the ScanCentral SAST sensor on which the scan should be performed. Se
 Extra ScanCentral SAST scan options; see [`fcli sc-sast scan start` documentation](https://fortify.github.io/fcli/v2.3.0//manpage/fcli-sc-sast-scan-start.html)
 
 
+<!-- START-INCLUDE:env-ssc-export.md -->
+
+**`EXTRA_EXPORT_OPTS`** - OPTIONAL   
+This environment variable allows for passing extra options to the `fcli ssc action run github-sast-report` command. Please see the `fcli ssc action help github-sast-report` command for supported options. With the current fcli version, the most interesting option is `--fs` to specify an alternative SSC filter set, for example: `EXTRA_EXPORT_OPTS: --fs "Quick View"`.
+
+<!-- END-INCLUDE:env-ssc-export.md -->
+
+
+
 <!-- START-INCLUDE:env-wait-export.md -->
 
 **`DO_WAIT`** - OPTIONAL    
@@ -1156,6 +1174,15 @@ Required when authenticating with SSC user credentials.
 Fortify SSC application version to use with this action. This can be specified either as a numeric application version id, or by providing application and version name in the format `<app-name>:<version-name>`. Default value is [`<github.repository>:<github.head_ref || github.ref_name>`](https://docs.github.com/en/actions/learn-github-actions/contexts#github-context), for example `myOrg/myRepo:myBranch`.
 
 <!-- END-INCLUDE:env-ssc-appversion.md -->
+
+
+
+<!-- START-INCLUDE:env-ssc-export.md -->
+
+**`EXTRA_EXPORT_OPTS`** - OPTIONAL   
+This environment variable allows for passing extra options to the `fcli ssc action run github-sast-report` command. Please see the `fcli ssc action help github-sast-report` command for supported options. With the current fcli version, the most interesting option is `--fs` to specify an alternative SSC filter set, for example: `EXTRA_EXPORT_OPTS: --fs "Quick View"`.
+
+<!-- END-INCLUDE:env-ssc-export.md -->
 
 
 
