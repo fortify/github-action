@@ -1,23 +1,61 @@
 #!/usr/bin/env bash
 if [ -n "$RUNNER_DEBUG" ]; then
   set -v -x
+  echo "Bash version: $BASH_VERSION"
 fi
 
-echo "Bash version: $BASH_VERSION"
+function printOutputFileName {
+  local operation=$1
+  local type=$2
+  mkdir -p "${TEMP_DIR}"
+  printf '%s/output_%s_%s.txt' "${TEMP_DIR}" "${operation}" "${type}"
+}
+
+function printOutput {
+  local operation=$1
+  local type=$2
+  local fileName=$(printOutputFileName "${operation}" "${type}")
+  [ -r "${fileName}" ] && cat "${fileName}"
+}
 
 declare -a runs
-declare -a runsWithError
 declare -A runResults
 declare -A runCommands
 function run {
   local operation=$1; shift;
+  local cmd=( )
+  for arg in "$@"; do
+    # Expand environment variables that potentially contain multiple arguments.
+    # This is commonly used for *_EXTRA_OPTS environment variables, needed to
+    # properly handle quoted arguments containing whitespace.
+    if [[ "$arg" == "__expand:"* ]]; then
+      local varName=${arg#"__expand:"}
+      if [ ! -z "${!varName}" ]; then
+        readarray -d '' expandedArgs < <(xargs printf '%s\0' <<<"${!varName}")
+        cmd+=("${expandedArgs[@]}")
+      fi
+    else
+      cmd+=("$arg")
+    fi
+  done
   runs+=($operation)
-  runCommands[$operation]="$@"
-  echo RUN $operation: "$@"
-  "$@"
-  local exitCode=$?
+  runCommands[$operation]="${cmd[@]}"
+  echo "::group::RUN $operation: ${cmd[@]}"
+  # Any better way of doing this, avoiding writing exit code to temporary file?
+  local exitCodeFile="$TEMP_DIR/exit_code.txt"
+  { ("${cmd[@]}"; echo >"$exitCodeFile" $?) 2>&1 1>&3 3>&- \
+    | tee $(printOutputFileName "${operation}" "stderr"); } 3>&1 1>&2 \
+    | tee $(printOutputFileName "${operation}" "stdout")
+  local exitCode=$(cat "$exitCodeFile")
+  rm -f ${exitCodeFile}
   runResults[$operation]=$exitCode
-  requireRun $operation || runsWithError+=($operation)
+  echo "::endgroup::"
+}
+
+function overrideExitCode {
+  local operation=$1
+  local exitCode=$2
+  runResults[$operation]=$exitCode
 }
 
 function requireRun {
@@ -25,22 +63,49 @@ function requireRun {
   [[ "${runResults[$operation]}" == "0" ]]
 }
 
+function printRunStatus {
+  local operations=("$@");
+  local fail=0, success=0;
+  for op in "${operations[@]}"; do
+    if [ -z "${runResults[$op]}" ]; then
+      skip=1
+    elif [[ "${runResults[$op]}" == "0" ]]; then
+      success=1
+    else
+      fail=1
+    fi
+  done
+  if [[ ${fail} == 1 ]]; then
+    echo "FAILED"
+  elif [[ ${success} == 1 ]]; then
+    echo "SUCCESS"
+  else
+    echo "SKIPPED"
+  fi
+}
+
 function printRunSummary {
   echo "Summary:"
+  local failingOperations=()
   for value in "${runs[@]}"; do
     echo -n "  $value: "
-    requireRun $value && echo "SUCCESS" || echo "ERROR"
+    if requireRun $value; then
+      echo "SUCCESS" 
+    else 
+      echo "ERROR"
+      failingOperations+=("${value}")
+    fi
   done
-  if [ ! ${#runsWithError[@]} -eq 0 ]; then
+  if [ ! ${#failingOperations[@]} -eq 0 ]; then
     echo "Failing commands:"
-    for value in "${runsWithError[@]}"; do
+    for value in "${failingOperations[@]}"; do
       echo "  $value: ${runCommands[$value]}"
     done
   fi
 }
 
 function failOnError {
-  if [ ! ${#runsWithError[@]} -eq 0 ]; then
+  if [[ "$(printRunSummary)" == *"ERROR"* ]]; then
     exit 1;
   fi
 }

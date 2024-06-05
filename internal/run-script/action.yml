@@ -27,13 +27,14 @@ runs:
     - run: echo "_RUN_SCRIPTS_DIR=$(pwd)/scripts" >> $GITHUB_ENV
       shell: bash
       working-directory: ${{ github.action_path }}
+    - run: echo "TEMP_DIR=$(pwd)" >> $GITHUB_ENV
+      shell: bash
+      working-directory: ${{ runner.temp }}
     - uses: fortify/github-action/internal/run-script/js@feat-1.3.0
       with: 
         dir:    ${{ env._RUN_SCRIPTS_DIR }}
         script: ${{ inputs.script }}
         post:   ${{ inputs.post }}
-      env:
-        TEMP_DIR: ${{ env.RUNNER_TEMP }}
 
 branding:
   icon: 'shield'
