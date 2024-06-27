@@ -259,6 +259,14 @@ class ArtifactDescriptor {
     name: string = "";
     downloadUrl: string = "";
     rsa_sha256: string = "";
+    addExtension(filePath: string, extension: string) {
+        let newFilePath = filePath;
+        if (!filePath.endsWith(extension)) {
+            newFilePath = newFilePath + extension;
+            fs.renameSync(filePath, newFilePath);
+        }
+        return newFilePath;
+    }
     /** 
      * Download, verify and copy or extract the artifact represented by this 
      * descriptor to a predefined directory as returned by the #getDestDir() 
@@ -271,7 +279,7 @@ class ArtifactDescriptor {
             const file = await tc.downloadTool(this.downloadUrl);
             await this.#verify(file);
             if ( this.downloadUrl.endsWith(".zip") ) {
-                await tc.extractZip(file, binDir);
+                await tc.extractZip(this.addExtension(file, ".zip"), binDir);
             } else if ( this.downloadUrl.endsWith(".tgz") ) {
                 await tc.extractTar(file, binDir);
             } else if (this.downloadUrl.endsWith(".jar") ) {
