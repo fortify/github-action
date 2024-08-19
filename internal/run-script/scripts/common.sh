@@ -4,6 +4,17 @@ if [ -n "$RUNNER_DEBUG" ]; then
   echo "Bash version: $BASH_VERSION"
 fi
 
+#############################################################################
+# Declare arrays used by the various functions below
+declare -a failedRequirements     # Failed requirements
+declare -a runs                   # Operations that have been run
+declare -A runResults             # Exit code by operation
+declare -A runCommands            # Expanded command line by operation
+
+#############################################################################
+# This function takes an operation name and output type (stdout/stderr) as
+# arguments, and prints the corresponding file name where the run function
+# will store the command output for the given operation.
 function printOutputFileName {
   local operation=$1
   local type=$2
@@ -11,6 +22,10 @@ function printOutputFileName {
   printf '%s/output_%s_%s.txt' "${TEMP_DIR}" "${operation}" "${type}"
 }
 
+#############################################################################
+# This function takes an operation name as previously run using the 'run'
+# function and output type (stdout/stderr) as arguments, and prints the 
+# corresponding command output.
 function printOutput {
   local operation=$1
   local type=$2
@@ -18,9 +33,25 @@ function printOutput {
   [ -r "${fileName}" ] && cat "${fileName}"
 }
 
-declare -a runs
-declare -A runResults
-declare -A runCommands
+#############################################################################
+# This function takes an operation name as first argument, remaining
+# arguments specify the command to run together with its arguments.
+#
+# Command arguments may contain environment variable references in the 
+# format __expand:<VARNAME>, for example __expand:EXTRA_SC_SAST_SCAN_OPTS;
+# these will be expanded before running the given command. The environment
+# variable to be expanded may contain multiple arguments, including properly
+# quoted arguments containing whitespace.
+# 
+# The following information is stored for each command being run through this
+# function; this information can be retrieved or otherwise used through various
+# other functions declared in this script.
+# - The operation name is stored in the 'runs' array
+# - The command with expanded arguments is stored by operation name in the 'runCommands' associative array
+# - The command exit code is stored by operation name in the 'runResults' associative array
+# - Command output (stdout & stderr) is stored in files; output file name can be retrieved
+#   using the 'printOutputFileName' function, contents can be retrieved using the 'printOutput'
+#   function
 function run {
   local operation=$1; shift;
   local cmd=( )
@@ -52,17 +83,28 @@ function run {
   echo "::endgroup::"
 }
 
+#############################################################################
+# This function takes an operation name and exit code as arguments, allowing 
+# to override the exit code of a previously run operation.
 function overrideExitCode {
   local operation=$1
   local exitCode=$2
   runResults[$operation]=$exitCode
 }
 
-function requireRun {
+#############################################################################
+# This function takes an operation name as input, and returns success if 
+# that operation was run successfully, failure otherwise. It is commonly
+# used to conditionally take some action based on the run result of some
+# operation.
+function ifRun {
   local operation=$1;
   [[ "${runResults[$operation]}" == "0" ]]
 }
 
+#############################################################################
+# Given one or more operations, this function prints either SUCCESS, 
+# FAILED, or SKIPPED.
 function printRunStatus {
   local operations=("$@");
   local fail=0, success=0;
@@ -84,12 +126,16 @@ function printRunStatus {
   fi
 }
 
+#############################################################################
+# This function prints the status of all operations previously run through 
+# the 'run' function, showing either SUCCESS or ERROR for each operation,
+# and a list of failing commands.
 function printRunSummary {
   echo "Summary:"
   local failingOperations=()
   for value in "${runs[@]}"; do
     echo -n "  $value: "
-    if requireRun $value; then
+    if ifRun $value; then
       echo "SUCCESS" 
     else 
       echo "ERROR"
@@ -104,14 +150,20 @@ function printRunSummary {
   fi
 }
 
+#############################################################################
+# This function exits the script with exit code 1 if the run summary 
+# contains any operation with ERROR status.
 function failOnError {
   if [[ "$(printRunSummary)" == *"ERROR"* ]]; then
     exit 1;
   fi
 }
 
-declare -a failedRequirements
-function require {
+#############################################################################
+# This function takes an environment variable name and optional message as
+# arguments, adding the given message or a default error message to the
+# failedRequirements array if the given variable name is not declared.
+function requireVar {
   local name=$1;
   local msg=$2;
   if [ -z "${!name}" ]; then
@@ -120,13 +172,37 @@ function require {
   fi
 }
 
-function requireIf {
+#############################################################################
+# This function takes two environment variable names and optional message
+# as arguments. If the first environment variable name is declared and not
+# set to false, the second variable name will be checked using the requireVar
+# function. 
+function requireIfVar {
   local ifName=$1;
   local name=$2;
   local msg=$3;
-  [ -z "${!ifName}" ] || [ "${!ifName}" == "false" ] || require "$name" "$msg"
+  [ -z "${!ifName}" ] || [ "${!ifName}" == "false" ] || requireVar "$name" "$msg"
 }
 
+#############################################################################
+# This function takes two environment variable names as arguments, adding 
+# an error message to the failedRequirementsArray if neither environment 
+# variable is declared, or if both environment variables are declared.
+function requireOneOfVar {
+  local name1=$1;
+  local name2=$2;
+  local msg=$3;
+  if [ -z "${!name1}" -a -z "${!name2}" ]; then
+    failedRequirements+=("ERROR: Either ${name1} or ${name2} must be declared")
+  elif [ -n "${!name1}" -a -n "${!name2}" ]; then
+    failedRequirements+=("ERROR: Only one of ${name1} or ${name2} may be declared")
+  fi
+}
+
+#############################################################################
+# This function checks whether any previous calls to require* functions
+# resulted in any failures; if so, failure messages are printed and the 
+# script is exited with exit code 1.
 function checkRequirements {
   if [ ! ${#failedRequirements[@]} -eq 0 ]; then
     for value in "${failedRequirements[@]}"; do
@@ -136,4 +212,8 @@ function checkRequirements {
   fi
 }
 
-require "FCLI_CMD" "ERROR: fortify/github-action/setup must be run to set up fcli before running this action"
+#############################################################################
+# Require FCLI_CMD variable to be declared. Note that the parent script is
+# responsible for calling the checkRequirements function to produce an error
+# if FCLI_CMD is not declared.
+requireVar "FCLI_CMD" "ERROR: fortify/github-action/setup must be run to set up fcli before running this action"

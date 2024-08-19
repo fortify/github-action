@@ -1,18 +1,18 @@
 #!/usr/bin/env bash
 . ${UTIL_DIR}/common.sh
 
-if [ -z "$FOD_URL" ]; then
-  echo "ERROR: FOD_URL environment variable must be set"; exit 1;
-fi
-if [ -n "${FOD_CLIENT_ID}" -a -n "${FOD_CLIENT_SECRET}" ]; then
-  _FOD_AUTH_OPTS=("--client-id" "${FOD_CLIENT_ID}" "--client-secret" "${FOD_CLIENT_SECRET}")
-elif [ -n "${FOD_USER}" -a -n "${FOD_PASSWORD}" -a -n "${FOD_TENANT}" ]; then
-  _FOD_AUTH_OPTS=("-t" "${FOD_TENANT}" "-u" "${FOD_USER}" "-p" "${FOD_PASSWORD}")
+requireVar "FOD_URL"
+requireOneOfVar "FOD_CLIENT_ID" "FOD_USER"
+requireIfVar "FOD_CLIENT_ID" "FOD_CLIENT_SECRET"
+requireIfVar "FOD_USER" "FOD_PASSWORD"
+requireIfVar "FOD_USER" "FOD_TENANT"
+checkRequirements
+
+if [ -n "${FOD_CLIENT_ID}" ]; then
+  run "FOD_LOGIN" "${FCLI_CMD}" fod session login --url "${FOD_URL}" --client-id "${FOD_CLIENT_ID}" --client-secret "${FOD_CLIENT_SECRET}" __expand:EXTRA_FOD_LOGIN_OPTS
 else
-  echo "ERROR: Either FOD_CLIENT_ID and FOD_CLIENT_SECRET, or FOD_TENANT, FOD_USER and FOD_PASSWORD environment variables must be set"
-  exit 1;
+  run "FOD_LOGIN" "${FCLI_CMD}" fod session login --url "${FOD_URL}" -t "${FOD_TENANT}" -u "${FOD_USER}" -p "${FOD_PASSWORD}" __expand:EXTRA_FOD_LOGIN_OPTS
 fi
-run "FOD_LOGIN" ${FCLI_CMD} fod session login --url "${FOD_URL}" "${_FOD_AUTH_OPTS[@]}" ${EXTRA_FOD_LOGIN_OPTS}
 
 printRunSummary
 failOnError
