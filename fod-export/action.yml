@@ -20,7 +20,7 @@ runs:
     - uses: actions/upload-artifact@v4
       if: always()
       with:
-        name: sarif-files
+        name: ${{ github.job }}-${{ strategy.job-index }}-sarif-files
         path: ./gh-fortify-sast.sarif
 
 branding:
