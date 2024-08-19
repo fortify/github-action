@@ -18951,7 +18951,7 @@ const core = __importStar(__nccwpck_require__(2186));
  */
 exports.TOOLS = {
     "fcli": {
-        "versionAliases": { "action-default": "2.4.0" },
+        "versionAliases": { "action-default": "2.5.1" },
         "cmds": { "windows": "fcli.exe", "linux": "fcli", "darwin": "fcli" }
     },
     "sc-client": {
@@ -18959,7 +18959,7 @@ exports.TOOLS = {
         "cmds": { "windows": "scancentral.bat", "linux": "scancentral", "darwin": "scancentral" }
     },
     "vuln-exporter": {
-        "versionAliases": { "action-default": "2.0.5" },
+        "versionAliases": { "action-default": "2.1.0" },
         "cmds": { "windows": "FortifyVulnerabilityExporter.bat", "linux": "FortifyVulnerabilityExporter", "darwin": "FortifyVulnerabilityExporter" }
     },
     "fod-uploader": {
@@ -18971,7 +18971,7 @@ exports.TOOLS = {
         "cmds": { "windows": "FortifyBugTrackerUtility.bat", "linux": "FortifyBugTrackerUtility", "darwin": "FortifyBugTrackerUtility" }
     },
     "debricked-cli": {
-        "versionAliases": { "action-default": "1.9.5" },
+        "versionAliases": { "action-default": "2.0.4" },
         "cmds": { "windows": "debricked.exe", "linux": "debricked", "darwin": "debricked" }
     }
 };
