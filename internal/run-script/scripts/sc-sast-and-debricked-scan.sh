@@ -22,15 +22,15 @@ if [ "${DO_DEBRICKED_SCAN}" == "true" ]; then
   # Debricked may return non-zero exit code on automation rule failures, in which case
   # we still want to run the import, so we don't explicitly check for Debricked scan success.
   run "DEBRICKED_SCAN" "${DEBRICKED_CLI_CMD}" scan -t "${DEBRICKED_TOKEN}" -i "Fortify GitHub Action"
-  run "DEBRICKED_IMPORT" "${FCLI_CMD}" ssc artifact import-debricked \
+  run "DEBRICKED_SSC_IMPORT" "${FCLI_CMD}" ssc artifact import-debricked \
     --av "${SSC_APPVERSION}" --repository "${GITHUB_REPOSITORY}" \
     --branch "${GITHUB_HEAD_REF:-$GITHUB_REF_NAME}" -t "${DEBRICKED_TOKEN}" \
     --store debricked_scan
 fi
 if [ "${DO_WAIT}" == "true" ] || [ "${DO_EXPORT}" == "true" ]; then
-  ifRun "SAST_SCAN" && run "SAST_PUBLISH" \
+  ifRun "SAST_SCAN" && run "SAST_SSC_PUBLISH" \
     "${FCLI_CMD}" sc-sast scan wait-for ::sc_sast_scan::
-  ifRun "DEBRICKED_IMPORT" && run "DEBRICKED_PUBLISH" \
+  ifRun "DEBRICKED_SSC_IMPORT" && run "DEBRICKED_SSC_PUBLISH" \
     "${FCLI_CMD}" ssc artifact wait-for ::debricked_scan::
 fi
 
@@ -39,9 +39,9 @@ DEBRICKED_SCAN_RESULTS=$(printOutput DEBRICKED_SCAN stdout | fgrep -e '───
 
 # Collect scan/publish statuses for inclusion in job summary.
 SAST_SCAN_STATUS=$(printRunStatus "SAST_SCAN")
-SAST_PUBLISH_STATUS=$(printRunStatus "SAST_PUBLISH")
+SAST_SSC_PUBLISH_STATUS=$(printRunStatus "SAST_SSC_PUBLISH")
 DEBRICKED_SCAN_STATUS=$(printRunStatus "DEBRICKED_SCAN")
-DEBRICKED_PUBLISH_STATUS=$(printRunStatus "DEBRICKED_IMPORT" "DEBRICKED_PUBLISH")
+DEBRICKED_SSC_PUBLISH_STATUS=$(printRunStatus "DEBRICKED_SSC_IMPORT" "DEBRICKED_SSC_PUBLISH")
 [ "${DEBRICKED_SCAN_STATUS}" == "FAILED" ] && [ ! -z "${DEBRICKED_SCAN_RESULTS}" ] && DEBRICKED_SCAN_STATUS="FAILED_RULES"
 
 cat <<EOF >> $GITHUB_STEP_SUMMARY
@@ -50,8 +50,8 @@ This section provides a status overview of the scans types supported by this Git
 
 | Analysis Type | Scan Status | Publish Status |
 | ------------- | ----------- | -------------- |
-| DEBRICKED     | ${DEBRICKED_SCAN_STATUS} | ${DEBRICKED_PUBLISH_STATUS} |
-| SCA           | ${SAST_SCAN_STATUS}      | ${SAST_PUBLISH_STATUS}      |
+| DEBRICKED     | ${DEBRICKED_SCAN_STATUS} | ${DEBRICKED_SSC_PUBLISH_STATUS} |
+| SCA           | ${SAST_SCAN_STATUS}      | ${SAST_SSC_PUBLISH_STATUS}      |
 EOF
 
 [ ! -z "${DEBRICKED_SCAN_RESULTS}" ] && cat <<EOF >> $GITHUB_STEP_SUMMARY
