@@ -4,24 +4,11 @@ author: 'Fortify'
 runs:
   using: composite
   steps:
+    - uses: fortify/github-action/internal/setup-java-for-sc-client@feat-1.3.0
     - uses: fortify/github-action/setup@feat-1.3.0
       with:
         export-path: false
         sc-client: action-default
-    - name: Store original JAVA_HOME and PATH
-      run: |
-        echo "ORG_JAVA_HOME=${{ env.JAVA_HOME }}" >> ${GITHUB_ENV}
-      shell: bash
-    - name: Setup required Java version for ScanCentral Client
-      uses: actions/setup-java@v4
-      with:
-        distribution: 'temurin'
-        java-version: '21' # ScanCentral Client 24.2+ requires Java17+
-    - name: Set SCANCENTRAL_JAVA_HOME, restore original JAVA_HOME and PATH
-      run: |
-        echo "SCANCENTRAL_JAVA_HOME=${{ env.JAVA_HOME }}" >> ${GITHUB_ENV}
-        echo "JAVA_HOME=${{ env.ORG_JAVA_HOME }}" >> ${GITHUB_ENV}
-      shell: bash
     - uses: fortify/github-action/internal/run@feat-1.3.0
       with: 
         cmd: '"${SC_CLIENT_CMD}" package ${EXTRA_PACKAGE_OPTS} -o package.zip'
