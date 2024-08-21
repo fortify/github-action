@@ -55,12 +55,12 @@ Fortify SSC application version to use with this action. This can be specified e
 
 
 
-<!-- START-INCLUDE:env-ssc-export.md -->
+<!-- START-INCLUDE:env-ssc-export-opts.md -->
 
 **`EXTRA_EXPORT_OPTS`** - OPTIONAL   
 This environment variable allows for passing extra options to the `fcli ssc action run github-sast-report` command. Please see the `fcli ssc action help github-sast-report` command for supported options. With the current fcli version, the most interesting option is `--fs` to specify an alternative SSC filter set, for example: `EXTRA_EXPORT_OPTS: --fs "Quick View"`.
 
-<!-- END-INCLUDE:env-ssc-export.md -->
+<!-- END-INCLUDE:env-ssc-export-opts.md -->
 
 
 

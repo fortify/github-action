@@ -8,6 +8,8 @@ This action exports the latest vulnerability data from an FoD release to the Git
 
 {{include:env-fod-release.md}}
 
+{{include:env-fod-export-opts.md}}
+
 {{include:env-setup.md}}
 
 ### Sample usage

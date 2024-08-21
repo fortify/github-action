@@ -55,6 +55,15 @@ Fortify on Demand release to use with this action. This can be specified either 
 
 
 
+<!-- START-INCLUDE:env-fod-export-opts.md -->
+
+**`EXTRA_EXPORT_OPTS`** - OPTIONAL   
+This environment variable allows for passing extra options to the `fcli fod action run github-sast-report` command. Please see the `fcli fod action help github-sast-report` command for supported options.
+
+<!-- END-INCLUDE:env-fod-export-opts.md -->
+
+
+
 <!-- START-INCLUDE:env-setup.md -->
 
 **`TOOL_DEFINITIONS`** - OPTIONAL   

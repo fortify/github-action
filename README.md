@@ -111,7 +111,7 @@ Required when authenticating with user credentials: FoD tenant, user and passwor
 
 
 **`EXTRA_FOD_LOGIN_OPTS`** - OPTIONAL   
-Extra FoD login options, for example for disabling SSL checks or changing connection time-outs; see [`fcli fod session login` documentation](https://fortify.github.io/fcli/v2.5.1//manpage/fcli-fod-session-login.html)
+Extra FoD login options, for example for disabling SSL checks or changing connection time-outs; see [`fcli fod session login` documentation](https://fortify.github.io/fcli/v2.5.2//manpage/fcli-fod-session-login.html)
 
 <!-- END-INCLUDE:env-fod-login.md -->
 
@@ -141,18 +141,45 @@ As an example, if the build file that you want to use for packaging doesn't adhe
 
 
 **`EXTRA_FOD_SAST_SCAN_OPTS`** - OPTIONAL    
-Extra FoD SAST scan options; see [`fcli fod sast-scan start` documentation](https://fortify.github.io/fcli/v2.5.1//manpage/fcli-fod-sast-scan-start.html)
+Extra FoD SAST scan options; see [`fcli fod sast-scan start` documentation](https://fortify.github.io/fcli/v2.5.2//manpage/fcli-fod-sast-scan-start.html)
 
 
-<!-- START-INCLUDE:env-wait-export.md -->
+<!-- START-INCLUDE:env-fod-summary.md -->
 
-**`DO_WAIT`** - OPTIONAL    
-By default, this action will not wait until the scan has been completed. To have the workflow wait until the scan has been completed, set the `DO_WAIT` environment variable to `true`. Note that `DO_WAIT` is implied if `DO_EXPORT` is set to `true`; see below.
+**`RELEASE_SUMMARY_ACTION`** - OPTIONAL   
+If configured, the GitHub Action will run the specified fcli action to add a release summary to the GitHub Actions workflow summary. You can either set this variable to `release-summary` to use the default fcli-provided application version summary, or specify a custom fcli action file or URL. With the current version of this GitHub Action, any custom fcli action must accept at least the `--rel` option to specify the release for which to generate a summary. Setting this environment variable to a non-empty value implies `DO_WAIT`.
+
+**`RELEASE_SUMMARY_ACTION_EXTRA_OPTS`** - OPTIONAL   
+This environment variable allows for passing extra options to the `fcli fod action run <RELEASE_SUMMARY_ACTION>` command. Please see the `fcli fod action help <RELEASE_SUMMARY_ACTION>` command for supported options. For example, this can be used to allow an unsigned custom action to be used.
+
+<!-- END-INCLUDE:env-fod-summary.md -->
+
+
+
+<!-- START-INCLUDE:env-do-export.md -->
 
 **`DO_EXPORT`** - OPTIONAL    
-If set to `true`, this action will export scan results to the GitHub Security Code Scanning dashboard. Note that this may require a [GitHub Advanced Security](https://docs.github.com/en/get-started/learning-about-github/about-github-advanced-security) subscription, unless you're running this action on a public github.com repository. Note that GitHub only supports importing SAST results; other results will not exported to GitHub.
+If set to `true`, this action will export scan results to the GitHub Security Code Scanning dashboard. Note that this may require a [GitHub Advanced Security](https://docs.github.com/en/get-started/learning-about-github/about-github-advanced-security) subscription, unless you're running this action on a public github.com repository. Note that GitHub only supports importing SAST results; other results will not exported to GitHub. Setting this environment variable to `true` implies `DO_WAIT`.
 
-<!-- END-INCLUDE:env-wait-export.md -->
+<!-- END-INCLUDE:env-do-export.md -->
+
+
+
+<!-- START-INCLUDE:env-fod-export-opts.md -->
+
+**`EXTRA_EXPORT_OPTS`** - OPTIONAL   
+This environment variable allows for passing extra options to the `fcli fod action run github-sast-report` command. Please see the `fcli fod action help github-sast-report` command for supported options.
+
+<!-- END-INCLUDE:env-fod-export-opts.md -->
+
+
+
+<!-- START-INCLUDE:env-do-wait.md -->
+
+**`DO_WAIT`** - OPTIONAL    
+By default, this action will not wait until scans have been completed. To have the workflow wait until all scans have been completed, set the `DO_WAIT` environment variable to `true`. Note that some other environment variables imply `DO_WAIT`, for example when exporting vulnerability data or generating workflow summaries. This behavior is documented in the applicable environment variable descriptions.
+
+<!-- END-INCLUDE:env-do-wait.md -->
 
 
 <!-- END-INCLUDE:env-fod-sast-scan.md -->
@@ -193,7 +220,7 @@ Required when authenticating with SSC user credentials.
 <!-- START-INCLUDE:env-ssc-login.md -->
 
 **`EXTRA_SSC_LOGIN_OPTS`** - OPTIONAL    
-Extra SSC login options, for example for disabling SSL checks or changing connection time-outs; see [`fcli ssc session login` documentation](https://fortify.github.io/fcli/v2.5.1//manpage/fcli-ssc-session-login.html).
+Extra SSC login options, for example for disabling SSL checks or changing connection time-outs; see [`fcli ssc session login` documentation](https://fortify.github.io/fcli/v2.5.2//manpage/fcli-ssc-session-login.html).
 
 <!-- END-INCLUDE:env-ssc-login.md -->
 
@@ -205,7 +232,7 @@ Extra SSC login options, for example for disabling SSL checks or changing connec
 Required: ScanCentral SAST Client Authentication Token for authenticating with ScanCentral SAST Controller.
 
 **`EXTRA_SC_SAST_LOGIN_OPTS`** - OPTIONAL    
-Extra ScanCentral SAST login options, for example for disabling SSL checks or changing connection time-outs; see [`fcli sc-sast session login` documentation](https://fortify.github.io/fcli/v2.5.1//manpage/fcli-sc-sast-session-login.html).
+Extra ScanCentral SAST login options, for example for disabling SSL checks or changing connection time-outs; see [`fcli sc-sast session login` documentation](https://fortify.github.io/fcli/v2.5.2//manpage/fcli-sc-sast-session-login.html).
 
 <!-- END-INCLUDE:env-sc-sast-login.md -->
 
@@ -237,30 +264,48 @@ As an example, if the build file that you want to use for packaging doesn't adhe
 
 
 **`SC_SAST_SENSOR_VERSION`** - REQUIRED     
-Version of the ScanCentral SAST sensor on which the scan should be performed. See [`fcli sc-sast scan start` documentation](https://fortify.github.io/fcli/v2.5.1//manpage/fcli-sc-sast-scan-start.html#_options_for_scanning_a_package_file) for details.
+Version of the ScanCentral SAST sensor on which the scan should be performed. See [`fcli sc-sast scan start` documentation](https://fortify.github.io/fcli/v2.5.2//manpage/fcli-sc-sast-scan-start.html#_options_for_scanning_a_package_file) for details.
 
 **`EXTRA_SC_SAST_SCAN_OPTS`** - OPTIONAL    
-Extra ScanCentral SAST scan options; see [`fcli sc-sast scan start` documentation](https://fortify.github.io/fcli/v2.5.1//manpage/fcli-sc-sast-scan-start.html)
+Extra ScanCentral SAST scan options; see [`fcli sc-sast scan start` documentation](https://fortify.github.io/fcli/v2.5.2//manpage/fcli-sc-sast-scan-start.html)
 
 
-<!-- START-INCLUDE:env-ssc-export.md -->
+<!-- START-INCLUDE:env-ssc-summary.md -->
+
+**`APPVERSION_SUMMARY_ACTION`** - OPTIONAL   
+If configured, the GitHub Action will run the specified fcli action to add an application version summary to the GitHub Actions workflow summary. You can either set this variable to `appversion-summary` to use the default fcli-provided application version summary, or specify a custom fcli action file or URL. With the current version of this GitHub Action, any custom fcli action must accept at least the `--av` option to specify the application version for which to generate a summary. Setting this environment variable to a non-empty value implies `DO_WAIT`.
+
+**`APPVERSION_SUMMARY_ACTION_EXTRA_OPTS`** - OPTIONAL   
+This environment variable allows for passing extra options to the `fcli ssc action run <APPVERSION_SUMMARY_ACTION>` command. Please see the `fcli ssc action help <APPVERSION_SUMMARY_ACTION>` command for supported options. For example, this can be used to specify the filter set(s) to be included in the summary, or to allow an unsigned custom action to be used.
+
+<!-- END-INCLUDE:env-ssc-summary.md -->
+
+
+
+<!-- START-INCLUDE:env-do-export.md -->
+
+**`DO_EXPORT`** - OPTIONAL    
+If set to `true`, this action will export scan results to the GitHub Security Code Scanning dashboard. Note that this may require a [GitHub Advanced Security](https://docs.github.com/en/get-started/learning-about-github/about-github-advanced-security) subscription, unless you're running this action on a public github.com repository. Note that GitHub only supports importing SAST results; other results will not exported to GitHub. Setting this environment variable to `true` implies `DO_WAIT`.
+
+<!-- END-INCLUDE:env-do-export.md -->
+
+
+
+<!-- START-INCLUDE:env-ssc-export-opts.md -->
 
 **`EXTRA_EXPORT_OPTS`** - OPTIONAL   
 This environment variable allows for passing extra options to the `fcli ssc action run github-sast-report` command. Please see the `fcli ssc action help github-sast-report` command for supported options. With the current fcli version, the most interesting option is `--fs` to specify an alternative SSC filter set, for example: `EXTRA_EXPORT_OPTS: --fs "Quick View"`.
 
-<!-- END-INCLUDE:env-ssc-export.md -->
+<!-- END-INCLUDE:env-ssc-export-opts.md -->
 
 
 
-<!-- START-INCLUDE:env-wait-export.md -->
+<!-- START-INCLUDE:env-do-wait.md -->
 
 **`DO_WAIT`** - OPTIONAL    
-By default, this action will not wait until the scan has been completed. To have the workflow wait until the scan has been completed, set the `DO_WAIT` environment variable to `true`. Note that `DO_WAIT` is implied if `DO_EXPORT` is set to `true`; see below.
+By default, this action will not wait until scans have been completed. To have the workflow wait until all scans have been completed, set the `DO_WAIT` environment variable to `true`. Note that some other environment variables imply `DO_WAIT`, for example when exporting vulnerability data or generating workflow summaries. This behavior is documented in the applicable environment variable descriptions.
 
-**`DO_EXPORT`** - OPTIONAL    
-If set to `true`, this action will export scan results to the GitHub Security Code Scanning dashboard. Note that this may require a [GitHub Advanced Security](https://docs.github.com/en/get-started/learning-about-github/about-github-advanced-security) subscription, unless you're running this action on a public github.com repository. Note that GitHub only supports importing SAST results; other results will not exported to GitHub.
-
-<!-- END-INCLUDE:env-wait-export.md -->
+<!-- END-INCLUDE:env-do-wait.md -->
 
 
 <!-- END-INCLUDE:env-sc-sast-scan.md -->
@@ -301,7 +346,7 @@ Required when authenticating with SSC user credentials.
 <!-- START-INCLUDE:env-ssc-login.md -->
 
 **`EXTRA_SSC_LOGIN_OPTS`** - OPTIONAL    
-Extra SSC login options, for example for disabling SSL checks or changing connection time-outs; see [`fcli ssc session login` documentation](https://fortify.github.io/fcli/v2.5.1//manpage/fcli-ssc-session-login.html).
+Extra SSC login options, for example for disabling SSL checks or changing connection time-outs; see [`fcli ssc session login` documentation](https://fortify.github.io/fcli/v2.5.2//manpage/fcli-ssc-session-login.html).
 
 <!-- END-INCLUDE:env-ssc-login.md -->
 
@@ -318,10 +363,26 @@ Fortify SSC application version to use with this action. This can be specified e
 <!-- END-INCLUDE:env-ssc-appversion.md -->
 
 
-**`DO_WAIT`** - OPTIONAL    
-By default, this action will complete immediately after Debricked scan results have been uploaded to SSC. To have the workflow wait until the Debricked results have been processed by SSC (potentially failing if the results cannot be successfully processed), set the `DO_WAIT` environment variable to `true`.
 
-For consistency with other actions, `DO_WAIT` is implied if `DO_EXPORT` is set to `true`, but since GitHub doesn't support importing Software Composition Analysis results, Debricked results will not be published to GitHub even if `DO_EXPORT` is set to `true`.
+<!-- START-INCLUDE:env-ssc-summary.md -->
+
+**`APPVERSION_SUMMARY_ACTION`** - OPTIONAL   
+If configured, the GitHub Action will run the specified fcli action to add an application version summary to the GitHub Actions workflow summary. You can either set this variable to `appversion-summary` to use the default fcli-provided application version summary, or specify a custom fcli action file or URL. With the current version of this GitHub Action, any custom fcli action must accept at least the `--av` option to specify the application version for which to generate a summary. Setting this environment variable to a non-empty value implies `DO_WAIT`.
+
+**`APPVERSION_SUMMARY_ACTION_EXTRA_OPTS`** - OPTIONAL   
+This environment variable allows for passing extra options to the `fcli ssc action run <APPVERSION_SUMMARY_ACTION>` command. Please see the `fcli ssc action help <APPVERSION_SUMMARY_ACTION>` command for supported options. For example, this can be used to specify the filter set(s) to be included in the summary, or to allow an unsigned custom action to be used.
+
+<!-- END-INCLUDE:env-ssc-summary.md -->
+
+
+
+<!-- START-INCLUDE:env-do-wait.md -->
+
+**`DO_WAIT`** - OPTIONAL    
+By default, this action will not wait until scans have been completed. To have the workflow wait until all scans have been completed, set the `DO_WAIT` environment variable to `true`. Note that some other environment variables imply `DO_WAIT`, for example when exporting vulnerability data or generating workflow summaries. This behavior is documented in the applicable environment variable descriptions.
+
+<!-- END-INCLUDE:env-do-wait.md -->
+
 
 <!-- END-INCLUDE:env-ssc-debricked-scan.md -->
 
@@ -665,7 +726,7 @@ Required when authenticating with user credentials: FoD tenant, user and passwor
 
 
 **`EXTRA_FOD_LOGIN_OPTS`** - OPTIONAL   
-Extra FoD login options, for example for disabling SSL checks or changing connection time-outs; see [`fcli fod session login` documentation](https://fortify.github.io/fcli/v2.5.1//manpage/fcli-fod-session-login.html)
+Extra FoD login options, for example for disabling SSL checks or changing connection time-outs; see [`fcli fod session login` documentation](https://fortify.github.io/fcli/v2.5.2//manpage/fcli-fod-session-login.html)
 
 <!-- END-INCLUDE:env-fod-login.md -->
 
@@ -695,18 +756,45 @@ As an example, if the build file that you want to use for packaging doesn't adhe
 
 
 **`EXTRA_FOD_SAST_SCAN_OPTS`** - OPTIONAL    
-Extra FoD SAST scan options; see [`fcli fod sast-scan start` documentation](https://fortify.github.io/fcli/v2.5.1//manpage/fcli-fod-sast-scan-start.html)
+Extra FoD SAST scan options; see [`fcli fod sast-scan start` documentation](https://fortify.github.io/fcli/v2.5.2//manpage/fcli-fod-sast-scan-start.html)
 
 
-<!-- START-INCLUDE:env-wait-export.md -->
+<!-- START-INCLUDE:env-fod-summary.md -->
 
-**`DO_WAIT`** - OPTIONAL    
-By default, this action will not wait until the scan has been completed. To have the workflow wait until the scan has been completed, set the `DO_WAIT` environment variable to `true`. Note that `DO_WAIT` is implied if `DO_EXPORT` is set to `true`; see below.
+**`RELEASE_SUMMARY_ACTION`** - OPTIONAL   
+If configured, the GitHub Action will run the specified fcli action to add a release summary to the GitHub Actions workflow summary. You can either set this variable to `release-summary` to use the default fcli-provided application version summary, or specify a custom fcli action file or URL. With the current version of this GitHub Action, any custom fcli action must accept at least the `--rel` option to specify the release for which to generate a summary. Setting this environment variable to a non-empty value implies `DO_WAIT`.
+
+**`RELEASE_SUMMARY_ACTION_EXTRA_OPTS`** - OPTIONAL   
+This environment variable allows for passing extra options to the `fcli fod action run <RELEASE_SUMMARY_ACTION>` command. Please see the `fcli fod action help <RELEASE_SUMMARY_ACTION>` command for supported options. For example, this can be used to allow an unsigned custom action to be used.
+
+<!-- END-INCLUDE:env-fod-summary.md -->
+
+
+
+<!-- START-INCLUDE:env-do-export.md -->
 
 **`DO_EXPORT`** - OPTIONAL    
-If set to `true`, this action will export scan results to the GitHub Security Code Scanning dashboard. Note that this may require a [GitHub Advanced Security](https://docs.github.com/en/get-started/learning-about-github/about-github-advanced-security) subscription, unless you're running this action on a public github.com repository. Note that GitHub only supports importing SAST results; other results will not exported to GitHub.
+If set to `true`, this action will export scan results to the GitHub Security Code Scanning dashboard. Note that this may require a [GitHub Advanced Security](https://docs.github.com/en/get-started/learning-about-github/about-github-advanced-security) subscription, unless you're running this action on a public github.com repository. Note that GitHub only supports importing SAST results; other results will not exported to GitHub. Setting this environment variable to `true` implies `DO_WAIT`.
 
-<!-- END-INCLUDE:env-wait-export.md -->
+<!-- END-INCLUDE:env-do-export.md -->
+
+
+
+<!-- START-INCLUDE:env-fod-export-opts.md -->
+
+**`EXTRA_EXPORT_OPTS`** - OPTIONAL   
+This environment variable allows for passing extra options to the `fcli fod action run github-sast-report` command. Please see the `fcli fod action help github-sast-report` command for supported options.
+
+<!-- END-INCLUDE:env-fod-export-opts.md -->
+
+
+
+<!-- START-INCLUDE:env-do-wait.md -->
+
+**`DO_WAIT`** - OPTIONAL    
+By default, this action will not wait until scans have been completed. To have the workflow wait until all scans have been completed, set the `DO_WAIT` environment variable to `true`. Note that some other environment variables imply `DO_WAIT`, for example when exporting vulnerability data or generating workflow summaries. This behavior is documented in the applicable environment variable descriptions.
+
+<!-- END-INCLUDE:env-do-wait.md -->
 
 
 <!-- END-INCLUDE:env-fod-sast-scan.md -->
@@ -801,6 +889,15 @@ Fortify on Demand release to use with this action. This can be specified either 
 
 
 
+<!-- START-INCLUDE:env-fod-export-opts.md -->
+
+**`EXTRA_EXPORT_OPTS`** - OPTIONAL   
+This environment variable allows for passing extra options to the `fcli fod action run github-sast-report` command. Please see the `fcli fod action help github-sast-report` command for supported options.
+
+<!-- END-INCLUDE:env-fod-export-opts.md -->
+
+
+
 <!-- START-INCLUDE:env-setup.md -->
 
 **`TOOL_DEFINITIONS`** - OPTIONAL   
@@ -892,7 +989,7 @@ Required when authenticating with SSC user credentials.
 <!-- START-INCLUDE:env-ssc-login.md -->
 
 **`EXTRA_SSC_LOGIN_OPTS`** - OPTIONAL    
-Extra SSC login options, for example for disabling SSL checks or changing connection time-outs; see [`fcli ssc session login` documentation](https://fortify.github.io/fcli/v2.5.1//manpage/fcli-ssc-session-login.html).
+Extra SSC login options, for example for disabling SSL checks or changing connection time-outs; see [`fcli ssc session login` documentation](https://fortify.github.io/fcli/v2.5.2//manpage/fcli-ssc-session-login.html).
 
 <!-- END-INCLUDE:env-ssc-login.md -->
 
@@ -904,7 +1001,7 @@ Extra SSC login options, for example for disabling SSL checks or changing connec
 Required: ScanCentral SAST Client Authentication Token for authenticating with ScanCentral SAST Controller.
 
 **`EXTRA_SC_SAST_LOGIN_OPTS`** - OPTIONAL    
-Extra ScanCentral SAST login options, for example for disabling SSL checks or changing connection time-outs; see [`fcli sc-sast session login` documentation](https://fortify.github.io/fcli/v2.5.1//manpage/fcli-sc-sast-session-login.html).
+Extra ScanCentral SAST login options, for example for disabling SSL checks or changing connection time-outs; see [`fcli sc-sast session login` documentation](https://fortify.github.io/fcli/v2.5.2//manpage/fcli-sc-sast-session-login.html).
 
 <!-- END-INCLUDE:env-sc-sast-login.md -->
 
@@ -936,30 +1033,48 @@ As an example, if the build file that you want to use for packaging doesn't adhe
 
 
 **`SC_SAST_SENSOR_VERSION`** - REQUIRED     
-Version of the ScanCentral SAST sensor on which the scan should be performed. See [`fcli sc-sast scan start` documentation](https://fortify.github.io/fcli/v2.5.1//manpage/fcli-sc-sast-scan-start.html#_options_for_scanning_a_package_file) for details.
+Version of the ScanCentral SAST sensor on which the scan should be performed. See [`fcli sc-sast scan start` documentation](https://fortify.github.io/fcli/v2.5.2//manpage/fcli-sc-sast-scan-start.html#_options_for_scanning_a_package_file) for details.
 
 **`EXTRA_SC_SAST_SCAN_OPTS`** - OPTIONAL    
-Extra ScanCentral SAST scan options; see [`fcli sc-sast scan start` documentation](https://fortify.github.io/fcli/v2.5.1//manpage/fcli-sc-sast-scan-start.html)
+Extra ScanCentral SAST scan options; see [`fcli sc-sast scan start` documentation](https://fortify.github.io/fcli/v2.5.2//manpage/fcli-sc-sast-scan-start.html)
 
 
-<!-- START-INCLUDE:env-ssc-export.md -->
+<!-- START-INCLUDE:env-ssc-summary.md -->
+
+**`APPVERSION_SUMMARY_ACTION`** - OPTIONAL   
+If configured, the GitHub Action will run the specified fcli action to add an application version summary to the GitHub Actions workflow summary. You can either set this variable to `appversion-summary` to use the default fcli-provided application version summary, or specify a custom fcli action file or URL. With the current version of this GitHub Action, any custom fcli action must accept at least the `--av` option to specify the application version for which to generate a summary. Setting this environment variable to a non-empty value implies `DO_WAIT`.
+
+**`APPVERSION_SUMMARY_ACTION_EXTRA_OPTS`** - OPTIONAL   
+This environment variable allows for passing extra options to the `fcli ssc action run <APPVERSION_SUMMARY_ACTION>` command. Please see the `fcli ssc action help <APPVERSION_SUMMARY_ACTION>` command for supported options. For example, this can be used to specify the filter set(s) to be included in the summary, or to allow an unsigned custom action to be used.
+
+<!-- END-INCLUDE:env-ssc-summary.md -->
+
+
+
+<!-- START-INCLUDE:env-do-export.md -->
+
+**`DO_EXPORT`** - OPTIONAL    
+If set to `true`, this action will export scan results to the GitHub Security Code Scanning dashboard. Note that this may require a [GitHub Advanced Security](https://docs.github.com/en/get-started/learning-about-github/about-github-advanced-security) subscription, unless you're running this action on a public github.com repository. Note that GitHub only supports importing SAST results; other results will not exported to GitHub. Setting this environment variable to `true` implies `DO_WAIT`.
+
+<!-- END-INCLUDE:env-do-export.md -->
+
+
+
+<!-- START-INCLUDE:env-ssc-export-opts.md -->
 
 **`EXTRA_EXPORT_OPTS`** - OPTIONAL   
 This environment variable allows for passing extra options to the `fcli ssc action run github-sast-report` command. Please see the `fcli ssc action help github-sast-report` command for supported options. With the current fcli version, the most interesting option is `--fs` to specify an alternative SSC filter set, for example: `EXTRA_EXPORT_OPTS: --fs "Quick View"`.
 
-<!-- END-INCLUDE:env-ssc-export.md -->
+<!-- END-INCLUDE:env-ssc-export-opts.md -->
 
 
 
-<!-- START-INCLUDE:env-wait-export.md -->
+<!-- START-INCLUDE:env-do-wait.md -->
 
 **`DO_WAIT`** - OPTIONAL    
-By default, this action will not wait until the scan has been completed. To have the workflow wait until the scan has been completed, set the `DO_WAIT` environment variable to `true`. Note that `DO_WAIT` is implied if `DO_EXPORT` is set to `true`; see below.
+By default, this action will not wait until scans have been completed. To have the workflow wait until all scans have been completed, set the `DO_WAIT` environment variable to `true`. Note that some other environment variables imply `DO_WAIT`, for example when exporting vulnerability data or generating workflow summaries. This behavior is documented in the applicable environment variable descriptions.
 
-**`DO_EXPORT`** - OPTIONAL    
-If set to `true`, this action will export scan results to the GitHub Security Code Scanning dashboard. Note that this may require a [GitHub Advanced Security](https://docs.github.com/en/get-started/learning-about-github/about-github-advanced-security) subscription, unless you're running this action on a public github.com repository. Note that GitHub only supports importing SAST results; other results will not exported to GitHub.
-
-<!-- END-INCLUDE:env-wait-export.md -->
+<!-- END-INCLUDE:env-do-wait.md -->
 
 
 <!-- END-INCLUDE:env-sc-sast-scan.md -->
@@ -1066,7 +1181,7 @@ Required when authenticating with SSC user credentials.
 <!-- START-INCLUDE:env-ssc-login.md -->
 
 **`EXTRA_SSC_LOGIN_OPTS`** - OPTIONAL    
-Extra SSC login options, for example for disabling SSL checks or changing connection time-outs; see [`fcli ssc session login` documentation](https://fortify.github.io/fcli/v2.5.1//manpage/fcli-ssc-session-login.html).
+Extra SSC login options, for example for disabling SSL checks or changing connection time-outs; see [`fcli ssc session login` documentation](https://fortify.github.io/fcli/v2.5.2//manpage/fcli-ssc-session-login.html).
 
 <!-- END-INCLUDE:env-ssc-login.md -->
 
@@ -1083,10 +1198,26 @@ Fortify SSC application version to use with this action. This can be specified e
 <!-- END-INCLUDE:env-ssc-appversion.md -->
 
 
-**`DO_WAIT`** - OPTIONAL    
-By default, this action will complete immediately after Debricked scan results have been uploaded to SSC. To have the workflow wait until the Debricked results have been processed by SSC (potentially failing if the results cannot be successfully processed), set the `DO_WAIT` environment variable to `true`.
 
-For consistency with other actions, `DO_WAIT` is implied if `DO_EXPORT` is set to `true`, but since GitHub doesn't support importing Software Composition Analysis results, Debricked results will not be published to GitHub even if `DO_EXPORT` is set to `true`.
+<!-- START-INCLUDE:env-ssc-summary.md -->
+
+**`APPVERSION_SUMMARY_ACTION`** - OPTIONAL   
+If configured, the GitHub Action will run the specified fcli action to add an application version summary to the GitHub Actions workflow summary. You can either set this variable to `appversion-summary` to use the default fcli-provided application version summary, or specify a custom fcli action file or URL. With the current version of this GitHub Action, any custom fcli action must accept at least the `--av` option to specify the application version for which to generate a summary. Setting this environment variable to a non-empty value implies `DO_WAIT`.
+
+**`APPVERSION_SUMMARY_ACTION_EXTRA_OPTS`** - OPTIONAL   
+This environment variable allows for passing extra options to the `fcli ssc action run <APPVERSION_SUMMARY_ACTION>` command. Please see the `fcli ssc action help <APPVERSION_SUMMARY_ACTION>` command for supported options. For example, this can be used to specify the filter set(s) to be included in the summary, or to allow an unsigned custom action to be used.
+
+<!-- END-INCLUDE:env-ssc-summary.md -->
+
+
+
+<!-- START-INCLUDE:env-do-wait.md -->
+
+**`DO_WAIT`** - OPTIONAL    
+By default, this action will not wait until scans have been completed. To have the workflow wait until all scans have been completed, set the `DO_WAIT` environment variable to `true`. Note that some other environment variables imply `DO_WAIT`, for example when exporting vulnerability data or generating workflow summaries. This behavior is documented in the applicable environment variable descriptions.
+
+<!-- END-INCLUDE:env-do-wait.md -->
+
 
 <!-- END-INCLUDE:env-ssc-debricked-scan.md -->
 
@@ -1177,12 +1308,12 @@ Fortify SSC application version to use with this action. This can be specified e
 
 
 
-<!-- START-INCLUDE:env-ssc-export.md -->
+<!-- START-INCLUDE:env-ssc-export-opts.md -->
 
 **`EXTRA_EXPORT_OPTS`** - OPTIONAL   
 This environment variable allows for passing extra options to the `fcli ssc action run github-sast-report` command. Please see the `fcli ssc action help github-sast-report` command for supported options. With the current fcli version, the most interesting option is `--fs` to specify an alternative SSC filter set, for example: `EXTRA_EXPORT_OPTS: --fs "Quick View"`.
 
-<!-- END-INCLUDE:env-ssc-export.md -->
+<!-- END-INCLUDE:env-ssc-export-opts.md -->
 
 
 

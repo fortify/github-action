@@ -7,10 +7,17 @@
 requireVar "FOD_RELEASE"
 checkRequirements
 
+function doReleaseSummary {
+  [ -n "${RELEASE_SUMMARY_ACTION}" ]
+}
+function doWait {
+  [ "${DO_WAIT}" == "true" ] || [ "${DO_EXPORT}" == "true" ] || doReleaseSummary
+}
+
 run "SAST_SCAN" "${FCLI_CMD}" fod sast-scan start \
     --rel "${FOD_RELEASE}" -f package.zip \
     --store fod_sast_scan __expand:EXTRA_FOD_SAST_SCAN_OPTS
-if [ "${DO_WAIT}" == "true" ] || [ "${DO_EXPORT}" == "true" ]; then
+if doWait; then
   ifRun "SAST_SCAN" && run "SAST_PUBLISH" \
     "${FCLI_CMD}" fod sast-scan wait-for ::fod_sast_scan::
 fi
@@ -21,15 +28,17 @@ SAST_PUBLISH_STATUS=$(printRunStatus "SAST_PUBLISH")
 
 cat <<EOF >> $GITHUB_STEP_SUMMARY
 # Scan Summary
-This section provides a status overview of the scans types supported by this GitHub Action, together with their status. If any of the statuses shows \`FAILED\`, please review job logs. 
+This section provides a status overview of the scans types supported by this GitHub Action, together with their status. 
 
 | Analysis Type | Scan Status | Publish Status |
 | ------------- | ----------- | -------------- |
 | SAST          | ${SAST_SCAN_STATUS} | ${SAST_PUBLISH_STATUS} |
+
+If any of the statuses shows \`FAILED\`, please review job logs to identify the cause of the failure. If any of the statuses
+shows \`FAILED\` or \`SKIPPED\`, the corresponding details listed in the summary below (if enabled) may represent older scan results.
 EOF
 
-RELEASE_SUMMARY_ACTION="${RELEASE_SUMMARY_ACTION:-release-summary}"
-if [ -n "${RELEASE_SUMMARY_ACTION}" ]; then
+if doReleaseSummary; then
   run "RELEASE_SUMMARY" "${FCLI_CMD}" fod action run "${RELEASE_SUMMARY_ACTION}" \
     --rel "${FOD_RELEASE}" --progress=none __expand:RELEASE_SUMMARY_ACTION_EXTRA_OPTS
   ifRun "RELEASE_SUMMARY" \

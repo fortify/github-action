@@ -20,6 +20,11 @@ Version of the ScanCentral SAST sensor on which the scan should be performed. Se
 **`EXTRA_SC_SAST_SCAN_OPTS`** - OPTIONAL    
 Extra ScanCentral SAST scan options; see [`fcli sc-sast scan start` documentation]({{var:fcli-doc-base-url}}/manpage/fcli-sc-sast-scan-start.html)
 
-{{include:env-ssc-export.md}}
+{{include:env-ssc-summary.md}}
 
-{{include:env-wait-export.md}}
+{{include:env-do-export.md}}
+
+{{include:env-ssc-export-opts.md}}
+
+{{include:env-do-wait.md}}
+

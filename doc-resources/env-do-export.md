@@ -1,0 +1,2 @@
+**`DO_EXPORT`** - OPTIONAL    
+If set to `true`, this action will export scan results to the GitHub Security Code Scanning dashboard. Note that this may require a [GitHub Advanced Security](https://docs.github.com/en/get-started/learning-about-github/about-github-advanced-security) subscription, unless you're running this action on a public github.com repository. Note that GitHub only supports importing SAST results; other results will not exported to GitHub. Setting this environment variable to `true` implies `DO_WAIT`.

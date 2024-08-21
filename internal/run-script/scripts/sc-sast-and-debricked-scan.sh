@@ -10,6 +10,13 @@ requireIfVar "DO_DEBRICKED_SCAN" "DEBRICKED_CLI_CMD"
 requireIfVar "DO_DEBRICKED_SCAN" "DEBRICKED_TOKEN"
 checkRequirements
 
+function doAppVersionSummary {
+  [ -n "${APPVERSION_SUMMARY_ACTION}" ]
+}
+function doWait {
+  [ "${DO_WAIT}" == "true" ] || [ "${DO_EXPORT}" == "true" ] || doAppVersionSummary
+}
+
 # Disable Debricked CLI colors 
 export NO_COLOR=true
 
@@ -27,7 +34,7 @@ if [ "${DO_DEBRICKED_SCAN}" == "true" ]; then
     --branch "${GITHUB_HEAD_REF:-$GITHUB_REF_NAME}" -t "${DEBRICKED_TOKEN}" \
     --store debricked_scan
 fi
-if [ "${DO_WAIT}" == "true" ] || [ "${DO_EXPORT}" == "true" ]; then
+if doWait; then
   ifRun "SAST_SCAN" && run "SAST_SSC_PUBLISH" \
     "${FCLI_CMD}" sc-sast scan wait-for ::sc_sast_scan::
   ifRun "DEBRICKED_SSC_IMPORT" && run "DEBRICKED_SSC_PUBLISH" \
@@ -46,12 +53,15 @@ DEBRICKED_SSC_PUBLISH_STATUS=$(printRunStatus "DEBRICKED_SSC_IMPORT" "DEBRICKED_
 
 cat <<EOF >> $GITHUB_STEP_SUMMARY
 # Scan Summary
-This section provides a status overview of the scans types supported by this GitHub Action, together with their status. If any of the statuses shows \`FAILED\`, please review job logs. 
+This section provides a status overview of the scans types supported by this GitHub Action, together with their status. 
 
 | Analysis Type | Scan Status | Publish Status |
 | ------------- | ----------- | -------------- |
 | DEBRICKED     | ${DEBRICKED_SCAN_STATUS} | ${DEBRICKED_SSC_PUBLISH_STATUS} |
 | SCA           | ${SAST_SCAN_STATUS}      | ${SAST_SSC_PUBLISH_STATUS}      |
+
+If any of the statuses shows \`FAILED\`, please review job logs to identify the cause of the failure. If any of the statuses
+shows \`FAILED\` or \`SKIPPED\`, the corresponding details listed in the summary below (if enabled) may represent older scan results.
 EOF
 
 [ ! -z "${DEBRICKED_SCAN_RESULTS}" ] && cat <<EOF >> $GITHUB_STEP_SUMMARY
@@ -62,15 +72,16 @@ ${DEBRICKED_SCAN_RESULTS}
 \`\`\`
 EOF
 
-APPVERSION_SUMMARY_ACTION="${APPVERSION_SUMMARY_ACTION:-appversion-summary}"
-run "APPVERSION_SUMMARY" "${FCLI_CMD}" ssc action run "${APPVERSION_SUMMARY_ACTION}" \
-  --av "${SSC_APPVERSION}" --progress=none __expand:APPVERSION_SUMMARY_ACTION_EXTRA_OPTS
-ifRun "APPVERSION_SUMMARY" \
-  && printOutput "APPVERSION_SUMMARY" "stdout" >> $GITHUB_STEP_SUMMARY \
-  || cat<<EOF >> $GITHUB_STEP_SUMMARY
+if doAppVersionSummary; then
+  run "APPVERSION_SUMMARY" "${FCLI_CMD}" ssc action run "${APPVERSION_SUMMARY_ACTION}" \
+    --av "${SSC_APPVERSION}" --progress=none __expand:APPVERSION_SUMMARY_ACTION_EXTRA_OPTS
+  ifRun "APPVERSION_SUMMARY" \
+    && printOutput "APPVERSION_SUMMARY" "stdout" >> $GITHUB_STEP_SUMMARY \
+    || cat<<EOF >> $GITHUB_STEP_SUMMARY
 # SSC Application Version Summary
 There was an error generating the application version summary; please review pipeline log for details.
 EOF
+fi
 
 printRunSummary
 failOnError

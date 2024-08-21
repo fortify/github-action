@@ -18941,17 +18941,18 @@ const core = __importStar(__nccwpck_require__(2186));
  * The TOOLS records list the tools supported by this action, together with
  * 'action-default' version aliases and the appropriate command names for
  * each platform.
- *
- * IMPORTANT: When updating "action-default" versions in the TOOLS record,
- *            please make sure to update any corresponding version numbers
- *            in the documentation links in doc-resources/template-values.md
- *            accordingly to allow for proper version-specific links in the
- *            action documentation. For now, this only applies to fcli and
- *            ScanCentral Client, but please double-check.
  */
 exports.TOOLS = {
+    /**
+     * IMPORTANT: When updating "action-default" versions in the TOOLS record,
+     *            please make sure to update any corresponding version numbers
+     *            in the documentation links in doc-resources/template-values.md
+     *            accordingly to allow for proper version-specific links in the
+     *            action documentation. For now, this only applies to fcli and
+     *            ScanCentral Client, but please double-check.
+     */
     "fcli": {
-        "versionAliases": { "action-default": "2.5.1" },
+        "versionAliases": { "action-default": "2.5.2" },
         "cmds": { "windows": "fcli.exe", "linux": "fcli", "darwin": "fcli" }
     },
     "sc-client": {
