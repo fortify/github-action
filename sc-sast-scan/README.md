@@ -49,7 +49,7 @@ Apart from the generic action prerequisites listed above, the following prerequi
 <!-- START-INCLUDE:env-ssc-connection.md -->
 
 **`SSC_URL`** - REQUIRED   
-Fortify Software Security Center URL, for example https://ssc.customer.fortifyhosted.net/
+Fortify Software Security Center URL, for example https://ssc.customer.fortifyhosted.net/. Note: Using GitHub Secrets to define this URL may cause links back to SSC to be rendered incorrectly, for example in GitHub Action workflow summaries. It is highly recommended to either hard-code the URL in your workflow, or to use [GitHub Variables](https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/store-information-in-variables) instead of GitHub Secrets.
 
 **`SSC_TOKEN`** - REQUIRED*   
 Required when authenticating with an SSC token (recommended). Most actions should work fine with a `CIToken`.
@@ -159,7 +159,7 @@ The sample workflow below demonstrates how to configure the action for running a
       - name: Run ScanCentral SAST Scan
         uses: fortify/github-action/sc-sast-scan@v1
         env:
-          SSC_URL: ${{secrets.SSC_URL}}
+          SSC_URL: ${{vars.SSC_URL}}
           SSC_TOKEN: ${{secrets.SSC_TOKEN}}
           # EXTRA_SSC_LOGIN_OPTS: --socket-timeout=60s
           SC_SAST_TOKEN: ${{secrets.CLIENT_AUTH_TOKEN}}

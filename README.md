@@ -99,7 +99,7 @@ If not specified or when set to false, no SAST scan will be performed. For FoD, 
 <!-- START-INCLUDE:env-fod-connection.md -->
 
 **`FOD_URL`** - REQUIRED   
-Fortify on Demand URL, for example https://ams.fortify.com
+Fortify on Demand URL, for example https://ams.fortify.com. Note: Using GitHub Secrets to define this URL may cause links back to FoD to be rendered incorrectly, for example in GitHub Action workflow summaries. It is highly recommended to either hard-code the URL in your workflow, or to use [GitHub Variables](https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/store-information-in-variables)  instead of GitHub Secrets. 
 
 **`FOD_CLIENT_ID` & `FOD_CLIENT_SECRET`** - REQUIRED*    
 Required when authenticating with an API key: FoD Client ID (API key) and Secret (API secret).
@@ -178,7 +178,7 @@ This environment variable allows for overriding the default tool definitions, po
 <!-- START-INCLUDE:env-ssc-connection.md -->
 
 **`SSC_URL`** - REQUIRED   
-Fortify Software Security Center URL, for example https://ssc.customer.fortifyhosted.net/
+Fortify Software Security Center URL, for example https://ssc.customer.fortifyhosted.net/. Note: Using GitHub Secrets to define this URL may cause links back to SSC to be rendered incorrectly, for example in GitHub Action workflow summaries. It is highly recommended to either hard-code the URL in your workflow, or to use [GitHub Variables](https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/store-information-in-variables) instead of GitHub Secrets.
 
 **`SSC_TOKEN`** - REQUIRED*   
 Required when authenticating with an SSC token (recommended). Most actions should work fine with a `CIToken`.
@@ -286,7 +286,7 @@ This environment variable allows for overriding the default tool definitions, po
 <!-- START-INCLUDE:env-ssc-connection.md -->
 
 **`SSC_URL`** - REQUIRED   
-Fortify Software Security Center URL, for example https://ssc.customer.fortifyhosted.net/
+Fortify Software Security Center URL, for example https://ssc.customer.fortifyhosted.net/. Note: Using GitHub Secrets to define this URL may cause links back to SSC to be rendered incorrectly, for example in GitHub Action workflow summaries. It is highly recommended to either hard-code the URL in your workflow, or to use [GitHub Variables](https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/store-information-in-variables) instead of GitHub Secrets.
 
 **`SSC_TOKEN`** - REQUIRED*   
 Required when authenticating with an SSC token (recommended). Most actions should work fine with a `CIToken`.
@@ -376,7 +376,7 @@ The sample workflows below demonstrate how to configure the action for running a
           sast-scan: true
           # debricked-sca-scan: true
         env:
-          SSC_URL: ${{secrets.SSC_URL}}
+          SSC_URL: ${{vars.SSC_URL}}
           SSC_TOKEN: ${{secrets.SSC_TOKEN}}
           # EXTRA_SSC_LOGIN_OPTS: --socket-timeout=60s
           SC_SAST_TOKEN: ${{secrets.CLIENT_AUTH_TOKEN}}
@@ -403,7 +403,7 @@ The sample workflows below demonstrate how to configure the action for running a
           sast-scan: false
           debricked-sca-scan: true
         env:
-          SSC_URL: ${{secrets.SSC_URL}}
+          SSC_URL: ${{vars.SSC_URL}}
           SSC_TOKEN: ${{secrets.SSC_TOKEN}}
           # EXTRA_SSC_LOGIN_OPTS: --socket-timeout=60s
           # SSC_APPVERSION: MyApp:MyVersion
@@ -653,7 +653,7 @@ Apart from the generic action prerequisites listed above, the following prerequi
 <!-- START-INCLUDE:env-fod-connection.md -->
 
 **`FOD_URL`** - REQUIRED   
-Fortify on Demand URL, for example https://ams.fortify.com
+Fortify on Demand URL, for example https://ams.fortify.com. Note: Using GitHub Secrets to define this URL may cause links back to FoD to be rendered incorrectly, for example in GitHub Action workflow summaries. It is highly recommended to either hard-code the URL in your workflow, or to use [GitHub Variables](https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/store-information-in-variables)  instead of GitHub Secrets. 
 
 **`FOD_CLIENT_ID` & `FOD_CLIENT_SECRET`** - REQUIRED*    
 Required when authenticating with an API key: FoD Client ID (API key) and Secret (API secret).
@@ -780,7 +780,7 @@ This action assumes the standard software packages as provided by GitHub-hosted 
 <!-- START-INCLUDE:env-fod-connection.md -->
 
 **`FOD_URL`** - REQUIRED   
-Fortify on Demand URL, for example https://ams.fortify.com
+Fortify on Demand URL, for example https://ams.fortify.com. Note: Using GitHub Secrets to define this URL may cause links back to FoD to be rendered incorrectly, for example in GitHub Action workflow summaries. It is highly recommended to either hard-code the URL in your workflow, or to use [GitHub Variables](https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/store-information-in-variables)  instead of GitHub Secrets. 
 
 **`FOD_CLIENT_ID` & `FOD_CLIENT_SECRET`** - REQUIRED*    
 Required when authenticating with an API key: FoD Client ID (API key) and Secret (API secret).
@@ -877,7 +877,7 @@ Apart from the generic action prerequisites listed above, the following prerequi
 <!-- START-INCLUDE:env-ssc-connection.md -->
 
 **`SSC_URL`** - REQUIRED   
-Fortify Software Security Center URL, for example https://ssc.customer.fortifyhosted.net/
+Fortify Software Security Center URL, for example https://ssc.customer.fortifyhosted.net/. Note: Using GitHub Secrets to define this URL may cause links back to SSC to be rendered incorrectly, for example in GitHub Action workflow summaries. It is highly recommended to either hard-code the URL in your workflow, or to use [GitHub Variables](https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/store-information-in-variables) instead of GitHub Secrets.
 
 **`SSC_TOKEN`** - REQUIRED*   
 Required when authenticating with an SSC token (recommended). Most actions should work fine with a `CIToken`.
@@ -987,7 +987,7 @@ The sample workflow below demonstrates how to configure the action for running a
       - name: Run ScanCentral SAST Scan
         uses: fortify/github-action/sc-sast-scan@v1
         env:
-          SSC_URL: ${{secrets.SSC_URL}}
+          SSC_URL: ${{vars.SSC_URL}}
           SSC_TOKEN: ${{secrets.SSC_TOKEN}}
           # EXTRA_SSC_LOGIN_OPTS: --socket-timeout=60s
           SC_SAST_TOKEN: ${{secrets.CLIENT_AUTH_TOKEN}}
@@ -1051,7 +1051,7 @@ Apart from the generic action prerequisites listed above, the following prerequi
 <!-- START-INCLUDE:env-ssc-connection.md -->
 
 **`SSC_URL`** - REQUIRED   
-Fortify Software Security Center URL, for example https://ssc.customer.fortifyhosted.net/
+Fortify Software Security Center URL, for example https://ssc.customer.fortifyhosted.net/. Note: Using GitHub Secrets to define this URL may cause links back to SSC to be rendered incorrectly, for example in GitHub Action workflow summaries. It is highly recommended to either hard-code the URL in your workflow, or to use [GitHub Variables](https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/store-information-in-variables) instead of GitHub Secrets.
 
 **`SSC_TOKEN`** - REQUIRED*   
 Required when authenticating with an SSC token (recommended). Most actions should work fine with a `CIToken`.
@@ -1113,7 +1113,7 @@ The sample workflow below demonstrates how to configure the action for running a
       - name: Run Debricked Scan
         uses: fortify/github-action/ssc-debricked-scan@v1
         env:
-          SSC_URL: ${{secrets.SSC_URL}}
+          SSC_URL: ${{vars.SSC_URL}}
           SSC_TOKEN: ${{secrets.SSC_TOKEN}}
           # EXTRA_SSC_LOGIN_OPTS: --socket-timeout=60s
           # SSC_APPVERSION: MyApp:MyVersion
@@ -1156,7 +1156,7 @@ This action assumes the standard software packages as provided by GitHub-hosted 
 <!-- START-INCLUDE:env-ssc-connection.md -->
 
 **`SSC_URL`** - REQUIRED   
-Fortify Software Security Center URL, for example https://ssc.customer.fortifyhosted.net/
+Fortify Software Security Center URL, for example https://ssc.customer.fortifyhosted.net/. Note: Using GitHub Secrets to define this URL may cause links back to SSC to be rendered incorrectly, for example in GitHub Action workflow summaries. It is highly recommended to either hard-code the URL in your workflow, or to use [GitHub Variables](https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/store-information-in-variables) instead of GitHub Secrets.
 
 **`SSC_TOKEN`** - REQUIRED*   
 Required when authenticating with an SSC token (recommended). Most actions should work fine with a `CIToken`.
@@ -1205,7 +1205,7 @@ The sample workflow below demonstrates how to configure the action for exporting
       - name: Export SSC vulnerability data to GitHub
         uses: fortify/github-action/ssc-export@v1
         env:
-          SSC_URL: ${{secrets.SSC_URL}}
+          SSC_URL: ${{vars.SSC_URL}}
           SSC_TOKEN: ${{secrets.SSC_TOKEN}}
           # SSC_APPVERSION: MyApp:MyVersion
           # TOOL_DEFINITIONS: https://ftfy.mycompany.com/tool-definitions/v1/tool-definitions.yaml.zip
