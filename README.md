@@ -24,7 +24,7 @@ The [Fortify github-action repository](https://github.com/fortify/github-action)
 * [`fortify/github-action/fod-export`](#fortify-github-action-fod-export)  
   Export SAST vulnerability data from Fortify on Demand to the GitHub Security dashboard.
 * [`fortify/github-action/setup`](#fortify-github-action-setup)  
-  Install various Fortify tools like [fcli](https://github.com/fortify/fcli), [ScanCentral Client](https://www.microfocus.com/documentation/fortify-software-security-center/2310/SC_SAST_Help_23.1.0/index.htm#A_Clients.htm), [FortifyVulnerabilityExporter](https://github.com/fortify/FortifyVulnerabilityExporter) and [FortifyBugTrackerUtility](https://github.com/fortify-ps/FortifyBugTrackerUtility) for use in your pipeline
+  Install various Fortify tools like [fcli](https://github.com/fortify/fcli), [ScanCentral Client](https://www.microfocus.com/documentation/fortify-software-security-center/2420/SC_SAST_Help_24.2.0/index.htm#A_Clients.htm), [FortifyVulnerabilityExporter](https://github.com/fortify/FortifyVulnerabilityExporter) and [FortifyBugTrackerUtility](https://github.com/fortify-ps/FortifyBugTrackerUtility) for use in your pipeline
   
 **Fortify Sofware Security Center (SSC) / ScanCentral SAST / Debricked**
 
@@ -39,7 +39,7 @@ The [Fortify github-action repository](https://github.com/fortify/github-action)
 * [`fortify/github-action/ssc-export`](#fortify-github-action-ssc-export)  
   Export SAST vulnerability data from Fortify SSC to the GitHub Security dashboard.
 * [`fortify/github-action/setup`](#fortify-github-action-setup)  
-  Install various Fortify tools like [fcli](https://github.com/fortify/fcli), [ScanCentral Client](https://www.microfocus.com/documentation/fortify-software-security-center/2310/SC_SAST_Help_23.1.0/index.htm#A_Clients.htm), [FortifyVulnerabilityExporter](https://github.com/fortify/FortifyVulnerabilityExporter) and [FortifyBugTrackerUtility](https://github.com/fortify-ps/FortifyBugTrackerUtility) for use in your pipeline
+  Install various Fortify tools like [fcli](https://github.com/fortify/fcli), [ScanCentral Client](https://www.microfocus.com/documentation/fortify-software-security-center/2420/SC_SAST_Help_24.2.0/index.htm#A_Clients.htm), [FortifyVulnerabilityExporter](https://github.com/fortify/FortifyVulnerabilityExporter) and [FortifyBugTrackerUtility](https://github.com/fortify-ps/FortifyBugTrackerUtility) for use in your pipeline
 
 <a name="fortify-github-action"></a>
 
@@ -111,7 +111,7 @@ Required when authenticating with user credentials: FoD tenant, user and passwor
 
 
 **`EXTRA_FOD_LOGIN_OPTS`** - OPTIONAL   
-Extra FoD login options, for example for disabling SSL checks or changing connection time-outs; see [`fcli fod session login` documentation](https://fortify.github.io/fcli/v2.3.0//manpage/fcli-fod-session-login.html)
+Extra FoD login options, for example for disabling SSL checks or changing connection time-outs; see [`fcli fod session login` documentation](https://fortify.github.io/fcli/v2.5.1//manpage/fcli-fod-session-login.html)
 
 <!-- END-INCLUDE:env-fod-login.md -->
 
@@ -141,7 +141,7 @@ As an example, if the build file that you want to use for packaging doesn't adhe
 
 
 **`EXTRA_FOD_SAST_SCAN_OPTS`** - OPTIONAL    
-Extra FoD SAST scan options; see [`fcli fod sast-scan start` documentation](https://fortify.github.io/fcli/v2.3.0//manpage/fcli-fod-sast-scan-start.html)
+Extra FoD SAST scan options; see [`fcli fod sast-scan start` documentation](https://fortify.github.io/fcli/v2.5.1//manpage/fcli-fod-sast-scan-start.html)
 
 
 <!-- START-INCLUDE:env-wait-export.md -->
@@ -193,7 +193,7 @@ Required when authenticating with SSC user credentials.
 <!-- START-INCLUDE:env-ssc-login.md -->
 
 **`EXTRA_SSC_LOGIN_OPTS`** - OPTIONAL    
-Extra SSC login options, for example for disabling SSL checks or changing connection time-outs; see [`fcli ssc session login` documentation](https://fortify.github.io/fcli/v2.3.0//manpage/fcli-ssc-session-login.html).
+Extra SSC login options, for example for disabling SSL checks or changing connection time-outs; see [`fcli ssc session login` documentation](https://fortify.github.io/fcli/v2.5.1//manpage/fcli-ssc-session-login.html).
 
 <!-- END-INCLUDE:env-ssc-login.md -->
 
@@ -205,7 +205,7 @@ Extra SSC login options, for example for disabling SSL checks or changing connec
 Required: ScanCentral SAST Client Authentication Token for authenticating with ScanCentral SAST Controller.
 
 **`EXTRA_SC_SAST_LOGIN_OPTS`** - OPTIONAL    
-Extra ScanCentral SAST login options, for example for disabling SSL checks or changing connection time-outs; see [`fcli sc-sast session login` documentation](https://fortify.github.io/fcli/v2.3.0//manpage/fcli-sc-sast-session-login.html).
+Extra ScanCentral SAST login options, for example for disabling SSL checks or changing connection time-outs; see [`fcli sc-sast session login` documentation](https://fortify.github.io/fcli/v2.5.1//manpage/fcli-sc-sast-session-login.html).
 
 <!-- END-INCLUDE:env-sc-sast-login.md -->
 
@@ -237,10 +237,10 @@ As an example, if the build file that you want to use for packaging doesn't adhe
 
 
 **`SC_SAST_SENSOR_VERSION`** - REQUIRED     
-Version of the ScanCentral SAST sensor on which the scan should be performed. See [`fcli sc-sast scan start` documentation](https://fortify.github.io/fcli/v2.3.0//manpage/fcli-sc-sast-scan-start.html#_options_for_scanning_a_package_file) for details.
+Version of the ScanCentral SAST sensor on which the scan should be performed. See [`fcli sc-sast scan start` documentation](https://fortify.github.io/fcli/v2.5.1//manpage/fcli-sc-sast-scan-start.html#_options_for_scanning_a_package_file) for details.
 
 **`EXTRA_SC_SAST_SCAN_OPTS`** - OPTIONAL    
-Extra ScanCentral SAST scan options; see [`fcli sc-sast scan start` documentation](https://fortify.github.io/fcli/v2.3.0//manpage/fcli-sc-sast-scan-start.html)
+Extra ScanCentral SAST scan options; see [`fcli sc-sast scan start` documentation](https://fortify.github.io/fcli/v2.5.1//manpage/fcli-sc-sast-scan-start.html)
 
 
 <!-- START-INCLUDE:env-ssc-export.md -->
@@ -301,7 +301,7 @@ Required when authenticating with SSC user credentials.
 <!-- START-INCLUDE:env-ssc-login.md -->
 
 **`EXTRA_SSC_LOGIN_OPTS`** - OPTIONAL    
-Extra SSC login options, for example for disabling SSL checks or changing connection time-outs; see [`fcli ssc session login` documentation](https://fortify.github.io/fcli/v2.3.0//manpage/fcli-ssc-session-login.html).
+Extra SSC login options, for example for disabling SSL checks or changing connection time-outs; see [`fcli ssc session login` documentation](https://fortify.github.io/fcli/v2.5.1//manpage/fcli-ssc-session-login.html).
 
 <!-- END-INCLUDE:env-ssc-login.md -->
 
@@ -431,7 +431,7 @@ This action allows for setting up the Fortify tools listed below. Which tools an
 
 * [fcli](https://github.com/fortify/fcli)
 * [Debricked CLI](https://github.com/debricked/cli)
-* [ScanCentral Client](https://www.microfocus.com/documentation/fortify-software-security-center/2310/SC_SAST_Help_23.1.0/index.htm#A_Clients.htm)
+* [ScanCentral Client](https://www.microfocus.com/documentation/fortify-software-security-center/2420/SC_SAST_Help_24.2.0/index.htm#A_Clients.htm)
 * [FoDUploader](https://github.com/fod-dev/fod-uploader-java)
 * [FortifyVulnerabilityExporter](https://github.com/fortify/FortifyVulnerabilityExporter)
 * [FortifyBugTrackerUtility](https://github.com/fortify-ps/FortifyBugTrackerUtility)
@@ -543,7 +543,7 @@ The sample workflow below demonstrates how to configure the action for installin
 
 <!-- START-INCLUDE:action-package.md -->
 
-This action packages application source code using [ScanCentral Client](https://www.microfocus.com/documentation/fortify-software-security-center/2310/SC_SAST_Help_23.1.0/index.htm#A_Clients.htm). The output package is saved as `package.zip`.
+This action packages application source code using [ScanCentral Client](https://www.microfocus.com/documentation/fortify-software-security-center/2420/SC_SAST_Help_24.2.0/index.htm#A_Clients.htm). The output package is saved as `package.zip`.
 
 
 <!-- START-INCLUDE:action-prerequisites.md -->
@@ -665,7 +665,7 @@ Required when authenticating with user credentials: FoD tenant, user and passwor
 
 
 **`EXTRA_FOD_LOGIN_OPTS`** - OPTIONAL   
-Extra FoD login options, for example for disabling SSL checks or changing connection time-outs; see [`fcli fod session login` documentation](https://fortify.github.io/fcli/v2.3.0//manpage/fcli-fod-session-login.html)
+Extra FoD login options, for example for disabling SSL checks or changing connection time-outs; see [`fcli fod session login` documentation](https://fortify.github.io/fcli/v2.5.1//manpage/fcli-fod-session-login.html)
 
 <!-- END-INCLUDE:env-fod-login.md -->
 
@@ -695,7 +695,7 @@ As an example, if the build file that you want to use for packaging doesn't adhe
 
 
 **`EXTRA_FOD_SAST_SCAN_OPTS`** - OPTIONAL    
-Extra FoD SAST scan options; see [`fcli fod sast-scan start` documentation](https://fortify.github.io/fcli/v2.3.0//manpage/fcli-fod-sast-scan-start.html)
+Extra FoD SAST scan options; see [`fcli fod sast-scan start` documentation](https://fortify.github.io/fcli/v2.5.1//manpage/fcli-fod-sast-scan-start.html)
 
 
 <!-- START-INCLUDE:env-wait-export.md -->
@@ -892,7 +892,7 @@ Required when authenticating with SSC user credentials.
 <!-- START-INCLUDE:env-ssc-login.md -->
 
 **`EXTRA_SSC_LOGIN_OPTS`** - OPTIONAL    
-Extra SSC login options, for example for disabling SSL checks or changing connection time-outs; see [`fcli ssc session login` documentation](https://fortify.github.io/fcli/v2.3.0//manpage/fcli-ssc-session-login.html).
+Extra SSC login options, for example for disabling SSL checks or changing connection time-outs; see [`fcli ssc session login` documentation](https://fortify.github.io/fcli/v2.5.1//manpage/fcli-ssc-session-login.html).
 
 <!-- END-INCLUDE:env-ssc-login.md -->
 
@@ -904,7 +904,7 @@ Extra SSC login options, for example for disabling SSL checks or changing connec
 Required: ScanCentral SAST Client Authentication Token for authenticating with ScanCentral SAST Controller.
 
 **`EXTRA_SC_SAST_LOGIN_OPTS`** - OPTIONAL    
-Extra ScanCentral SAST login options, for example for disabling SSL checks or changing connection time-outs; see [`fcli sc-sast session login` documentation](https://fortify.github.io/fcli/v2.3.0//manpage/fcli-sc-sast-session-login.html).
+Extra ScanCentral SAST login options, for example for disabling SSL checks or changing connection time-outs; see [`fcli sc-sast session login` documentation](https://fortify.github.io/fcli/v2.5.1//manpage/fcli-sc-sast-session-login.html).
 
 <!-- END-INCLUDE:env-sc-sast-login.md -->
 
@@ -936,10 +936,10 @@ As an example, if the build file that you want to use for packaging doesn't adhe
 
 
 **`SC_SAST_SENSOR_VERSION`** - REQUIRED     
-Version of the ScanCentral SAST sensor on which the scan should be performed. See [`fcli sc-sast scan start` documentation](https://fortify.github.io/fcli/v2.3.0//manpage/fcli-sc-sast-scan-start.html#_options_for_scanning_a_package_file) for details.
+Version of the ScanCentral SAST sensor on which the scan should be performed. See [`fcli sc-sast scan start` documentation](https://fortify.github.io/fcli/v2.5.1//manpage/fcli-sc-sast-scan-start.html#_options_for_scanning_a_package_file) for details.
 
 **`EXTRA_SC_SAST_SCAN_OPTS`** - OPTIONAL    
-Extra ScanCentral SAST scan options; see [`fcli sc-sast scan start` documentation](https://fortify.github.io/fcli/v2.3.0//manpage/fcli-sc-sast-scan-start.html)
+Extra ScanCentral SAST scan options; see [`fcli sc-sast scan start` documentation](https://fortify.github.io/fcli/v2.5.1//manpage/fcli-sc-sast-scan-start.html)
 
 
 <!-- START-INCLUDE:env-ssc-export.md -->
@@ -1066,7 +1066,7 @@ Required when authenticating with SSC user credentials.
 <!-- START-INCLUDE:env-ssc-login.md -->
 
 **`EXTRA_SSC_LOGIN_OPTS`** - OPTIONAL    
-Extra SSC login options, for example for disabling SSL checks or changing connection time-outs; see [`fcli ssc session login` documentation](https://fortify.github.io/fcli/v2.3.0//manpage/fcli-ssc-session-login.html).
+Extra SSC login options, for example for disabling SSL checks or changing connection time-outs; see [`fcli ssc session login` documentation](https://fortify.github.io/fcli/v2.5.1//manpage/fcli-ssc-session-login.html).
 
 <!-- END-INCLUDE:env-ssc-login.md -->
 

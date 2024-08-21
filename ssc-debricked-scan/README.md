@@ -64,7 +64,7 @@ Required when authenticating with SSC user credentials.
 <!-- START-INCLUDE:env-ssc-login.md -->
 
 **`EXTRA_SSC_LOGIN_OPTS`** - OPTIONAL    
-Extra SSC login options, for example for disabling SSL checks or changing connection time-outs; see [`fcli ssc session login` documentation](https://fortify.github.io/fcli/v2.3.0//manpage/fcli-ssc-session-login.html).
+Extra SSC login options, for example for disabling SSL checks or changing connection time-outs; see [`fcli ssc session login` documentation](https://fortify.github.io/fcli/v2.5.1//manpage/fcli-ssc-session-login.html).
 
 <!-- END-INCLUDE:env-ssc-login.md -->
 

@@ -64,7 +64,7 @@ Required when authenticating with SSC user credentials.
 <!-- START-INCLUDE:env-ssc-login.md -->
 
 **`EXTRA_SSC_LOGIN_OPTS`** - OPTIONAL    
-Extra SSC login options, for example for disabling SSL checks or changing connection time-outs; see [`fcli ssc session login` documentation](https://fortify.github.io/fcli/v2.3.0//manpage/fcli-ssc-session-login.html).
+Extra SSC login options, for example for disabling SSL checks or changing connection time-outs; see [`fcli ssc session login` documentation](https://fortify.github.io/fcli/v2.5.1//manpage/fcli-ssc-session-login.html).
 
 <!-- END-INCLUDE:env-ssc-login.md -->
 
@@ -76,7 +76,7 @@ Extra SSC login options, for example for disabling SSL checks or changing connec
 Required: ScanCentral SAST Client Authentication Token for authenticating with ScanCentral SAST Controller.
 
 **`EXTRA_SC_SAST_LOGIN_OPTS`** - OPTIONAL    
-Extra ScanCentral SAST login options, for example for disabling SSL checks or changing connection time-outs; see [`fcli sc-sast session login` documentation](https://fortify.github.io/fcli/v2.3.0//manpage/fcli-sc-sast-session-login.html).
+Extra ScanCentral SAST login options, for example for disabling SSL checks or changing connection time-outs; see [`fcli sc-sast session login` documentation](https://fortify.github.io/fcli/v2.5.1//manpage/fcli-sc-sast-session-login.html).
 
 <!-- END-INCLUDE:env-sc-sast-login.md -->
 
@@ -108,10 +108,10 @@ As an example, if the build file that you want to use for packaging doesn't adhe
 
 
 **`SC_SAST_SENSOR_VERSION`** - REQUIRED     
-Version of the ScanCentral SAST sensor on which the scan should be performed. See [`fcli sc-sast scan start` documentation](https://fortify.github.io/fcli/v2.3.0//manpage/fcli-sc-sast-scan-start.html#_options_for_scanning_a_package_file) for details.
+Version of the ScanCentral SAST sensor on which the scan should be performed. See [`fcli sc-sast scan start` documentation](https://fortify.github.io/fcli/v2.5.1//manpage/fcli-sc-sast-scan-start.html#_options_for_scanning_a_package_file) for details.
 
 **`EXTRA_SC_SAST_SCAN_OPTS`** - OPTIONAL    
-Extra ScanCentral SAST scan options; see [`fcli sc-sast scan start` documentation](https://fortify.github.io/fcli/v2.3.0//manpage/fcli-sc-sast-scan-start.html)
+Extra ScanCentral SAST scan options; see [`fcli sc-sast scan start` documentation](https://fortify.github.io/fcli/v2.5.1//manpage/fcli-sc-sast-scan-start.html)
 
 
 <!-- START-INCLUDE:env-ssc-export.md -->
