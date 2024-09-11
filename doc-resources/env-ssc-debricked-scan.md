@@ -7,6 +7,8 @@ See the [Generate access token](https://docs.debricked.com/product/administratio
 
 {{include:env-ssc-appversion.md}}
 
+{{include:env-do-wait.md}}
+
 {{include:env-do-job-summary.md}}
 
-{{include:env-do-wait.md}}
+{{include:env-do-pr-comment.md}}

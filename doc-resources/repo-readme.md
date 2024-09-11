@@ -11,7 +11,7 @@ The [Fortify github-action repository]({{var:repo-url}}) hosts various Fortify-r
 * [`fortify/github-action/fod-export`](#fortify-github-action-fod-export)  
   Export SAST vulnerability data from Fortify on Demand to the GitHub Security dashboard.
 * [`fortify/github-action/setup`](#fortify-github-action-setup)  
-  Install various Fortify tools like [fcli](https://github.com/fortify/fcli), [ScanCentral Client]({{var:sc-client-doc-base-url}}#A_Clients.htm), [FortifyVulnerabilityExporter](https://github.com/fortify/FortifyVulnerabilityExporter) and [FortifyBugTrackerUtility](https://github.com/fortify-ps/FortifyBugTrackerUtility) for use in your pipeline
+  Install various Fortify tools like [fcli](https://github.com/fortify/fcli), [ScanCentral Client]({{var:sc-client-doc-base-url}}#cli/intro.htm), [FortifyVulnerabilityExporter](https://github.com/fortify/FortifyVulnerabilityExporter) and [FortifyBugTrackerUtility](https://github.com/fortify-ps/FortifyBugTrackerUtility) for use in your pipeline
   
 **Fortify Sofware Security Center (SSC) / ScanCentral SAST / Debricked**
 
@@ -26,7 +26,7 @@ The [Fortify github-action repository]({{var:repo-url}}) hosts various Fortify-r
 * [`fortify/github-action/ssc-export`](#fortify-github-action-ssc-export)  
   Export SAST vulnerability data from Fortify SSC to the GitHub Security dashboard.
 * [`fortify/github-action/setup`](#fortify-github-action-setup)  
-  Install various Fortify tools like [fcli](https://github.com/fortify/fcli), [ScanCentral Client]({{var:sc-client-doc-base-url}}#A_Clients.htm), [FortifyVulnerabilityExporter](https://github.com/fortify/FortifyVulnerabilityExporter) and [FortifyBugTrackerUtility](https://github.com/fortify-ps/FortifyBugTrackerUtility) for use in your pipeline
+  Install various Fortify tools like [fcli](https://github.com/fortify/fcli), [ScanCentral Client]({{var:sc-client-doc-base-url}}#cli/intro.htm), [FortifyVulnerabilityExporter](https://github.com/fortify/FortifyVulnerabilityExporter) and [FortifyBugTrackerUtility](https://github.com/fortify-ps/FortifyBugTrackerUtility) for use in your pipeline
 
 <a name="fortify-github-action"></a>
 
