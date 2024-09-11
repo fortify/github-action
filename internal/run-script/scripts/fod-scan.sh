@@ -30,7 +30,7 @@ This section provides a status overview of the scans types supported by this Git
 | SAST          | ${SAST_SCAN_STATUS} | ${SAST_PUBLISH_STATUS} |
 
 If any of the statuses shows \`FAILED\`, please review job logs to identify the cause of the failure. If any of the statuses
-shows \`FAILED\` or \`SKIPPED\`, the corresponding details listed in the summary below (if enabled) may represent older scan results.
+shows \`FAILED\` or \`SKIPPED\`, the corresponding details listed in the summary below may represent older scan results.
 EOF
 
   run "JOB_SUMMARY" "${FCLI_CMD}" fod action run "${JOB_SUMMARY_ACTION:-release-summary}" \

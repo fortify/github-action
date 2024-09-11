@@ -9,6 +9,7 @@ requireVar "SSC_APPVERSION"
 if [ "${DO_SC_SAST_SCAN}" == "true" ]; then
   requireSCSastSession
   requireVar "SC_SAST_SENSOR_VERSION"
+fi
 if [ "${DO_DEBRICKED_SCAN}" == "true" ]; then
   requireDebrickedCLI
   requireVar "DEBRICKED_TOKEN"
@@ -60,7 +61,7 @@ This section provides a status overview of the scans types supported by this Git
 | SCA           | ${SAST_SCAN_STATUS}      | ${SAST_SSC_PUBLISH_STATUS}      |
 
 If any of the statuses shows \`FAILED\`, please review job logs to identify the cause of the failure. If any of the statuses
-shows \`FAILED\` or \`SKIPPED\`, the corresponding details listed in the summary below (if enabled) may represent older scan results.
+shows \`FAILED\` or \`SKIPPED\`, the corresponding details listed in the summary below may represent older scan results.
 EOF
 
   [ ! -z "${DEBRICKED_SCAN_RESULTS}" ] && cat <<EOF >> $GITHUB_STEP_SUMMARY
