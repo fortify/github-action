@@ -144,33 +144,40 @@ As an example, if the build file that you want to use for packaging doesn't adhe
 Extra FoD SAST scan options; see [`fcli fod sast-scan start` documentation](https://fortify.github.io/fcli/v2.5.2//manpage/fcli-fod-sast-scan-start.html)
 
 
-<!-- START-INCLUDE:env-fod-summary.md -->
+<!-- START-INCLUDE:env-do-job-summary.md -->
 
-**`RELEASE_SUMMARY_ACTION`** - OPTIONAL   
-If configured, the GitHub Action will run the specified fcli action to add a release summary to the GitHub Actions workflow summary. You can either set this variable to `release-summary` to use the default fcli-provided release summary, or specify a custom fcli action file or URL. With the current version of this GitHub Action, any custom fcli action must accept at least the `--rel` option to specify the release for which to generate a summary. Setting this environment variable to a non-empty value implies `DO_WAIT`.
+**`DO_JOB_SUMMARY`, `JOB_SUMMARY_ACTION`, `JOB_SUMMARY_EXTRA_OPTS`** - OPTIONAL    
+If `DO_JOB_SUMMARY` is set to `true` (which implies `DO_WAIT`), this action will generate a job summary listing scan status and issue counts using the fcli-provided `release-summary` (FoD) or `appversion-summary` (SSC) action, or, if specified, the custom fcli action specified through `JOB_SUMMARY_ACTION`. `JOB_SUMMARY_ACTION` may point to a local file or URL; this custom fcli action must support (at least) the exact same action parameters (including any environment variable based default values for those parameters) as the built-in fcli action. Any extra options for the fcli action can be passed through the `JOB_SUMMARY_EXTRA_OPTS` environment variable, for example to specify the SSC filter sets to be included in the summary, or to allow an unsigned custom action to be used. Please see https://fortify.github.io/fcli/v2.5.2/#_actions for more information. 
 
-**`RELEASE_SUMMARY_ACTION_EXTRA_OPTS`** - OPTIONAL   
-This environment variable allows for passing extra options to the `fcli fod action run <RELEASE_SUMMARY_ACTION>` command. Please see the `fcli fod action help <RELEASE_SUMMARY_ACTION>` command for supported options. For example, this can be used to allow an unsigned custom action to be used.
-
-<!-- END-INCLUDE:env-fod-summary.md -->
+<!-- END-INCLUDE:env-do-job-summary.md -->
 
 
 
 <!-- START-INCLUDE:env-do-export.md -->
 
-**`DO_EXPORT`** - OPTIONAL    
-If set to `true`, this action will export scan results to the GitHub Security Code Scanning dashboard. Note that this may require a [GitHub Advanced Security](https://docs.github.com/en/get-started/learning-about-github/about-github-advanced-security) subscription, unless you're running this action on a public github.com repository. Note that GitHub only supports importing SAST results; other results will not exported to GitHub. Setting this environment variable to `true` implies `DO_WAIT`.
+**`DO_EXPORT`, `EXPORT_ACTION`, `EXPORT_EXTRA_OPTS`** - OPTIONAL    
+If `DO_EXPORT` is set to `true` (which implies `DO_WAIT`) or when explicitly invoking the `fortify/github-action/fod-export` or `fortify/github-action/ssc-export` actions, this action will will export scan results to the GitHub Security Code Scanning dashboard using the fcli-provided `github-sast-report` action or, if specified, the custom fcli action specified through `EXPORT_ACTION`.  `EXPORT_ACTION` may point to a local file or URL; this custom fcli action must support (at least) the exact same action parameters (including any environment variable based default values for those parameters) as the built-in fcli action. Any extra options for the fcli action can be passed through the `EXPORT_EXTRA_OPTS` environment variable, for example to specify the SSC filter set from which to load issue data, or to allow an unsigned custom action to be used. Please see https://fortify.github.io/fcli/v2.5.2/#_actions for more information. 
+
+Note that this may require a [GitHub Advanced Security](https://docs.github.com/en/get-started/learning-about-github/about-github-advanced-security) subscription, unless you're running this action on a public github.com repository. GitHub only supports importing SAST results; other results will not exported to GitHub.
 
 <!-- END-INCLUDE:env-do-export.md -->
 
 
 
-<!-- START-INCLUDE:env-fod-export-opts.md -->
+<!-- START-INCLUDE:env-do-pr-comment.md -->
 
-**`EXTRA_EXPORT_OPTS`** - OPTIONAL   
-This environment variable allows for passing extra options to the `fcli fod action run github-sast-report` command. Please see the `fcli fod action help github-sast-report` command for supported options.
+**`DO_PR_COMMENT`, `PR_COMMENT_ACTION`, `PR_COMMENT_EXTRA_OPTS`** - OPTIONAL    
+If `DO_PR_COMMENT` is set to `true` (which implies `DO_WAIT`), this action will generate a pull request comment listing new, re-introduced and removed issues using the fcli-provided `github-pr-comment` action or, if specified, the custom fcli action specified through `PR_COMMENT_ACTION`. `PR_COMMENT_ACTION` may point to a local file or URL; this custom fcli action must support (at least) the exact same action parameters (including any environment variable based default values for those parameters) as the built-in fcli action. Any extra options for the fcli action can be passed through the `PR_COMMENT_EXTRA_OPTS` environment variable, for example to specify the SSC filter set from which to load issue data, or to allow an unsigned custom action to be used. Please see https://fortify.github.io/fcli/v2.5.2/#_actions for more information. 
 
-<!-- END-INCLUDE:env-fod-export-opts.md -->
+Note that pull request comments will only be generated under the following conditions:
+
+* `GITHUB_TOKEN` environment variable needs to be set to a valid GitHub token, for example from `{{ secrets.GITHUB_TOKEN }}`.
+* Standard `GITHUB_REF_NAME` environment variable points to a pull request.
+* All other standard GitHub environment variables like `GITHUB_REPOSITORY` and `GITHUB_SHA` are set.
+
+PR comments are generated by comparing scan results from the current GitHub Action run against the previous scan in the same application version/release; it won't detect any new/removed issues from older scans. For best results, you should configure the GitHub Action to run only on pull request creation (not on every commit) and optionally allow for manual runs (if you want to re-run the scan after a PR is updated). You should also configure the action to automatically create a dedicated application version/release for the current branch/PR, copying state from the main/parent branch version/release. This will allow the action to compare scan results for the current GitHub Action run against the last scan results of the main/parent branch.
+
+<!-- END-INCLUDE:env-do-pr-comment.md -->
 
 
 
@@ -270,33 +277,40 @@ Version of the ScanCentral SAST sensor on which the scan should be performed. Se
 Extra ScanCentral SAST scan options; see [`fcli sc-sast scan start` documentation](https://fortify.github.io/fcli/v2.5.2//manpage/fcli-sc-sast-scan-start.html)
 
 
-<!-- START-INCLUDE:env-ssc-summary.md -->
+<!-- START-INCLUDE:env-do-job-summary.md -->
 
-**`APPVERSION_SUMMARY_ACTION`** - OPTIONAL   
-If configured, the GitHub Action will run the specified fcli action to add an application version summary to the GitHub Actions workflow summary. You can either set this variable to `appversion-summary` to use the default fcli-provided application version summary, or specify a custom fcli action file or URL. With the current version of this GitHub Action, any custom fcli action must accept at least the `--av` option to specify the application version for which to generate a summary. Setting this environment variable to a non-empty value implies `DO_WAIT`.
+**`DO_JOB_SUMMARY`, `JOB_SUMMARY_ACTION`, `JOB_SUMMARY_EXTRA_OPTS`** - OPTIONAL    
+If `DO_JOB_SUMMARY` is set to `true` (which implies `DO_WAIT`), this action will generate a job summary listing scan status and issue counts using the fcli-provided `release-summary` (FoD) or `appversion-summary` (SSC) action, or, if specified, the custom fcli action specified through `JOB_SUMMARY_ACTION`. `JOB_SUMMARY_ACTION` may point to a local file or URL; this custom fcli action must support (at least) the exact same action parameters (including any environment variable based default values for those parameters) as the built-in fcli action. Any extra options for the fcli action can be passed through the `JOB_SUMMARY_EXTRA_OPTS` environment variable, for example to specify the SSC filter sets to be included in the summary, or to allow an unsigned custom action to be used. Please see https://fortify.github.io/fcli/v2.5.2/#_actions for more information. 
 
-**`APPVERSION_SUMMARY_ACTION_EXTRA_OPTS`** - OPTIONAL   
-This environment variable allows for passing extra options to the `fcli ssc action run <APPVERSION_SUMMARY_ACTION>` command. Please see the `fcli ssc action help <APPVERSION_SUMMARY_ACTION>` command for supported options. For example, this can be used to specify the filter set(s) to be included in the summary, or to allow an unsigned custom action to be used.
-
-<!-- END-INCLUDE:env-ssc-summary.md -->
+<!-- END-INCLUDE:env-do-job-summary.md -->
 
 
 
 <!-- START-INCLUDE:env-do-export.md -->
 
-**`DO_EXPORT`** - OPTIONAL    
-If set to `true`, this action will export scan results to the GitHub Security Code Scanning dashboard. Note that this may require a [GitHub Advanced Security](https://docs.github.com/en/get-started/learning-about-github/about-github-advanced-security) subscription, unless you're running this action on a public github.com repository. Note that GitHub only supports importing SAST results; other results will not exported to GitHub. Setting this environment variable to `true` implies `DO_WAIT`.
+**`DO_EXPORT`, `EXPORT_ACTION`, `EXPORT_EXTRA_OPTS`** - OPTIONAL    
+If `DO_EXPORT` is set to `true` (which implies `DO_WAIT`) or when explicitly invoking the `fortify/github-action/fod-export` or `fortify/github-action/ssc-export` actions, this action will will export scan results to the GitHub Security Code Scanning dashboard using the fcli-provided `github-sast-report` action or, if specified, the custom fcli action specified through `EXPORT_ACTION`.  `EXPORT_ACTION` may point to a local file or URL; this custom fcli action must support (at least) the exact same action parameters (including any environment variable based default values for those parameters) as the built-in fcli action. Any extra options for the fcli action can be passed through the `EXPORT_EXTRA_OPTS` environment variable, for example to specify the SSC filter set from which to load issue data, or to allow an unsigned custom action to be used. Please see https://fortify.github.io/fcli/v2.5.2/#_actions for more information. 
+
+Note that this may require a [GitHub Advanced Security](https://docs.github.com/en/get-started/learning-about-github/about-github-advanced-security) subscription, unless you're running this action on a public github.com repository. GitHub only supports importing SAST results; other results will not exported to GitHub.
 
 <!-- END-INCLUDE:env-do-export.md -->
 
 
 
-<!-- START-INCLUDE:env-ssc-export-opts.md -->
+<!-- START-INCLUDE:env-do-pr-comment.md -->
 
-**`EXTRA_EXPORT_OPTS`** - OPTIONAL   
-This environment variable allows for passing extra options to the `fcli ssc action run github-sast-report` command. Please see the `fcli ssc action help github-sast-report` command for supported options. With the current fcli version, the most interesting option is `--fs` to specify an alternative SSC filter set, for example: `EXTRA_EXPORT_OPTS: --fs "Quick View"`.
+**`DO_PR_COMMENT`, `PR_COMMENT_ACTION`, `PR_COMMENT_EXTRA_OPTS`** - OPTIONAL    
+If `DO_PR_COMMENT` is set to `true` (which implies `DO_WAIT`), this action will generate a pull request comment listing new, re-introduced and removed issues using the fcli-provided `github-pr-comment` action or, if specified, the custom fcli action specified through `PR_COMMENT_ACTION`. `PR_COMMENT_ACTION` may point to a local file or URL; this custom fcli action must support (at least) the exact same action parameters (including any environment variable based default values for those parameters) as the built-in fcli action. Any extra options for the fcli action can be passed through the `PR_COMMENT_EXTRA_OPTS` environment variable, for example to specify the SSC filter set from which to load issue data, or to allow an unsigned custom action to be used. Please see https://fortify.github.io/fcli/v2.5.2/#_actions for more information. 
 
-<!-- END-INCLUDE:env-ssc-export-opts.md -->
+Note that pull request comments will only be generated under the following conditions:
+
+* `GITHUB_TOKEN` environment variable needs to be set to a valid GitHub token, for example from `{{ secrets.GITHUB_TOKEN }}`.
+* Standard `GITHUB_REF_NAME` environment variable points to a pull request.
+* All other standard GitHub environment variables like `GITHUB_REPOSITORY` and `GITHUB_SHA` are set.
+
+PR comments are generated by comparing scan results from the current GitHub Action run against the previous scan in the same application version/release; it won't detect any new/removed issues from older scans. For best results, you should configure the GitHub Action to run only on pull request creation (not on every commit) and optionally allow for manual runs (if you want to re-run the scan after a PR is updated). You should also configure the action to automatically create a dedicated application version/release for the current branch/PR, copying state from the main/parent branch version/release. This will allow the action to compare scan results for the current GitHub Action run against the last scan results of the main/parent branch.
+
+<!-- END-INCLUDE:env-do-pr-comment.md -->
 
 
 
@@ -364,15 +378,12 @@ Fortify SSC application version to use with this action. This can be specified e
 
 
 
-<!-- START-INCLUDE:env-ssc-summary.md -->
+<!-- START-INCLUDE:env-do-job-summary.md -->
 
-**`APPVERSION_SUMMARY_ACTION`** - OPTIONAL   
-If configured, the GitHub Action will run the specified fcli action to add an application version summary to the GitHub Actions workflow summary. You can either set this variable to `appversion-summary` to use the default fcli-provided application version summary, or specify a custom fcli action file or URL. With the current version of this GitHub Action, any custom fcli action must accept at least the `--av` option to specify the application version for which to generate a summary. Setting this environment variable to a non-empty value implies `DO_WAIT`.
+**`DO_JOB_SUMMARY`, `JOB_SUMMARY_ACTION`, `JOB_SUMMARY_EXTRA_OPTS`** - OPTIONAL    
+If `DO_JOB_SUMMARY` is set to `true` (which implies `DO_WAIT`), this action will generate a job summary listing scan status and issue counts using the fcli-provided `release-summary` (FoD) or `appversion-summary` (SSC) action, or, if specified, the custom fcli action specified through `JOB_SUMMARY_ACTION`. `JOB_SUMMARY_ACTION` may point to a local file or URL; this custom fcli action must support (at least) the exact same action parameters (including any environment variable based default values for those parameters) as the built-in fcli action. Any extra options for the fcli action can be passed through the `JOB_SUMMARY_EXTRA_OPTS` environment variable, for example to specify the SSC filter sets to be included in the summary, or to allow an unsigned custom action to be used. Please see https://fortify.github.io/fcli/v2.5.2/#_actions for more information. 
 
-**`APPVERSION_SUMMARY_ACTION_EXTRA_OPTS`** - OPTIONAL   
-This environment variable allows for passing extra options to the `fcli ssc action run <APPVERSION_SUMMARY_ACTION>` command. Please see the `fcli ssc action help <APPVERSION_SUMMARY_ACTION>` command for supported options. For example, this can be used to specify the filter set(s) to be included in the summary, or to allow an unsigned custom action to be used.
-
-<!-- END-INCLUDE:env-ssc-summary.md -->
+<!-- END-INCLUDE:env-do-job-summary.md -->
 
 
 
@@ -759,33 +770,40 @@ As an example, if the build file that you want to use for packaging doesn't adhe
 Extra FoD SAST scan options; see [`fcli fod sast-scan start` documentation](https://fortify.github.io/fcli/v2.5.2//manpage/fcli-fod-sast-scan-start.html)
 
 
-<!-- START-INCLUDE:env-fod-summary.md -->
+<!-- START-INCLUDE:env-do-job-summary.md -->
 
-**`RELEASE_SUMMARY_ACTION`** - OPTIONAL   
-If configured, the GitHub Action will run the specified fcli action to add a release summary to the GitHub Actions workflow summary. You can either set this variable to `release-summary` to use the default fcli-provided release summary, or specify a custom fcli action file or URL. With the current version of this GitHub Action, any custom fcli action must accept at least the `--rel` option to specify the release for which to generate a summary. Setting this environment variable to a non-empty value implies `DO_WAIT`.
+**`DO_JOB_SUMMARY`, `JOB_SUMMARY_ACTION`, `JOB_SUMMARY_EXTRA_OPTS`** - OPTIONAL    
+If `DO_JOB_SUMMARY` is set to `true` (which implies `DO_WAIT`), this action will generate a job summary listing scan status and issue counts using the fcli-provided `release-summary` (FoD) or `appversion-summary` (SSC) action, or, if specified, the custom fcli action specified through `JOB_SUMMARY_ACTION`. `JOB_SUMMARY_ACTION` may point to a local file or URL; this custom fcli action must support (at least) the exact same action parameters (including any environment variable based default values for those parameters) as the built-in fcli action. Any extra options for the fcli action can be passed through the `JOB_SUMMARY_EXTRA_OPTS` environment variable, for example to specify the SSC filter sets to be included in the summary, or to allow an unsigned custom action to be used. Please see https://fortify.github.io/fcli/v2.5.2/#_actions for more information. 
 
-**`RELEASE_SUMMARY_ACTION_EXTRA_OPTS`** - OPTIONAL   
-This environment variable allows for passing extra options to the `fcli fod action run <RELEASE_SUMMARY_ACTION>` command. Please see the `fcli fod action help <RELEASE_SUMMARY_ACTION>` command for supported options. For example, this can be used to allow an unsigned custom action to be used.
-
-<!-- END-INCLUDE:env-fod-summary.md -->
+<!-- END-INCLUDE:env-do-job-summary.md -->
 
 
 
 <!-- START-INCLUDE:env-do-export.md -->
 
-**`DO_EXPORT`** - OPTIONAL    
-If set to `true`, this action will export scan results to the GitHub Security Code Scanning dashboard. Note that this may require a [GitHub Advanced Security](https://docs.github.com/en/get-started/learning-about-github/about-github-advanced-security) subscription, unless you're running this action on a public github.com repository. Note that GitHub only supports importing SAST results; other results will not exported to GitHub. Setting this environment variable to `true` implies `DO_WAIT`.
+**`DO_EXPORT`, `EXPORT_ACTION`, `EXPORT_EXTRA_OPTS`** - OPTIONAL    
+If `DO_EXPORT` is set to `true` (which implies `DO_WAIT`) or when explicitly invoking the `fortify/github-action/fod-export` or `fortify/github-action/ssc-export` actions, this action will will export scan results to the GitHub Security Code Scanning dashboard using the fcli-provided `github-sast-report` action or, if specified, the custom fcli action specified through `EXPORT_ACTION`.  `EXPORT_ACTION` may point to a local file or URL; this custom fcli action must support (at least) the exact same action parameters (including any environment variable based default values for those parameters) as the built-in fcli action. Any extra options for the fcli action can be passed through the `EXPORT_EXTRA_OPTS` environment variable, for example to specify the SSC filter set from which to load issue data, or to allow an unsigned custom action to be used. Please see https://fortify.github.io/fcli/v2.5.2/#_actions for more information. 
+
+Note that this may require a [GitHub Advanced Security](https://docs.github.com/en/get-started/learning-about-github/about-github-advanced-security) subscription, unless you're running this action on a public github.com repository. GitHub only supports importing SAST results; other results will not exported to GitHub.
 
 <!-- END-INCLUDE:env-do-export.md -->
 
 
 
-<!-- START-INCLUDE:env-fod-export-opts.md -->
+<!-- START-INCLUDE:env-do-pr-comment.md -->
 
-**`EXTRA_EXPORT_OPTS`** - OPTIONAL   
-This environment variable allows for passing extra options to the `fcli fod action run github-sast-report` command. Please see the `fcli fod action help github-sast-report` command for supported options.
+**`DO_PR_COMMENT`, `PR_COMMENT_ACTION`, `PR_COMMENT_EXTRA_OPTS`** - OPTIONAL    
+If `DO_PR_COMMENT` is set to `true` (which implies `DO_WAIT`), this action will generate a pull request comment listing new, re-introduced and removed issues using the fcli-provided `github-pr-comment` action or, if specified, the custom fcli action specified through `PR_COMMENT_ACTION`. `PR_COMMENT_ACTION` may point to a local file or URL; this custom fcli action must support (at least) the exact same action parameters (including any environment variable based default values for those parameters) as the built-in fcli action. Any extra options for the fcli action can be passed through the `PR_COMMENT_EXTRA_OPTS` environment variable, for example to specify the SSC filter set from which to load issue data, or to allow an unsigned custom action to be used. Please see https://fortify.github.io/fcli/v2.5.2/#_actions for more information. 
 
-<!-- END-INCLUDE:env-fod-export-opts.md -->
+Note that pull request comments will only be generated under the following conditions:
+
+* `GITHUB_TOKEN` environment variable needs to be set to a valid GitHub token, for example from `{{ secrets.GITHUB_TOKEN }}`.
+* Standard `GITHUB_REF_NAME` environment variable points to a pull request.
+* All other standard GitHub environment variables like `GITHUB_REPOSITORY` and `GITHUB_SHA` are set.
+
+PR comments are generated by comparing scan results from the current GitHub Action run against the previous scan in the same application version/release; it won't detect any new/removed issues from older scans. For best results, you should configure the GitHub Action to run only on pull request creation (not on every commit) and optionally allow for manual runs (if you want to re-run the scan after a PR is updated). You should also configure the action to automatically create a dedicated application version/release for the current branch/PR, copying state from the main/parent branch version/release. This will allow the action to compare scan results for the current GitHub Action run against the last scan results of the main/parent branch.
+
+<!-- END-INCLUDE:env-do-pr-comment.md -->
 
 
 
@@ -889,12 +907,14 @@ Fortify on Demand release to use with this action. This can be specified either 
 
 
 
-<!-- START-INCLUDE:env-fod-export-opts.md -->
+<!-- START-INCLUDE:env-do-export.md -->
 
-**`EXTRA_EXPORT_OPTS`** - OPTIONAL   
-This environment variable allows for passing extra options to the `fcli fod action run github-sast-report` command. Please see the `fcli fod action help github-sast-report` command for supported options.
+**`DO_EXPORT`, `EXPORT_ACTION`, `EXPORT_EXTRA_OPTS`** - OPTIONAL    
+If `DO_EXPORT` is set to `true` (which implies `DO_WAIT`) or when explicitly invoking the `fortify/github-action/fod-export` or `fortify/github-action/ssc-export` actions, this action will will export scan results to the GitHub Security Code Scanning dashboard using the fcli-provided `github-sast-report` action or, if specified, the custom fcli action specified through `EXPORT_ACTION`.  `EXPORT_ACTION` may point to a local file or URL; this custom fcli action must support (at least) the exact same action parameters (including any environment variable based default values for those parameters) as the built-in fcli action. Any extra options for the fcli action can be passed through the `EXPORT_EXTRA_OPTS` environment variable, for example to specify the SSC filter set from which to load issue data, or to allow an unsigned custom action to be used. Please see https://fortify.github.io/fcli/v2.5.2/#_actions for more information. 
 
-<!-- END-INCLUDE:env-fod-export-opts.md -->
+Note that this may require a [GitHub Advanced Security](https://docs.github.com/en/get-started/learning-about-github/about-github-advanced-security) subscription, unless you're running this action on a public github.com repository. GitHub only supports importing SAST results; other results will not exported to GitHub.
+
+<!-- END-INCLUDE:env-do-export.md -->
 
 
 
@@ -1039,33 +1059,40 @@ Version of the ScanCentral SAST sensor on which the scan should be performed. Se
 Extra ScanCentral SAST scan options; see [`fcli sc-sast scan start` documentation](https://fortify.github.io/fcli/v2.5.2//manpage/fcli-sc-sast-scan-start.html)
 
 
-<!-- START-INCLUDE:env-ssc-summary.md -->
+<!-- START-INCLUDE:env-do-job-summary.md -->
 
-**`APPVERSION_SUMMARY_ACTION`** - OPTIONAL   
-If configured, the GitHub Action will run the specified fcli action to add an application version summary to the GitHub Actions workflow summary. You can either set this variable to `appversion-summary` to use the default fcli-provided application version summary, or specify a custom fcli action file or URL. With the current version of this GitHub Action, any custom fcli action must accept at least the `--av` option to specify the application version for which to generate a summary. Setting this environment variable to a non-empty value implies `DO_WAIT`.
+**`DO_JOB_SUMMARY`, `JOB_SUMMARY_ACTION`, `JOB_SUMMARY_EXTRA_OPTS`** - OPTIONAL    
+If `DO_JOB_SUMMARY` is set to `true` (which implies `DO_WAIT`), this action will generate a job summary listing scan status and issue counts using the fcli-provided `release-summary` (FoD) or `appversion-summary` (SSC) action, or, if specified, the custom fcli action specified through `JOB_SUMMARY_ACTION`. `JOB_SUMMARY_ACTION` may point to a local file or URL; this custom fcli action must support (at least) the exact same action parameters (including any environment variable based default values for those parameters) as the built-in fcli action. Any extra options for the fcli action can be passed through the `JOB_SUMMARY_EXTRA_OPTS` environment variable, for example to specify the SSC filter sets to be included in the summary, or to allow an unsigned custom action to be used. Please see https://fortify.github.io/fcli/v2.5.2/#_actions for more information. 
 
-**`APPVERSION_SUMMARY_ACTION_EXTRA_OPTS`** - OPTIONAL   
-This environment variable allows for passing extra options to the `fcli ssc action run <APPVERSION_SUMMARY_ACTION>` command. Please see the `fcli ssc action help <APPVERSION_SUMMARY_ACTION>` command for supported options. For example, this can be used to specify the filter set(s) to be included in the summary, or to allow an unsigned custom action to be used.
-
-<!-- END-INCLUDE:env-ssc-summary.md -->
+<!-- END-INCLUDE:env-do-job-summary.md -->
 
 
 
 <!-- START-INCLUDE:env-do-export.md -->
 
-**`DO_EXPORT`** - OPTIONAL    
-If set to `true`, this action will export scan results to the GitHub Security Code Scanning dashboard. Note that this may require a [GitHub Advanced Security](https://docs.github.com/en/get-started/learning-about-github/about-github-advanced-security) subscription, unless you're running this action on a public github.com repository. Note that GitHub only supports importing SAST results; other results will not exported to GitHub. Setting this environment variable to `true` implies `DO_WAIT`.
+**`DO_EXPORT`, `EXPORT_ACTION`, `EXPORT_EXTRA_OPTS`** - OPTIONAL    
+If `DO_EXPORT` is set to `true` (which implies `DO_WAIT`) or when explicitly invoking the `fortify/github-action/fod-export` or `fortify/github-action/ssc-export` actions, this action will will export scan results to the GitHub Security Code Scanning dashboard using the fcli-provided `github-sast-report` action or, if specified, the custom fcli action specified through `EXPORT_ACTION`.  `EXPORT_ACTION` may point to a local file or URL; this custom fcli action must support (at least) the exact same action parameters (including any environment variable based default values for those parameters) as the built-in fcli action. Any extra options for the fcli action can be passed through the `EXPORT_EXTRA_OPTS` environment variable, for example to specify the SSC filter set from which to load issue data, or to allow an unsigned custom action to be used. Please see https://fortify.github.io/fcli/v2.5.2/#_actions for more information. 
+
+Note that this may require a [GitHub Advanced Security](https://docs.github.com/en/get-started/learning-about-github/about-github-advanced-security) subscription, unless you're running this action on a public github.com repository. GitHub only supports importing SAST results; other results will not exported to GitHub.
 
 <!-- END-INCLUDE:env-do-export.md -->
 
 
 
-<!-- START-INCLUDE:env-ssc-export-opts.md -->
+<!-- START-INCLUDE:env-do-pr-comment.md -->
 
-**`EXTRA_EXPORT_OPTS`** - OPTIONAL   
-This environment variable allows for passing extra options to the `fcli ssc action run github-sast-report` command. Please see the `fcli ssc action help github-sast-report` command for supported options. With the current fcli version, the most interesting option is `--fs` to specify an alternative SSC filter set, for example: `EXTRA_EXPORT_OPTS: --fs "Quick View"`.
+**`DO_PR_COMMENT`, `PR_COMMENT_ACTION`, `PR_COMMENT_EXTRA_OPTS`** - OPTIONAL    
+If `DO_PR_COMMENT` is set to `true` (which implies `DO_WAIT`), this action will generate a pull request comment listing new, re-introduced and removed issues using the fcli-provided `github-pr-comment` action or, if specified, the custom fcli action specified through `PR_COMMENT_ACTION`. `PR_COMMENT_ACTION` may point to a local file or URL; this custom fcli action must support (at least) the exact same action parameters (including any environment variable based default values for those parameters) as the built-in fcli action. Any extra options for the fcli action can be passed through the `PR_COMMENT_EXTRA_OPTS` environment variable, for example to specify the SSC filter set from which to load issue data, or to allow an unsigned custom action to be used. Please see https://fortify.github.io/fcli/v2.5.2/#_actions for more information. 
 
-<!-- END-INCLUDE:env-ssc-export-opts.md -->
+Note that pull request comments will only be generated under the following conditions:
+
+* `GITHUB_TOKEN` environment variable needs to be set to a valid GitHub token, for example from `{{ secrets.GITHUB_TOKEN }}`.
+* Standard `GITHUB_REF_NAME` environment variable points to a pull request.
+* All other standard GitHub environment variables like `GITHUB_REPOSITORY` and `GITHUB_SHA` are set.
+
+PR comments are generated by comparing scan results from the current GitHub Action run against the previous scan in the same application version/release; it won't detect any new/removed issues from older scans. For best results, you should configure the GitHub Action to run only on pull request creation (not on every commit) and optionally allow for manual runs (if you want to re-run the scan after a PR is updated). You should also configure the action to automatically create a dedicated application version/release for the current branch/PR, copying state from the main/parent branch version/release. This will allow the action to compare scan results for the current GitHub Action run against the last scan results of the main/parent branch.
+
+<!-- END-INCLUDE:env-do-pr-comment.md -->
 
 
 
@@ -1199,15 +1226,12 @@ Fortify SSC application version to use with this action. This can be specified e
 
 
 
-<!-- START-INCLUDE:env-ssc-summary.md -->
+<!-- START-INCLUDE:env-do-job-summary.md -->
 
-**`APPVERSION_SUMMARY_ACTION`** - OPTIONAL   
-If configured, the GitHub Action will run the specified fcli action to add an application version summary to the GitHub Actions workflow summary. You can either set this variable to `appversion-summary` to use the default fcli-provided application version summary, or specify a custom fcli action file or URL. With the current version of this GitHub Action, any custom fcli action must accept at least the `--av` option to specify the application version for which to generate a summary. Setting this environment variable to a non-empty value implies `DO_WAIT`.
+**`DO_JOB_SUMMARY`, `JOB_SUMMARY_ACTION`, `JOB_SUMMARY_EXTRA_OPTS`** - OPTIONAL    
+If `DO_JOB_SUMMARY` is set to `true` (which implies `DO_WAIT`), this action will generate a job summary listing scan status and issue counts using the fcli-provided `release-summary` (FoD) or `appversion-summary` (SSC) action, or, if specified, the custom fcli action specified through `JOB_SUMMARY_ACTION`. `JOB_SUMMARY_ACTION` may point to a local file or URL; this custom fcli action must support (at least) the exact same action parameters (including any environment variable based default values for those parameters) as the built-in fcli action. Any extra options for the fcli action can be passed through the `JOB_SUMMARY_EXTRA_OPTS` environment variable, for example to specify the SSC filter sets to be included in the summary, or to allow an unsigned custom action to be used. Please see https://fortify.github.io/fcli/v2.5.2/#_actions for more information. 
 
-**`APPVERSION_SUMMARY_ACTION_EXTRA_OPTS`** - OPTIONAL   
-This environment variable allows for passing extra options to the `fcli ssc action run <APPVERSION_SUMMARY_ACTION>` command. Please see the `fcli ssc action help <APPVERSION_SUMMARY_ACTION>` command for supported options. For example, this can be used to specify the filter set(s) to be included in the summary, or to allow an unsigned custom action to be used.
-
-<!-- END-INCLUDE:env-ssc-summary.md -->
+<!-- END-INCLUDE:env-do-job-summary.md -->
 
 
 
@@ -1308,12 +1332,14 @@ Fortify SSC application version to use with this action. This can be specified e
 
 
 
-<!-- START-INCLUDE:env-ssc-export-opts.md -->
+<!-- START-INCLUDE:env-do-export.md -->
 
-**`EXTRA_EXPORT_OPTS`** - OPTIONAL   
-This environment variable allows for passing extra options to the `fcli ssc action run github-sast-report` command. Please see the `fcli ssc action help github-sast-report` command for supported options. With the current fcli version, the most interesting option is `--fs` to specify an alternative SSC filter set, for example: `EXTRA_EXPORT_OPTS: --fs "Quick View"`.
+**`DO_EXPORT`, `EXPORT_ACTION`, `EXPORT_EXTRA_OPTS`** - OPTIONAL    
+If `DO_EXPORT` is set to `true` (which implies `DO_WAIT`) or when explicitly invoking the `fortify/github-action/fod-export` or `fortify/github-action/ssc-export` actions, this action will will export scan results to the GitHub Security Code Scanning dashboard using the fcli-provided `github-sast-report` action or, if specified, the custom fcli action specified through `EXPORT_ACTION`.  `EXPORT_ACTION` may point to a local file or URL; this custom fcli action must support (at least) the exact same action parameters (including any environment variable based default values for those parameters) as the built-in fcli action. Any extra options for the fcli action can be passed through the `EXPORT_EXTRA_OPTS` environment variable, for example to specify the SSC filter set from which to load issue data, or to allow an unsigned custom action to be used. Please see https://fortify.github.io/fcli/v2.5.2/#_actions for more information. 
 
-<!-- END-INCLUDE:env-ssc-export-opts.md -->
+Note that this may require a [GitHub Advanced Security](https://docs.github.com/en/get-started/learning-about-github/about-github-advanced-security) subscription, unless you're running this action on a public github.com repository. GitHub only supports importing SAST results; other results will not exported to GitHub.
+
+<!-- END-INCLUDE:env-do-export.md -->
 
 
 

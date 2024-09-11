@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 . ${UTIL_DIR}/common.sh
 
+requireFcli
 requireVar "SSC_URL"
 requireVar "SC_SAST_TOKEN"
 requireVar "SSC_TOKEN"

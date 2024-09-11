@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 . ${UTIL_DIR}/common.sh
 
+requireFcli
+checkRequirements
+
 if [[ "${_SSC_LOGGED_IN}" == "true" ]]; then
   echo '_SSC_LOGGED_IN=false' >> $GITHUB_ENV
   if [ -n "${SSC_TOKEN}" ]; then

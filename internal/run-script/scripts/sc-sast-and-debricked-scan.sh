@@ -4,18 +4,16 @@
 # This script assumes that fcli and Debricked CLI have already been installed,
 # and that any necessary fcli sessions have been created.
 
+requireFcli
 requireVar "SSC_APPVERSION"
-requireIfVar "DO_SC_SAST_SCAN" "SC_SAST_SENSOR_VERSION"
-requireIfVar "DO_DEBRICKED_SCAN" "DEBRICKED_CLI_CMD"
-requireIfVar "DO_DEBRICKED_SCAN" "DEBRICKED_TOKEN"
+if [ "${DO_SC_SAST_SCAN}" == "true" ]; then
+  requireSCSastSession
+  requireVar "SC_SAST_SENSOR_VERSION"
+if [ "${DO_DEBRICKED_SCAN}" == "true" ]; then
+  requireDebrickedCLI
+  requireVar "DEBRICKED_TOKEN"
+fi
 checkRequirements
-
-function doAppVersionSummary {
-  [ -n "${APPVERSION_SUMMARY_ACTION}" ]
-}
-function doWait {
-  [ "${DO_WAIT}" == "true" ] || [ "${DO_EXPORT}" == "true" ] || doAppVersionSummary
-}
 
 # Disable Debricked CLI colors 
 export NO_COLOR=true
@@ -44,14 +42,15 @@ fi
 # Collect Debricked scan output
 DEBRICKED_SCAN_RESULTS=$(printOutput DEBRICKED_SCAN stdout | fgrep -e '───' -e '│' -e 'vulnerabilities found' -e 'For full details')
 
-# Collect scan/publish statuses for inclusion in job summary.
-SAST_SCAN_STATUS=$(printRunStatus "SAST_SCAN")
-SAST_SSC_PUBLISH_STATUS=$(printRunStatus "SAST_SSC_PUBLISH")
-DEBRICKED_SCAN_STATUS=$(printRunStatus "DEBRICKED_SCAN")
-DEBRICKED_SSC_PUBLISH_STATUS=$(printRunStatus "DEBRICKED_SSC_IMPORT" "DEBRICKED_SSC_PUBLISH")
-[ "${DEBRICKED_SCAN_STATUS}" == "FAILED" ] && [ ! -z "${DEBRICKED_SCAN_RESULTS}" ] && DEBRICKED_SCAN_STATUS="FAILED_RULES"
+if doJobSummary; then
+  # Collect scan/publish statuses for inclusion in job summary.
+  SAST_SCAN_STATUS=$(printRunStatus "SAST_SCAN")
+  SAST_SSC_PUBLISH_STATUS=$(printRunStatus "SAST_SSC_PUBLISH")
+  DEBRICKED_SCAN_STATUS=$(printRunStatus "DEBRICKED_SCAN")
+  DEBRICKED_SSC_PUBLISH_STATUS=$(printRunStatus "DEBRICKED_SSC_IMPORT" "DEBRICKED_SSC_PUBLISH")
+  [ "${DEBRICKED_SCAN_STATUS}" == "FAILED" ] && [ ! -z "${DEBRICKED_SCAN_RESULTS}" ] && DEBRICKED_SCAN_STATUS="FAILED_RULES"
 
-cat <<EOF >> $GITHUB_STEP_SUMMARY
+  cat <<EOF >> $GITHUB_STEP_SUMMARY
 # Scan Summary
 This section provides a status overview of the scans types supported by this GitHub Action, together with their status. 
 
@@ -64,7 +63,7 @@ If any of the statuses shows \`FAILED\`, please review job logs to identify the 
 shows \`FAILED\` or \`SKIPPED\`, the corresponding details listed in the summary below (if enabled) may represent older scan results.
 EOF
 
-[ ! -z "${DEBRICKED_SCAN_RESULTS}" ] && cat <<EOF >> $GITHUB_STEP_SUMMARY
+  [ ! -z "${DEBRICKED_SCAN_RESULTS}" ] && cat <<EOF >> $GITHUB_STEP_SUMMARY
 # Debricked Scan Results
 
 \`\`\`
@@ -72,15 +71,19 @@ ${DEBRICKED_SCAN_RESULTS}
 \`\`\`
 EOF
 
-if doAppVersionSummary; then
-  run "APPVERSION_SUMMARY" "${FCLI_CMD}" ssc action run "${APPVERSION_SUMMARY_ACTION}" \
-    --av "${SSC_APPVERSION}" --progress=none __expand:APPVERSION_SUMMARY_ACTION_EXTRA_OPTS
+  run "JOB_SUMMARY" "${FCLI_CMD}" ssc action run "${JOB_SUMMARY_ACTION:-appversion-summary}" \
+    --av "${SSC_APPVERSION}" --progress=none __expand:JOB_SUMMARY_EXTRA_OPTS
   ifRun "APPVERSION_SUMMARY" \
-    && printOutput "APPVERSION_SUMMARY" "stdout" >> $GITHUB_STEP_SUMMARY \
+    && printOutput "JOB_SUMMARY" "stdout" >> $GITHUB_STEP_SUMMARY \
     || cat<<EOF >> $GITHUB_STEP_SUMMARY
 # SSC Application Version Summary
 There was an error generating the application version summary; please review pipeline log for details.
 EOF
+fi
+
+if doPRComment; then
+  run "PR_COMMENT" "${FCLI_CMD}" ssc action run "${PR_COMMENT_ACTION:-github-pr-comment}" \
+    --av "${SSC_APPVERSION}" --progress=none __expand:PR_COMMENT_EXTRA_OPTS
 fi
 
 printRunSummary

@@ -213,7 +213,61 @@ function checkRequirements {
 }
 
 #############################################################################
-# Require FCLI_CMD variable to be declared. Note that the parent script is
-# responsible for calling the checkRequirements function to produce an error
-# if FCLI_CMD is not declared.
-requireVar "FCLI_CMD" "ERROR: fortify/github-action/setup must be run to set up fcli before running this action"
+# Function to be called by scripts that require fcli.
+function requireFcli {
+    requireVar "FCLI_CMD" "ERROR: fortify/github-action/setup must be run to set up fcli before running this action"
+}
+
+#############################################################################
+# Function to be called by scripts that require ScanCentral Client.
+function requireScancentralClient {
+    requireVar "SC_CLIENT_CMD" "ERROR: fortify/github-action/setup must be run to set up ScanCentral Client (sc-client) before running this action"
+}
+
+#############################################################################
+# Function to be called by scripts that require Debricked CLI.
+function requireDebrickedCLI {
+    requireVar "DEBRICKED_CLI_CMD" "ERROR: fortify/github-action/setup must be run to set up Debricked CLI before running this action"
+}
+
+#############################################################################
+# Function to be called by scripts that require an active FoD session.
+function requireFoDSession {
+    requireVar "_FOD_LOGGED_IN" "ERROR: This script requires an active FoD session"
+}
+
+#############################################################################
+# Function to be called by scripts that require an active SSC session.
+function requireSSCSession {
+    requireVar "_SSC_LOGGED_IN" "ERROR: This script requires an active SSC session"
+}
+
+#############################################################################
+# Function to be called by scripts that require an active ScanCentral SAST session.
+function requireSCSastSession {
+    requireVar _SC_SAST_LOGGED_IN "ERROR: This script requires an active ScanCentral SAST session"
+}
+
+#############################################################################
+# Function to determine whether PR comments should be generated.
+function doPRComment {
+  [ "${DO_PR_COMMENT}" == "true" ] \         # Must be explicitly enabled
+  && [ -n "${GITHUB_TOKEN}" ] \              # Required
+  && [ -n "${GITHUB_REPOSITORY_OWNER}" ] \   # Required
+  && [ -n "${GITHUB_REPOSITORY}" ] \         # Required
+  && [ -n "${GITHUB_REF_NAME}" ] \           # Required
+  && [ -n "${GITHUB_SHA}" ] \                # Required
+  && [[ "${GITHUB_REF_NAME}" == */merge ]]   # Only run on PR
+}
+
+#############################################################################
+# Function to determine whether job summary should be generated.
+function doJobSummary {
+  [ "${DO_JOB_SUMMARY}" == "true" ]
+}
+
+#############################################################################
+# Function to determine whether we should wait for scan completion.
+function doWait {
+  [ "${DO_WAIT}" == "true" ] || [ "${DO_EXPORT}" == "true" ] || doJobSummary || doPRComment
+}

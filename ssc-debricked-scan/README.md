@@ -82,15 +82,12 @@ Fortify SSC application version to use with this action. This can be specified e
 
 
 
-<!-- START-INCLUDE:env-ssc-summary.md -->
+<!-- START-INCLUDE:env-do-job-summary.md -->
 
-**`APPVERSION_SUMMARY_ACTION`** - OPTIONAL   
-If configured, the GitHub Action will run the specified fcli action to add an application version summary to the GitHub Actions workflow summary. You can either set this variable to `appversion-summary` to use the default fcli-provided application version summary, or specify a custom fcli action file or URL. With the current version of this GitHub Action, any custom fcli action must accept at least the `--av` option to specify the application version for which to generate a summary. Setting this environment variable to a non-empty value implies `DO_WAIT`.
+**`DO_JOB_SUMMARY`, `JOB_SUMMARY_ACTION`, `JOB_SUMMARY_EXTRA_OPTS`** - OPTIONAL    
+If `DO_JOB_SUMMARY` is set to `true` (which implies `DO_WAIT`), this action will generate a job summary listing scan status and issue counts using the fcli-provided `release-summary` (FoD) or `appversion-summary` (SSC) action, or, if specified, the custom fcli action specified through `JOB_SUMMARY_ACTION`. `JOB_SUMMARY_ACTION` may point to a local file or URL; this custom fcli action must support (at least) the exact same action parameters (including any environment variable based default values for those parameters) as the built-in fcli action. Any extra options for the fcli action can be passed through the `JOB_SUMMARY_EXTRA_OPTS` environment variable, for example to specify the SSC filter sets to be included in the summary, or to allow an unsigned custom action to be used. Please see https://fortify.github.io/fcli/v2.5.2/#_actions for more information. 
 
-**`APPVERSION_SUMMARY_ACTION_EXTRA_OPTS`** - OPTIONAL   
-This environment variable allows for passing extra options to the `fcli ssc action run <APPVERSION_SUMMARY_ACTION>` command. Please see the `fcli ssc action help <APPVERSION_SUMMARY_ACTION>` command for supported options. For example, this can be used to specify the filter set(s) to be included in the summary, or to allow an unsigned custom action to be used.
-
-<!-- END-INCLUDE:env-ssc-summary.md -->
+<!-- END-INCLUDE:env-do-job-summary.md -->
 
 
 

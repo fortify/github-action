@@ -1,18 +1,12 @@
 #!/usr/bin/env bash
 . ${UTIL_DIR}/common.sh
 
-# This script assumes that fcli has already been installed,
-# and that any necessary fcli sessions have been created.
+# This script assumes that any necessary fcli sessions have been created.
 
+requireFcli
+requireFoDSession
 requireVar "FOD_RELEASE"
 checkRequirements
-
-function doReleaseSummary {
-  [ -n "${RELEASE_SUMMARY_ACTION}" ]
-}
-function doWait {
-  [ "${DO_WAIT}" == "true" ] || [ "${DO_EXPORT}" == "true" ] || doReleaseSummary
-}
 
 run "SAST_SCAN" "${FCLI_CMD}" fod sast-scan start \
     --rel "${FOD_RELEASE}" -f package.zip \
@@ -22,11 +16,12 @@ if doWait; then
     "${FCLI_CMD}" fod sast-scan wait-for ::fod_sast_scan::
 fi
 
-# Collect scan/publish statuses for inclusion in job summary.
-SAST_SCAN_STATUS=$(printRunStatus "SAST_SCAN")
-SAST_PUBLISH_STATUS=$(printRunStatus "SAST_PUBLISH")
+if doJobSummary; then
+  # Collect scan/publish statuses for inclusion in job summary.
+  SAST_SCAN_STATUS=$(printRunStatus "SAST_SCAN")
+  SAST_PUBLISH_STATUS=$(printRunStatus "SAST_PUBLISH")
 
-cat <<EOF >> $GITHUB_STEP_SUMMARY
+  cat <<EOF >> $GITHUB_STEP_SUMMARY
 # Scan Summary
 This section provides a status overview of the scans types supported by this GitHub Action, together with their status. 
 
@@ -38,15 +33,19 @@ If any of the statuses shows \`FAILED\`, please review job logs to identify the 
 shows \`FAILED\` or \`SKIPPED\`, the corresponding details listed in the summary below (if enabled) may represent older scan results.
 EOF
 
-if doReleaseSummary; then
-  run "RELEASE_SUMMARY" "${FCLI_CMD}" fod action run "${RELEASE_SUMMARY_ACTION}" \
-    --rel "${FOD_RELEASE}" --progress=none __expand:RELEASE_SUMMARY_ACTION_EXTRA_OPTS
+  run "JOB_SUMMARY" "${FCLI_CMD}" fod action run "${JOB_SUMMARY_ACTION:-release-summary}" \
+    --rel "${FOD_RELEASE}" --progress=none __expand:JOB_SUMMARY_EXTRA_OPTS
   ifRun "RELEASE_SUMMARY" \
-    && printOutput "RELEASE_SUMMARY" "stdout" >> $GITHUB_STEP_SUMMARY \
+    && printOutput "JOB_SUMMARY" "stdout" >> $GITHUB_STEP_SUMMARY \
     || cat<<EOF >> $GITHUB_STEP_SUMMARY
 # FoD Release Summary
 There was an error generating the release summary; please review pipeline log for details.
 EOF
+fi
+
+if doPRComment; then
+  run "PR_COMMENT" "${FCLI_CMD}" fod action run "${PR_COMMENT_ACTION:-github-pr-comment}" \
+    --av "${SSC_APPVERSION}" --progress=none __expand:PR_COMMENT_EXTRA_OPTS
 fi
 
 printRunSummary

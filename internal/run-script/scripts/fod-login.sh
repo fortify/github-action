@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 . ${UTIL_DIR}/common.sh
 
+requireFcli
 requireVar "FOD_URL"
 requireOneOfVar "FOD_CLIENT_ID" "FOD_USER"
 requireIfVar "FOD_CLIENT_ID" "FOD_CLIENT_SECRET"

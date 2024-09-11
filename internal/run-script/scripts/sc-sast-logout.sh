@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 . ${UTIL_DIR}/common.sh
+
+requireFcli
 checkRequirements
 
 if [[ "${_SC_SAST_LOGGED_IN}" == "true" ]]; then

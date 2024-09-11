@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 . ${UTIL_DIR}/common.sh
+
+requireFcli
 checkRequirements
 
 if [[ "${_FOD_LOGGED_IN}" == "true" ]]; then

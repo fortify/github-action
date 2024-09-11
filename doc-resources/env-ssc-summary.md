@@ -1,5 +1,0 @@
-**`APPVERSION_SUMMARY_ACTION`** - OPTIONAL   
-If configured, the GitHub Action will run the specified fcli action to add an application version summary to the GitHub Actions workflow summary. You can either set this variable to `appversion-summary` to use the default fcli-provided application version summary, or specify a custom fcli action file or URL. With the current version of this GitHub Action, any custom fcli action must accept at least the `--av` option to specify the application version for which to generate a summary. Setting this environment variable to a non-empty value implies `DO_WAIT`.
-
-**`APPVERSION_SUMMARY_ACTION_EXTRA_OPTS`** - OPTIONAL   
-This environment variable allows for passing extra options to the `fcli ssc action run <APPVERSION_SUMMARY_ACTION>` command. Please see the `fcli ssc action help <APPVERSION_SUMMARY_ACTION>` command for supported options. For example, this can be used to specify the filter set(s) to be included in the summary, or to allow an unsigned custom action to be used.
