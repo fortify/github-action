@@ -74,7 +74,7 @@ EOF
 
   run "JOB_SUMMARY" "${FCLI_CMD}" ssc action run "${JOB_SUMMARY_ACTION:-appversion-summary}" \
     --av "${SSC_APPVERSION}" --progress=none __expand:JOB_SUMMARY_EXTRA_OPTS
-  ifRun "APPVERSION_SUMMARY" \
+  ifRun "JOB_SUMMARY" \
     && printOutput "JOB_SUMMARY" "stdout" >> $GITHUB_STEP_SUMMARY \
     || cat<<EOF >> $GITHUB_STEP_SUMMARY
 # SSC Application Version Summary

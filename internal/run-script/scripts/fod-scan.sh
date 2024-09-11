@@ -35,7 +35,7 @@ EOF
 
   run "JOB_SUMMARY" "${FCLI_CMD}" fod action run "${JOB_SUMMARY_ACTION:-release-summary}" \
     --rel "${FOD_RELEASE}" --progress=none __expand:JOB_SUMMARY_EXTRA_OPTS
-  ifRun "RELEASE_SUMMARY" \
+  ifRun "JOB_SUMMARY" \
     && printOutput "JOB_SUMMARY" "stdout" >> $GITHUB_STEP_SUMMARY \
     || cat<<EOF >> $GITHUB_STEP_SUMMARY
 # FoD Release Summary
