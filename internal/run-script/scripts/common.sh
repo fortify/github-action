@@ -249,15 +249,17 @@ function requireSCSastSession {
 }
 
 #############################################################################
-# Function to determine whether PR comments should be generated.
+# Function to determine whether PR comments should be generated. PR comments
+# are only generated if DO_PR_COMMENT is set to true, required GITHUB_*
+# environment variables are available, and GITHUB_REF_NAME points to a PR.
 function doPRComment {
-  [ "${DO_PR_COMMENT}" == "true" ] \         # Must be explicitly enabled
-  && [ -n "${GITHUB_TOKEN}" ] \              # Required
-  && [ -n "${GITHUB_REPOSITORY_OWNER}" ] \   # Required
-  && [ -n "${GITHUB_REPOSITORY}" ] \         # Required
-  && [ -n "${GITHUB_REF_NAME}" ] \           # Required
-  && [ -n "${GITHUB_SHA}" ] \                # Required
-  && [[ "${GITHUB_REF_NAME}" == */merge ]]   # Only run on PR
+  [ "${DO_PR_COMMENT}" == "true" ] \
+  && [ -n "${GITHUB_TOKEN}" ] \
+  && [ -n "${GITHUB_REPOSITORY_OWNER}" ] \
+  && [ -n "${GITHUB_REPOSITORY}" ] \
+  && [ -n "${GITHUB_REF_NAME}" ] \
+  && [ -n "${GITHUB_SHA}" ] \
+  && [[ "${GITHUB_REF_NAME}" == */merge ]]
 }
 
 #############################################################################

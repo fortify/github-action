@@ -35,7 +35,7 @@ export const TOOLS: Record<string, Record<string, Record<string, string>>> = {
         "cmds": {"windows": "FortifyBugTrackerUtility.bat", "linux": "FortifyBugTrackerUtility", "darwin": "FortifyBugTrackerUtility"}
     },
     "debricked-cli": { 
-        "versionAliases": {"action-default": "2.0.9"},
+        "versionAliases": {"action-default": "2.0.8"},
         "cmds": {"windows": "debricked.exe", "linux": "debricked", "darwin": "debricked"}
     }
 };

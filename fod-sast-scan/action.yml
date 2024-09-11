@@ -16,6 +16,7 @@ runs:
         script: fod-scan.sh
       env: 
         DO_SAST_SCAN: true # Not used for now
+        GITHUB_TOKEN: ${{ github.token }}
     - if: env.DO_EXPORT == 'true'
       uses: fortify/github-action/fod-export@feat-1.3.0
         
