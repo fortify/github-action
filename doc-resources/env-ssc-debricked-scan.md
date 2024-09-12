@@ -9,6 +9,8 @@ See the [Generate access token](https://docs.debricked.com/product/administratio
 
 {{include:env-do-wait.md}}
 
+{{include:env-do-policy-check.md}}
+
 {{include:env-do-job-summary.md}}
 
 {{include:env-do-pr-comment.md}}

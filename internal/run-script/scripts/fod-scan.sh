@@ -10,12 +10,18 @@ checkRequirements
 
 run "SAST_SCAN" "${FCLI_CMD}" fod sast-scan start \
     --rel "${FOD_RELEASE}" -f package.zip \
-    --store fod_sast_scan __expand:EXTRA_FOD_SAST_SCAN_OPTS
+    --store fod_sast_scan __expand:EXTRA_FOD_SAST_SCAN_OPTS __expand:FOD_SAST_SCAN_EXTRA_OPTS
 if doWait; then
   ifRun "SAST_SCAN" && run "SAST_PUBLISH" \
     "${FCLI_CMD}" fod sast-scan wait-for ::fod_sast_scan::
 fi
 
+if doPolicyCheck; then
+  run "POLICY_CHECK" "${FCLI_CMD}" ssc action run "${POLICY_CHECK_ACTION}" \
+    --av "${SSC_APPVERSION}" --progress=none __expand:POLICY_CHECK_EXTRA_OPTS
+fi
+
+# TODO Add policy check output to job summary
 if doJobSummary; then
   # Collect scan/publish statuses for inclusion in job summary.
   SAST_SCAN_STATUS=$(printRunStatus "SAST_SCAN")

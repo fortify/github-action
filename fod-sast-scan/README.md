@@ -39,7 +39,7 @@ This action assumes the standard software packages as provided by GitHub-hosted 
 Apart from the generic action prerequisites listed above, the following prerequisites apply to this specific action:
 
 * The appropriate application release exists on FoD and has been configured for SAST scans. Future versions of this action may add support for automating app/release creation and scan setup.
-* If open source scanning has been enabled in the FoD SAST scan configuration, be sure to pass the `-oss` option through the `EXTRA_PACKAGE_OPTS` environment variable.
+* If open source scanning has been enabled in the FoD SAST scan configuration, be sure to pass the `-oss` option through the `PACKAGE_EXTRA_OPTS` environment variable.
 
 ### Action environment variable inputs
 
@@ -65,7 +65,7 @@ Required when authenticating with user credentials: FoD tenant, user and passwor
 <!-- END-INCLUDE:env-fod-connection.md -->
 
 
-**`EXTRA_FOD_LOGIN_OPTS`** - OPTIONAL   
+**`EXTRA_FOD_LOGIN_OPTS` (deprecated), `FOD_LOGIN_EXTRA_OPTS`** - OPTIONAL   
 Extra FoD login options, for example for disabling SSL checks or changing connection time-outs; see [`fcli fod session login` documentation](https://fortify.github.io/fcli/v2.6.0//manpage/fcli-fod-session-login.html)
 
 <!-- END-INCLUDE:env-fod-login.md -->
@@ -83,19 +83,19 @@ Fortify on Demand release to use with this action. This can be specified either 
 
 <!-- START-INCLUDE:env-fod-package.md -->
 
-**`EXTRA_PACKAGE_OPTS`** - OPTIONAL     
-By default, this action runs `scancentral package -o package.zip` to package application source code. The `EXTRA_PACKAGE_OPTS` environment variable can be used to specify additional packaging options. 
+**`EXTRA_PACKAGE_OPTS` (deprecated), `PACKAGE_EXTRA_OPTS`** - OPTIONAL     
+By default, this action runs `scancentral package -o package.zip` to package application source code. The `PACKAGE_EXTRA_OPTS` environment variable can be used to specify additional packaging options. 
 
 If FoD Software Composition Analysis has been purchased and configured on the applicable release, you'll need to pass the `-oss` option through this environment variable to generate and package the additional dependency files required. 
 
-Based on the  automated build tool detection feature provided by ScanCentral Client, this default `scancentral` command is often sufficient to properly package application source code. Depending on your build setup, you may however need to configure the `EXTRA_PACKAGE_OPTS` environment variable to specify additional packaging options. 
+Based on the  automated build tool detection feature provided by ScanCentral Client, this default `scancentral` command is often sufficient to properly package application source code. Depending on your build setup, you may however need to configure the `PACKAGE_EXTRA_OPTS` environment variable to specify additional packaging options. 
 
-As an example, if the build file that you want to use for packaging doesn't adhere  to common naming conventions, you can configure the `-bf <custom build file>` option using the `EXTRA_PACKAGE_OPTS` environment variable. See [Command-line options for the package command](https://www.microfocus.com/documentation/fortify-software-security-center/2420/SC_SAST_Help_24.2.0/index.htm#cli/package-cmd.htm) for more information on available options.
+As an example, if the build file that you want to use for packaging doesn't adhere  to common naming conventions, you can configure the `-bf <custom build file>` option using the `PACKAGE_EXTRA_OPTS` environment variable. See [Command-line options for the package command](https://www.microfocus.com/documentation/fortify-software-security-center/2420/SC_SAST_Help_24.2.0/index.htm#cli/package-cmd.htm) for more information on available options.
 
 <!-- END-INCLUDE:env-fod-package.md -->
 
 
-**`EXTRA_FOD_SAST_SCAN_OPTS`** - OPTIONAL    
+**`EXTRA_FOD_SAST_SCAN_OPTS` (deprecated), `FOD_SAST_SCAN_EXTRA_OPTS`** - OPTIONAL    
 Extra FoD SAST scan options; see [`fcli fod sast-scan start` documentation](https://fortify.github.io/fcli/v2.6.0//manpage/fcli-fod-sast-scan-start.html)
 
 
@@ -105,6 +105,15 @@ Extra FoD SAST scan options; see [`fcli fod sast-scan start` documentation](http
 By default, this action will not wait until scans have been completed. To have the workflow wait until all scans have been completed, set the `DO_WAIT` environment variable to `true`. Note that some other environment variables imply `DO_WAIT`, for example when exporting vulnerability data or generating workflow summaries. This behavior is documented in the applicable environment variable descriptions.
 
 <!-- END-INCLUDE:env-do-wait.md -->
+
+
+
+<!-- START-INCLUDE:env-do-policy-check.md -->
+
+**`CHECK_POLICY_ACTION`, `CHECK_POLICY_EXTRA_OPTS`** - OPTIONAL    
+These inputs allow for running policy checks after scan completion. As security policies are different for every Fortify customer, we don't provide a default policy check action. `POLICY_CHECK_ACTION` may point to a local file or URL; this custom fcli action must accept at least the `--av` (for SSC) or `--rel` (for FoD) option. Any extra options for this custom fcli action can be passed through the `CHECK_POLICY_EXTRA_OPTS` environment variable, which may include fcli options to allow unsigned custom actions to be used. Please see https://fortify.github.io/fcli/v2.6.0/#_actions for more information. 
+
+<!-- END-INCLUDE:env-do-policy-check.md -->
 
 
 
@@ -173,9 +182,9 @@ The sample workflow below demonstrates how to configure the action for running a
           FOD_TENANT: ${{secrets.FOD_TENANT}}
           FOD_USER: ${{secrets.FOD_USER}}
           FOD_PASSWORD: ${{secrets.FOD_PAT}}
-          # EXTRA_FOD_LOGIN_OPTS: --socket-timeout=60s
+          # FOD_LOGIN_EXTRA_OPTS: --socket-timeout=60s
           # FOD_RELEASE: MyApp:MyRelease
-          # EXTRA_PACKAGE_OPTS: -oss
+          # PACKAGE_EXTRA_OPTS: -oss
           # DO_WAIT: true
           # DO_EXPORT: true
           # TOOL_DEFINITIONS: https://ftfy.mycompany.com/tool-definitions/v1/tool-definitions.yaml.zip

@@ -10,9 +10,9 @@ requireIfVar "FOD_USER" "FOD_TENANT"
 checkRequirements
 
 if [ -n "${FOD_CLIENT_ID}" ]; then
-  run "FOD_LOGIN" "${FCLI_CMD}" fod session login --url "${FOD_URL}" --client-id "${FOD_CLIENT_ID}" --client-secret "${FOD_CLIENT_SECRET}" __expand:EXTRA_FOD_LOGIN_OPTS
+  run "FOD_LOGIN" "${FCLI_CMD}" fod session login --url "${FOD_URL}" --client-id "${FOD_CLIENT_ID}" --client-secret "${FOD_CLIENT_SECRET}" __expand:EXTRA_FOD_LOGIN_OPTS __expand:FOD_LOGIN_EXTRA_OPTS
 else
-  run "FOD_LOGIN" "${FCLI_CMD}" fod session login --url "${FOD_URL}" -t "${FOD_TENANT}" -u "${FOD_USER}" -p "${FOD_PASSWORD}" __expand:EXTRA_FOD_LOGIN_OPTS
+  run "FOD_LOGIN" "${FCLI_CMD}" fod session login --url "${FOD_URL}" -t "${FOD_TENANT}" -u "${FOD_USER}" -p "${FOD_PASSWORD}" __expand:EXTRA_FOD_LOGIN_OPTS __expand:FOD_LOGIN_EXTRA_OPTS
 fi
 
 printRunSummary

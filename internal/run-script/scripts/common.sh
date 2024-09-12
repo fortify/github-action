@@ -38,7 +38,7 @@ function printOutput {
 # arguments specify the command to run together with its arguments.
 #
 # Command arguments may contain environment variable references in the 
-# format __expand:<VARNAME>, for example __expand:EXTRA_SC_SAST_SCAN_OPTS;
+# format __expand:<VARNAME>, for example __expand:SC_SAST_SCAN_EXTRA_OPTS;
 # these will be expanded before running the given command. The environment
 # variable to be expanded may contain multiple arguments, including properly
 # quoted arguments containing whitespace.
@@ -250,26 +250,36 @@ function requireSCSastSession {
 
 #############################################################################
 # Function to determine whether PR comments should be generated. PR comments
-# are only generated if DO_PR_COMMENT is set to true, required GITHUB_*
-# environment variables are available, and GITHUB_REF_NAME points to a PR.
+# are only generated if any of the PR_COMMENT variables is set, required 
+# GITHUB_* environment variables are available, and GITHUB_REF_NAME points to
+# a PR.
 function doPRComment {
-  [ "${DO_PR_COMMENT}" == "true" ] \
-  && [ -n "${GITHUB_TOKEN}" ] \
-  && [ -n "${GITHUB_REPOSITORY_OWNER}" ] \
-  && [ -n "${GITHUB_REPOSITORY}" ] \
-  && [ -n "${GITHUB_REF_NAME}" ] \
-  && [ -n "${GITHUB_SHA}" ] \
-  && [[ "${GITHUB_REF_NAME}" == */merge ]]
+  [[ ("${DO_PR_COMMENT}" == "true" || -n "${PR_COMMENT_ACTION}" || -n "${PR_COMMENT_EXTRA_OPTS}") \
+  && -n "${GITHUB_TOKEN}" ] \
+  && -n "${GITHUB_REPOSITORY_OWNER}" ] \
+  && -n "${GITHUB_REPOSITORY}" ] \
+  && -n "${GITHUB_REF_NAME}" ] \
+  && -n "${GITHUB_SHA}" ] \
+  && "${GITHUB_REF_NAME}" == */merge ]]
 }
 
 #############################################################################
-# Function to determine whether job summary should be generated.
+# Function to determine whether PR comments should be generated. Job summary 
+# is enabled if any of the JOB_SUMMARY variables is set.
 function doJobSummary {
-  [ "${DO_JOB_SUMMARY}" == "true" ]
+  [[ "${DO_JOB_SUMMARY}" == "true" || -n "${JOB_SUMMARY_ACTION}" || -n "${JOB_SUMMARY_EXTRA_OPTS} ]]
+}
+
+#############################################################################
+# Function to determine whether policy check should be run. Policy checks
+# are enabled if POLICY_CHECK_ACTION is defined (as we don't provide a
+# default action).
+function doPolicyCheck {
+  [[ -n "${POLICY_CHECK_ACTION}" ]]
 }
 
 #############################################################################
 # Function to determine whether we should wait for scan completion.
 function doWait {
-  [ "${DO_WAIT}" == "true" ] || [ "${DO_EXPORT}" == "true" ] || doJobSummary || doPRComment
+  [ "${DO_WAIT}" == "true" ] || [ "${DO_EXPORT}" == "true" ] || doJobSummary || doPRComment || doPolicyCheck
 }

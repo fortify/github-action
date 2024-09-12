@@ -1,1 +1,1 @@
-          # EXTRA_PACKAGE_OPTS: -oss
+          # PACKAGE_EXTRA_OPTS: -oss

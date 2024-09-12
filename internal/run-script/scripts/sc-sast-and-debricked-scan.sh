@@ -22,7 +22,7 @@ export NO_COLOR=true
 if [ "${DO_SC_SAST_SCAN}" == "true" ]; then
   run "SAST_SCAN" "${FCLI_CMD}" sc-sast scan start \
     --publish-to "${SSC_APPVERSION}" -p package.zip -v "${SC_SAST_SENSOR_VERSION}" \
-    --store sc_sast_scan __expand:EXTRA_SC_SAST_SCAN_OPTS
+    --store sc_sast_scan __expand:EXTRA_SC_SAST_SCAN_OPTS __expand:SC_SAST_SCAN_EXTRA_OPTS
 fi
 if [ "${DO_DEBRICKED_SCAN}" == "true" ]; then
   # Debricked may return non-zero exit code on automation rule failures, in which case
@@ -43,6 +43,12 @@ fi
 # Collect Debricked scan output
 DEBRICKED_SCAN_RESULTS=$(printOutput DEBRICKED_SCAN stdout | fgrep -e '───' -e '│' -e 'vulnerabilities found' -e 'For full details')
 
+if doPolicyCheck; then
+  run "POLICY_CHECK" "${FCLI_CMD}" ssc action run "${POLICY_CHECK_ACTION}" \
+    --av "${SSC_APPVERSION}" --progress=none __expand:POLICY_CHECK_EXTRA_OPTS
+fi
+
+# TODO Add policy check output to job summary
 if doJobSummary; then
   # Collect scan/publish statuses for inclusion in job summary.
   SAST_SCAN_STATUS=$(printRunStatus "SAST_SCAN")

@@ -1,1 +1,1 @@
-          # EXTRA_PACKAGE_OPTS: -bf custom-pom.xml
+          # PACKAGE_EXTRA_OPTS: -bf custom-pom.xml

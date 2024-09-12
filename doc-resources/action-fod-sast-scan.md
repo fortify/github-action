@@ -13,7 +13,7 @@ The SAST and optional open source scan performed by this action consists of the 
 Apart from the generic action prerequisites listed above, the following prerequisites apply to this specific action:
 
 * The appropriate application release exists on FoD and has been configured for SAST scans. Future versions of this action may add support for automating app/release creation and scan setup.
-* If open source scanning has been enabled in the FoD SAST scan configuration, be sure to pass the `-oss` option through the `EXTRA_PACKAGE_OPTS` environment variable.
+* If open source scanning has been enabled in the FoD SAST scan configuration, be sure to pass the `-oss` option through the `PACKAGE_EXTRA_OPTS` environment variable.
 
 ### Action environment variable inputs
 

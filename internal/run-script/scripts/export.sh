@@ -5,6 +5,6 @@ requireFcli
 requireVar "PRODUCT"
 checkRequirements
 
-run "EXPORT" "${FCLI_CMD}" "${PRODUCT}" action run "${EXPORT_ACTION:-github-sast-report}" __expand:DEFAULT_OPTS __expand:EXTRA_EXPORT_OPTS
+run "EXPORT" "${FCLI_CMD}" "${PRODUCT}" action run "${EXPORT_ACTION:-github-sast-report}" __expand:DEFAULT_OPTS __expand:EXPORT_EXTRA_OPTS
 printRunSummary
 failOnError

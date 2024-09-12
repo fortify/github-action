@@ -63,7 +63,7 @@ Required when authenticating with SSC user credentials.
 
 <!-- START-INCLUDE:env-ssc-login.md -->
 
-**`EXTRA_SSC_LOGIN_OPTS`** - OPTIONAL    
+**`EXTRA_SSC_LOGIN_OPTS` (deprecated), `SSC_LOGIN_EXTRA_OPTS`** - OPTIONAL    
 Extra SSC login options, for example for disabling SSL checks or changing connection time-outs; see [`fcli ssc session login` documentation](https://fortify.github.io/fcli/v2.6.0//manpage/fcli-ssc-session-login.html).
 
 <!-- END-INCLUDE:env-ssc-login.md -->
@@ -75,7 +75,7 @@ Extra SSC login options, for example for disabling SSL checks or changing connec
 **`SC_SAST_TOKEN`** - REQUIRED    
 Required: ScanCentral SAST Client Authentication Token for authenticating with ScanCentral SAST Controller.
 
-**`EXTRA_SC_SAST_LOGIN_OPTS`** - OPTIONAL    
+**`EXTRA_SC_SAST_LOGIN_OPTS` (deprecated), `SC_SAST_LOGIN_EXTRA_OPTS`** - OPTIONAL    
 Extra ScanCentral SAST login options, for example for disabling SSL checks or changing connection time-outs; see [`fcli sc-sast session login` documentation](https://fortify.github.io/fcli/v2.6.0//manpage/fcli-sc-sast-session-login.html).
 
 <!-- END-INCLUDE:env-sc-sast-login.md -->
@@ -99,10 +99,10 @@ Fortify SSC application version to use with this action. This can be specified e
 
 <!-- START-INCLUDE:env-package.md -->
 
-**`EXTRA_PACKAGE_OPTS`** - OPTIONAL   
-By default, this action runs `scancentral package -o package.zip` to package application source code. Based on the  automated build tool detection feature provided by ScanCentral Client, this default `scancentral` command is often sufficient. Depending on your build setup, you may however need to configure the `EXTRA_PACKAGE_OPTS` environment variable to specify additional packaging options. 
+**`EXTRA_PACKAGE_OPTS` (deprecated), `PACKAGE_EXTRA_OPTS`** - OPTIONAL   
+By default, this action runs `scancentral package -o package.zip` to package application source code. Based on the  automated build tool detection feature provided by ScanCentral Client, this default `scancentral` command is often sufficient. Depending on your build setup, you may however need to configure the `PACKAGE_EXTRA_OPTS` environment variable to specify additional packaging options. 
 
-As an example, if the build file that you want to use for packaging doesn't adhere  to common naming conventions, you can configure the `-bf <custom build file>` option using the `EXTRA_PACKAGE_OPTS` environment variable. See [Command-line options for the package command](https://www.microfocus.com/documentation/fortify-software-security-center/2420/SC_SAST_Help_24.2.0/index.htm#cli/package-cmd.htm) for more information on available options.
+As an example, if the build file that you want to use for packaging doesn't adhere  to common naming conventions, you can configure the `-bf <custom build file>` option using the `PACKAGE_EXTRA_OPTS` environment variable. See [Command-line options for the package command](https://www.microfocus.com/documentation/fortify-software-security-center/2420/SC_SAST_Help_24.2.0/index.htm#cli/package-cmd.htm) for more information on available options.
 
 <!-- END-INCLUDE:env-package.md -->
 
@@ -110,7 +110,7 @@ As an example, if the build file that you want to use for packaging doesn't adhe
 **`SC_SAST_SENSOR_VERSION`** - REQUIRED     
 Version of the ScanCentral SAST sensor on which the scan should be performed. See [`fcli sc-sast scan start` documentation](https://fortify.github.io/fcli/v2.6.0//manpage/fcli-sc-sast-scan-start.html#_options_for_scanning_a_package_file) for details.
 
-**`EXTRA_SC_SAST_SCAN_OPTS`** - OPTIONAL    
+**`EXTRA_SC_SAST_SCAN_OPTS` (deprecated), `SC_SAST_SCAN_EXTRA_OPTS`** - OPTIONAL    
 Extra ScanCentral SAST scan options; see [`fcli sc-sast scan start` documentation](https://fortify.github.io/fcli/v2.6.0//manpage/fcli-sc-sast-scan-start.html)
 
 
@@ -120,6 +120,15 @@ Extra ScanCentral SAST scan options; see [`fcli sc-sast scan start` documentatio
 By default, this action will not wait until scans have been completed. To have the workflow wait until all scans have been completed, set the `DO_WAIT` environment variable to `true`. Note that some other environment variables imply `DO_WAIT`, for example when exporting vulnerability data or generating workflow summaries. This behavior is documented in the applicable environment variable descriptions.
 
 <!-- END-INCLUDE:env-do-wait.md -->
+
+
+
+<!-- START-INCLUDE:env-do-policy-check.md -->
+
+**`CHECK_POLICY_ACTION`, `CHECK_POLICY_EXTRA_OPTS`** - OPTIONAL    
+These inputs allow for running policy checks after scan completion. As security policies are different for every Fortify customer, we don't provide a default policy check action. `POLICY_CHECK_ACTION` may point to a local file or URL; this custom fcli action must accept at least the `--av` (for SSC) or `--rel` (for FoD) option. Any extra options for this custom fcli action can be passed through the `CHECK_POLICY_EXTRA_OPTS` environment variable, which may include fcli options to allow unsigned custom actions to be used. Please see https://fortify.github.io/fcli/v2.6.0/#_actions for more information. 
+
+<!-- END-INCLUDE:env-do-policy-check.md -->
 
 
 
@@ -186,11 +195,11 @@ The sample workflow below demonstrates how to configure the action for running a
         env:
           SSC_URL: ${{vars.SSC_URL}}
           SSC_TOKEN: ${{secrets.SSC_TOKEN}}
-          # EXTRA_SSC_LOGIN_OPTS: --socket-timeout=60s
+          # SSC_LOGIN_EXTRA_OPTS: --socket-timeout=60s
           SC_SAST_TOKEN: ${{secrets.CLIENT_AUTH_TOKEN}}
-          # EXTRA_SC_SAST_LOGIN_OPTS: --socket-timeout=60s
+          # SC_SAST_LOGIN_EXTRA_OPTS: --socket-timeout=60s
           # SSC_APPVERSION: MyApp:MyVersion
-          # EXTRA_PACKAGE_OPTS: -bf custom-pom.xml
+          # PACKAGE_EXTRA_OPTS: -bf custom-pom.xml
           SC_SAST_SENSOR_VERSION: 23.2
           # DO_DEBRICKED_SCAN: true  # Or debricked-sca-scan input on top-level action
           # DEBRICKED_TOKEN: ${{secrets.DEBRICKED_TOKEN}}

@@ -5,10 +5,12 @@
 
 {{include:env-fod-package.md}}
 
-**`EXTRA_FOD_SAST_SCAN_OPTS`** - OPTIONAL    
+**`EXTRA_FOD_SAST_SCAN_OPTS` (deprecated), `FOD_SAST_SCAN_EXTRA_OPTS`** - OPTIONAL    
 Extra FoD SAST scan options; see [`fcli fod sast-scan start` documentation]({{var:fcli-doc-base-url}}/manpage/fcli-fod-sast-scan-start.html)
 
 {{include:env-do-wait.md}}
+
+{{include:env-do-policy-check.md}}
 
 {{include:env-do-job-summary.md}}
 
