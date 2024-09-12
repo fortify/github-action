@@ -85,7 +85,7 @@ Fortify SSC application version to use with this action. This can be specified e
 <!-- START-INCLUDE:env-do-wait.md -->
 
 **`DO_WAIT`** - OPTIONAL    
-By default, this action will not wait until scans have been completed. To have the workflow wait until all scans have been completed, set the `DO_WAIT` environment variable to `true`. Note that some other environment variables imply `DO_WAIT`, for example when exporting vulnerability data or generating workflow summaries. This behavior is documented in the applicable environment variable descriptions.
+By default, this action will not wait until scans have been completed. To have the workflow wait until all scans have been completed, set the `DO_WAIT` environment variable to `true`. Note that some other environment variables imply `DO_WAIT`, for example when exporting vulnerability data or generating job summaries. This behavior is documented in the applicable environment variable descriptions.
 
 <!-- END-INCLUDE:env-do-wait.md -->
 
@@ -94,7 +94,7 @@ By default, this action will not wait until scans have been completed. To have t
 <!-- START-INCLUDE:env-do-policy-check.md -->
 
 **`CHECK_POLICY_ACTION`, `CHECK_POLICY_EXTRA_OPTS`** - OPTIONAL    
-These inputs allow for running policy checks after scan completion. As security policies are different for every Fortify customer, we don't provide a default policy check action. `POLICY_CHECK_ACTION` may point to a local file or URL; this custom fcli action must accept at least the `--av` (for SSC) or `--rel` (for FoD) option. Any extra options for this custom fcli action can be passed through the `CHECK_POLICY_EXTRA_OPTS` environment variable, which may include fcli options to allow unsigned custom actions to be used. Please see https://fortify.github.io/fcli/v2.6.0/#_actions for more information. 
+These inputs allow for running policy checks after scan completion. As security policies are different for every Fortify customer, we don't provide a default policy check action. `POLICY_CHECK_ACTION` may point to a local file or URL; this custom fcli action must accept at least the `--av` (for SSC) or `--rel` (for FoD) option. Any extra options for this custom fcli action can be passed through the `CHECK_POLICY_EXTRA_OPTS` environment variable, which may include fcli options to allow unsigned custom actions to be used. Fcli ships with sample `check-policy` actions that can be used as a basis for implementing your own policy checks. Please see https://fortify.github.io/fcli/v2.6.0/#_actions for more information. 
 
 <!-- END-INCLUDE:env-do-policy-check.md -->
 
@@ -103,7 +103,7 @@ These inputs allow for running policy checks after scan completion. As security 
 <!-- START-INCLUDE:env-do-job-summary.md -->
 
 **`DO_JOB_SUMMARY`, `JOB_SUMMARY_ACTION`, `JOB_SUMMARY_EXTRA_OPTS`** - OPTIONAL    
-If `DO_JOB_SUMMARY` is set to `true` (which implies `DO_WAIT`), this action will generate a job summary listing scan status and issue counts using the fcli-provided `release-summary` (FoD) or `appversion-summary` (SSC) action, or, if specified, the custom fcli action specified through `JOB_SUMMARY_ACTION`. `JOB_SUMMARY_ACTION` may point to a local file or URL; this custom fcli action must support (at least) the exact same action parameters (including any environment variable based default values for those parameters) as the built-in fcli action. Any extra options for the fcli action can be passed through the `JOB_SUMMARY_EXTRA_OPTS` environment variable, for example to specify the SSC filter sets to be included in the summary, or to allow an unsigned custom action to be used. Please see https://fortify.github.io/fcli/v2.6.0/#_actions for more information. 
+If `DO_JOB_SUMMARY` is set to `true` (implied if any of the other `JOB_SUMMARY_*` variables are set, and implies `DO_WAIT`), this action will generate a job summary listing scan status and issue counts using the fcli-provided `release-summary` (FoD) or `appversion-summary` (SSC) action, or, if specified, the custom fcli action specified through `JOB_SUMMARY_ACTION`. `JOB_SUMMARY_ACTION` may point to a local file or URL; this custom fcli action must support (at least) the exact same action parameters (including any environment variable based default values for those parameters) as the built-in fcli action. Any extra options for the fcli action can be passed through the `JOB_SUMMARY_EXTRA_OPTS` environment variable, for example to specify the SSC filter sets to be included in the summary, or to allow an unsigned custom action to be used. Please see https://fortify.github.io/fcli/v2.6.0/#_actions for more information. 
 
 <!-- END-INCLUDE:env-do-job-summary.md -->
 
@@ -112,7 +112,7 @@ If `DO_JOB_SUMMARY` is set to `true` (which implies `DO_WAIT`), this action will
 <!-- START-INCLUDE:env-do-pr-comment.md -->
 
 **`DO_PR_COMMENT`, `PR_COMMENT_ACTION`, `PR_COMMENT_EXTRA_OPTS`** - OPTIONAL    
-If `DO_PR_COMMENT` is set to `true` (which implies `DO_WAIT`), this action will generate a pull request comment listing new, re-introduced and removed issues using the fcli-provided `github-pr-comment` action or, if specified, the custom fcli action specified through `PR_COMMENT_ACTION`. `PR_COMMENT_ACTION` may point to a local file or URL; this custom fcli action must support (at least) the exact same action parameters (including any environment variable based default values for those parameters) as the built-in fcli action. Any extra options for the fcli action can be passed through the `PR_COMMENT_EXTRA_OPTS` environment variable, for example to specify the SSC filter set from which to load issue data, or to allow an unsigned custom action to be used. Please see https://fortify.github.io/fcli/v2.6.0/#_actions for more information. 
+If `DO_PR_COMMENT` is set to `true` (implied if any of the other `PR_COMMENT_*` variables are set, and implies `DO_WAIT`), this action will generate a pull request comment listing new, re-introduced and removed issues using the fcli-provided `github-pr-comment` action or, if specified, the custom fcli action specified through `PR_COMMENT_ACTION`. `PR_COMMENT_ACTION` may point to a local file or URL; this custom fcli action must support (at least) the exact same action parameters (including any environment variable based default values for those parameters) as the built-in fcli action. Any extra options for the fcli action can be passed through the `PR_COMMENT_EXTRA_OPTS` environment variable, for example to specify the SSC filter set from which to load issue data, or to allow an unsigned custom action to be used. Please see https://fortify.github.io/fcli/v2.6.0/#_actions for more information. 
 
 Note that pull request comments will only be generated under the following conditions:
 
