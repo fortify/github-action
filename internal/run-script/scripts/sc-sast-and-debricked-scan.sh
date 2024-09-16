@@ -44,7 +44,7 @@ fi
 DEBRICKED_SCAN_RESULTS=$(printOutput DEBRICKED_SCAN stdout | fgrep -e '───' -e '│' -e 'vulnerabilities found' -e 'For full details')
 
 if doPolicyCheck; then
-  run "POLICY_CHECK" "${FCLI_CMD}" ssc action run "${POLICY_CHECK_ACTION}" \
+  run "POLICY_CHECK" "${FCLI_CMD}" ssc action run "${POLICY_CHECK_ACTION:-check-policy}" \
     --av "${SSC_APPVERSION}" --progress=none __expand:POLICY_CHECK_EXTRA_OPTS
 fi
 

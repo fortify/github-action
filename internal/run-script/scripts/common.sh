@@ -272,10 +272,9 @@ function doJobSummary {
 
 #############################################################################
 # Function to determine whether policy check should be run. Policy checks
-# are enabled if POLICY_CHECK_ACTION is defined (as we don't provide a
-# default action).
+# are enabled if any of the POLICY_CHECK variables is set.
 function doPolicyCheck {
-  [[ -n "${POLICY_CHECK_ACTION}" ]]
+  [[ "${DO_POLICY_CHECK}" == "true" || -n "${POLICY_CHECK_ACTION}" || -n "${POLICY_CHECK_EXTRA_OPTS} ]]
 }
 
 #############################################################################
