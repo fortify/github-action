@@ -252,7 +252,7 @@ function requireSCSastSession {
 # Function to determine whether appversion/release setup is enabled. Setup 
 # is enabled if any of the SETUP variables is set.
 function doSetup {
-  [[ "${DO_SETUP}" == "true" || -n "${SETUP_ACTION}" || -n "${SETUP_EXTRA_OPTS} ]]
+  [[ "${DO_SETUP}" == "true" || -n "${SETUP_ACTION}" || -n "${SETUP_EXTRA_OPTS}" ]]
 }
 
 #############################################################################
@@ -274,14 +274,14 @@ function doPRComment {
 # Function to determine whether PR comments should be generated. Job summary 
 # is enabled if any of the JOB_SUMMARY variables is set.
 function doJobSummary {
-  [[ "${DO_JOB_SUMMARY}" == "true" || -n "${JOB_SUMMARY_ACTION}" || -n "${JOB_SUMMARY_EXTRA_OPTS} ]]
+  [[ "${DO_JOB_SUMMARY}" == "true" || -n "${JOB_SUMMARY_ACTION}" || -n "${JOB_SUMMARY_EXTRA_OPTS}" ]]
 }
 
 #############################################################################
 # Function to determine whether policy check should be run. Policy checks
 # are enabled if any of the POLICY_CHECK variables is set.
 function doPolicyCheck {
-  [[ "${DO_POLICY_CHECK}" == "true" || -n "${POLICY_CHECK_ACTION}" || -n "${POLICY_CHECK_EXTRA_OPTS} ]]
+  [[ "${DO_POLICY_CHECK}" == "true" || -n "${POLICY_CHECK_ACTION}" || -n "${POLICY_CHECK_EXTRA_OPTS}" ]]
 }
 
 #############################################################################
