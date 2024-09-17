@@ -56,7 +56,7 @@ fi
 
 if doPRComment; then
   run "PR_COMMENT" "${FCLI_CMD}" fod action run "${PR_COMMENT_ACTION:-github-pr-comment}" \
-    --av "${SSC_APPVERSION}" __expand:PR_COMMENT_EXTRA_OPTS
+    --rel "${FOD_RELEASE}" __expand:PR_COMMENT_EXTRA_OPTS
 fi
 
 printRunSummary
