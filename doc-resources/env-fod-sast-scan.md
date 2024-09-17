@@ -3,6 +3,8 @@
 
 {{include:env-fod-release.md}}
 
+{{include:env-do-setup.md}}
+
 {{include:env-fod-package.md}}
 
 **`EXTRA_FOD_SAST_SCAN_OPTS` (deprecated), `FOD_SAST_SCAN_EXTRA_OPTS`** - OPTIONAL    

@@ -19,6 +19,11 @@ checkRequirements
 # Disable Debricked CLI colors 
 export NO_COLOR=true
 
+if doSetup; then
+  run "SETUP" "${FCLI_CMD}" ssc action run "${SETUP_ACTION:-setup-appversion}" \
+    --av "${SSC_APPVERSION}" __expand:SETUP_EXTRA_OPTS
+fi
+
 if [ "${DO_SC_SAST_SCAN}" == "true" ]; then
   run "SAST_SCAN" "${FCLI_CMD}" sc-sast scan start \
     --publish-to "${SSC_APPVERSION}" -p package.zip -v "${SC_SAST_SENSOR_VERSION}" \
@@ -45,7 +50,7 @@ DEBRICKED_SCAN_RESULTS=$(printOutput DEBRICKED_SCAN stdout | fgrep -e '───
 
 if doPolicyCheck; then
   run "POLICY_CHECK" "${FCLI_CMD}" ssc action run "${POLICY_CHECK_ACTION:-check-policy}" \
-    --av "${SSC_APPVERSION}" --progress=none __expand:POLICY_CHECK_EXTRA_OPTS
+    --av "${SSC_APPVERSION}" __expand:POLICY_CHECK_EXTRA_OPTS
 fi
 
 # TODO Add policy check output to job summary
@@ -90,7 +95,7 @@ fi
 
 if doPRComment; then
   run "PR_COMMENT" "${FCLI_CMD}" ssc action run "${PR_COMMENT_ACTION:-github-pr-comment}" \
-    --av "${SSC_APPVERSION}" --progress=none __expand:PR_COMMENT_EXTRA_OPTS
+    --av "${SSC_APPVERSION}" __expand:PR_COMMENT_EXTRA_OPTS
 fi
 
 printRunSummary

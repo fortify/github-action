@@ -18952,7 +18952,7 @@ exports.TOOLS = {
      *            ScanCentral Client, but please double-check.
      */
     "fcli": {
-        "versionAliases": { "action-default": "2.6.0" },
+        "versionAliases": { "action-default": "dev_develop" },
         "cmds": { "windows": "fcli.exe", "linux": "fcli", "darwin": "fcli" }
     },
     "sc-client": {

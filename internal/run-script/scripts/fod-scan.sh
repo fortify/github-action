@@ -8,6 +8,11 @@ requireFoDSession
 requireVar "FOD_RELEASE"
 checkRequirements
 
+if doSetup; then
+  run "SETUP" "${FCLI_CMD}" fod action run "${SETUP_ACTION:-setup-release}" \
+    --rel "${FOD_RELEASE}" __expand:SETUP_EXTRA_OPTS
+fi
+
 run "SAST_SCAN" "${FCLI_CMD}" fod sast-scan start \
     --rel "${FOD_RELEASE}" -f package.zip \
     --store fod_sast_scan __expand:EXTRA_FOD_SAST_SCAN_OPTS __expand:FOD_SAST_SCAN_EXTRA_OPTS
@@ -17,8 +22,8 @@ if doWait; then
 fi
 
 if doPolicyCheck; then
-  run "POLICY_CHECK" "${FCLI_CMD}" ssc action run "${POLICY_CHECK_ACTION:-check-policy}" \
-    --av "${SSC_APPVERSION}" --progress=none __expand:POLICY_CHECK_EXTRA_OPTS
+  run "POLICY_CHECK" "${FCLI_CMD}" fod action run "${POLICY_CHECK_ACTION:-check-policy}" \
+    --rel "${FOD_RELEASE}" __expand:POLICY_CHECK_EXTRA_OPTS
 fi
 
 # TODO Add policy check output to job summary
@@ -51,7 +56,7 @@ fi
 
 if doPRComment; then
   run "PR_COMMENT" "${FCLI_CMD}" fod action run "${PR_COMMENT_ACTION:-github-pr-comment}" \
-    --av "${SSC_APPVERSION}" --progress=none __expand:PR_COMMENT_EXTRA_OPTS
+    --av "${SSC_APPVERSION}" __expand:PR_COMMENT_EXTRA_OPTS
 fi
 
 printRunSummary

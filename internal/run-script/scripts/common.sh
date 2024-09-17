@@ -249,6 +249,13 @@ function requireSCSastSession {
 }
 
 #############################################################################
+# Function to determine whether appversion/release setup is enabled. Setup 
+# is enabled if any of the SETUP variables is set.
+function doSetup {
+  [[ "${DO_SETUP}" == "true" || -n "${SETUP_ACTION}" || -n "${SETUP_EXTRA_OPTS} ]]
+}
+
+#############################################################################
 # Function to determine whether PR comments should be generated. PR comments
 # are only generated if any of the PR_COMMENT variables is set, required 
 # GITHUB_* environment variables are available, and GITHUB_REF_NAME points to

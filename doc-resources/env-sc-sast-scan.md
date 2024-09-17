@@ -12,6 +12,8 @@ Required when performing a Debricked Software Composition Analysis scan; see the
 
 {{include:env-ssc-appversion.md}}
 
+{{include:env-do-setup.md}}
+
 {{include:env-package.md}}
 
 **`SC_SAST_SENSOR_VERSION`** - REQUIRED     
