@@ -261,12 +261,12 @@ function doSetup {
 # GITHUB_* environment variables are available, and GITHUB_REF_NAME points to
 # a PR.
 function doPRComment {
-  [[ ("${DO_PR_COMMENT}" == "true" || -n "${PR_COMMENT_ACTION}" || -n "${PR_COMMENT_EXTRA_OPTS}") \
-  && -n "${GITHUB_TOKEN}" ] \
-  && -n "${GITHUB_REPOSITORY_OWNER}" ] \
-  && -n "${GITHUB_REPOSITORY}" ] \
-  && -n "${GITHUB_REF_NAME}" ] \
-  && -n "${GITHUB_SHA}" ] \
+  [[ ("${DO_PR_COMMENT}" == "true" || -n "${PR_COMMENT_ACTION}" || -n "${PR_COMMENT_EXTRA_OPTS}")
+  && -n "${GITHUB_TOKEN}"
+  && -n "${GITHUB_REPOSITORY_OWNER}"
+  && -n "${GITHUB_REPOSITORY}"
+  && -n "${GITHUB_REF_NAME}"
+  && -n "${GITHUB_SHA}"
   && "${GITHUB_REF_NAME}" == */merge ]]
 }
 
