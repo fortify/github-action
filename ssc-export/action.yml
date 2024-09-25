@@ -1,35 +1,30 @@
-name: 'xport FoD vulnerability data to GitHub'
-description: 'xport FoD vulnerability data to GitHub'
+name: 'Export SSC vulnerability data to GitHub'
+description: 'Export SSC vulnerability data to GitHub'
 author: 'Fortify'
 runs:
   using: composite
   steps:
-    - uses: fortify/github-action/setup@main
+    - uses: fortify/github-action/internal/set-ssc-var-defaults@feat-1.3.0
+    - uses: fortify/github-action/setup@feat-1.3.0
       with:
         export-path: false
-        vuln-exporter: action-default
-    - run: |
-        case ${SSC_APPVERSION} in
-          ''|*[!0-9]*) echo '_APPVERSION_OPT=--ssc.version.name='''${SSC_APPVERSION}'''' >> $GITHUB_ENV ;;
-          *) echo '_APPVERSION_OPT="--ssc.version.id=${SSC_APPVERSION}"' >> $GITHUB_ENV ;;
-        esac
-      shell: bash
-    - uses: fortify/github-action/internal/run@main
+        fcli: action-default
+    - uses: fortify/github-action/internal/ssc-login@feat-1.3.0
+    - uses: fortify/github-action/internal/run-script@feat-1.3.0
       with:
-        cmd: '"${VULN_EXPORTER_CMD}" SSCToGitHub "--ssc.baseUrl=${SSC_URL}" "--ssc.user=${SSC_USER}" "--ssc.password=${SSC_PASSWORD}" "--ssc.authToken=${SSC_TOKEN}" "${_APPVERSION_OPT}"'
-    - run: |
-        echo '_APPVERSION_OPT=""' >> $GITHUB_ENV
-      shell: bash
-    # Uploaded the generated file containing Fortify vulnerabilities to GitHub.
+        script: export.sh
+      env: 
+        PRODUCT: ssc
+        DEFAULT_OPTS: --av "${{env.SSC_APPVERSION}}" -f ./gh-fortify-sast.sarif
     - uses: github/codeql-action/upload-sarif@v3
       with:
         sarif_file: ./gh-fortify-sast.sarif
 
     # Optionally store the generated file for troubleshooting purposes.
-    - uses: actions/upload-artifact@v3
+    - uses: actions/upload-artifact@v4
       if: always()
       with:
-        name: sarif-files
+        name: ${{ github.job }}-${{ strategy.job-index }}-sarif-files
         path: ./gh-fortify-sast.sarif
 
 branding:

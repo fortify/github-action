@@ -4,37 +4,38 @@ import * as core from '@actions/core';
  * The TOOLS records list the tools supported by this action, together with
  * 'action-default' version aliases and the appropriate command names for
  * each platform.
- * 
- * IMPORTANT: When updating "action-default" versions in the TOOLS record,
- *            please make sure to update any corresponding version numbers 
- *            in the documentation links in doc-resources/template-values.md 
- *            accordingly to allow for proper version-specific links in the 
- *            action documentation. For now, this only applies to fcli and
- *            ScanCentral Client, but please double-check. 
  */ 
 export const TOOLS: Record<string, Record<string, Record<string, string>>> = {
+    /**
+     * IMPORTANT: When updating "action-default" versions in the TOOLS record,
+     *            please make sure to update any corresponding version numbers 
+     *            in the documentation links in doc-resources/template-values.md 
+     *            accordingly to allow for proper version-specific links in the 
+     *            action documentation. For now, this only applies to fcli and
+     *            ScanCentral Client, but please double-check. 
+     */
     "fcli": { 
-        "versionAliases": {"action-default": "2.3.0"},
+        "versionAliases": {"action-default": "2.7.0"},
         "cmds": {"windows": "fcli.exe", "linux": "fcli", "darwin": "fcli"}
     },
     "sc-client": { 
-        "versionAliases": {"action-default": "23.2.1"},
+        "versionAliases": {"action-default": "24.2.0"},
         "cmds": {"windows": "scancentral.bat", "linux": "scancentral", "darwin": "scancentral"}
     },
     "vuln-exporter": { 
-        "versionAliases": {"action-default": "2.0.4"},
+        "versionAliases": {"action-default": "2.1.0"},
         "cmds": {"windows": "FortifyVulnerabilityExporter.bat", "linux": "FortifyVulnerabilityExporter", "darwin": "FortifyVulnerabilityExporter"}
     },
     "fod-uploader": { 
-        "versionAliases": {"action-default": "5.4.0"},
+        "versionAliases": {"action-default": "5.4.1"},
         "cmds": {"windows": "FoDUploader.bat", "linux": "FoDUploader", "darwin": "FoDUploader"}
     },
     "bugtracker-utility": { 
-        "versionAliases": {"action-default": "4.12.0"},
+        "versionAliases": {"action-default": "4.14.0"},
         "cmds": {"windows": "FortifyBugTrackerUtility.bat", "linux": "FortifyBugTrackerUtility", "darwin": "FortifyBugTrackerUtility"}
     },
     "debricked-cli": { 
-        "versionAliases": {"action-default": "1.7.13"},
+        "versionAliases": {"action-default": "2.1.3"},
         "cmds": {"windows": "debricked.exe", "linux": "debricked", "darwin": "debricked"}
     }
 };

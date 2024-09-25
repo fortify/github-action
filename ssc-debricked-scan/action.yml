@@ -1,0 +1,24 @@
+name: 'Perform Debricked scan'
+description: 'Perform a Debricked Software Composition Analysis (SCA) scan and publish results to SSC'
+author: 'Fortify'
+runs:
+  using: composite
+  steps:
+    - uses: fortify/github-action/internal/set-ssc-var-defaults@feat-1.3.0
+    - uses: fortify/github-action/setup@feat-1.3.0
+      with:
+        export-path: false
+        fcli: action-default
+        debricked-cli: action-default
+    - uses: fortify/github-action/internal/ssc-login@feat-1.3.0
+    - uses: fortify/github-action/internal/run-script@feat-1.3.0
+      with:
+        script: sc-sast-and-debricked-scan.sh
+      env: 
+        DO_DEBRICKED_SCAN: true
+        DO_SC_SAST_SCAN: false
+        
+branding:
+  icon: 'shield'
+  color: 'blue'
+

@@ -18941,37 +18941,38 @@ const core = __importStar(__nccwpck_require__(2186));
  * The TOOLS records list the tools supported by this action, together with
  * 'action-default' version aliases and the appropriate command names for
  * each platform.
- *
- * IMPORTANT: When updating "action-default" versions in the TOOLS record,
- *            please make sure to update any corresponding version numbers
- *            in the documentation links in doc-resources/template-values.md
- *            accordingly to allow for proper version-specific links in the
- *            action documentation. For now, this only applies to fcli and
- *            ScanCentral Client, but please double-check.
  */
 exports.TOOLS = {
+    /**
+     * IMPORTANT: When updating "action-default" versions in the TOOLS record,
+     *            please make sure to update any corresponding version numbers
+     *            in the documentation links in doc-resources/template-values.md
+     *            accordingly to allow for proper version-specific links in the
+     *            action documentation. For now, this only applies to fcli and
+     *            ScanCentral Client, but please double-check.
+     */
     "fcli": {
-        "versionAliases": { "action-default": "2.3.0" },
+        "versionAliases": { "action-default": "2.7.0" },
         "cmds": { "windows": "fcli.exe", "linux": "fcli", "darwin": "fcli" }
     },
     "sc-client": {
-        "versionAliases": { "action-default": "23.2.1" },
+        "versionAliases": { "action-default": "24.2.0" },
         "cmds": { "windows": "scancentral.bat", "linux": "scancentral", "darwin": "scancentral" }
     },
     "vuln-exporter": {
-        "versionAliases": { "action-default": "2.0.4" },
+        "versionAliases": { "action-default": "2.1.0" },
         "cmds": { "windows": "FortifyVulnerabilityExporter.bat", "linux": "FortifyVulnerabilityExporter", "darwin": "FortifyVulnerabilityExporter" }
     },
     "fod-uploader": {
-        "versionAliases": { "action-default": "5.4.0" },
+        "versionAliases": { "action-default": "5.4.1" },
         "cmds": { "windows": "FoDUploader.bat", "linux": "FoDUploader", "darwin": "FoDUploader" }
     },
     "bugtracker-utility": {
-        "versionAliases": { "action-default": "4.12.0" },
+        "versionAliases": { "action-default": "4.14.0" },
         "cmds": { "windows": "FortifyBugTrackerUtility.bat", "linux": "FortifyBugTrackerUtility", "darwin": "FortifyBugTrackerUtility" }
     },
     "debricked-cli": {
-        "versionAliases": { "action-default": "1.7.13" },
+        "versionAliases": { "action-default": "2.1.3" },
         "cmds": { "windows": "debricked.exe", "linux": "debricked", "darwin": "debricked" }
     }
 };
@@ -19079,6 +19080,7 @@ exports.FcliRunOutput = exports.InternalFcliHelper = void 0;
 /* eslint-disable @typescript-eslint/no-explicit-any */
 const exec = __importStar(__nccwpck_require__(1514));
 const tc = __importStar(__nccwpck_require__(7784));
+const core = __importStar(__nccwpck_require__(2186));
 const node_stream_zip_1 = __importDefault(__nccwpck_require__(8119));
 const yaml = __importStar(__nccwpck_require__(5065));
 const constants = __importStar(__nccwpck_require__(9042));
@@ -19370,26 +19372,31 @@ _ArtifactDescriptor_instances = new WeakSet(), _ArtifactDescriptor_getDestDir = 
 }, _ArtifactDescriptor_verify = function _ArtifactDescriptor_verify(file) {
     var e_1, _c;
     return __awaiter(this, void 0, void 0, function* () {
-        const verifier = crypto.createVerify('RSA-SHA256');
-        const readable = fs.createReadStream(file);
-        try {
-            // For some reason, readable.pipe(verifier) doesn't work
-            for (var readable_1 = __asyncValues(readable), readable_1_1; readable_1_1 = yield readable_1.next(), !readable_1_1.done;) {
-                const chunk = readable_1_1.value;
-                verifier.update(chunk);
-            }
+        if (this.version.startsWith("dev_")) {
+            core.warning("Fcli action-default set to development version, not verifying signature. This should be changed to fcli release version before releasingthe GitHub Action.");
         }
-        catch (e_1_1) { e_1 = { error: e_1_1 }; }
-        finally {
+        else {
+            const verifier = crypto.createVerify('RSA-SHA256');
+            const readable = fs.createReadStream(file);
             try {
-                if (readable_1_1 && !readable_1_1.done && (_c = readable_1.return)) yield _c.call(readable_1);
+                // For some reason, readable.pipe(verifier) doesn't work
+                for (var readable_1 = __asyncValues(readable), readable_1_1; readable_1_1 = yield readable_1.next(), !readable_1_1.done;) {
+                    const chunk = readable_1_1.value;
+                    verifier.update(chunk);
+                }
             }
-            finally { if (e_1) throw e_1.error; }
-        }
-        if (!verifier.verify(constants.TOOL_DEFINITIONS_PUBLIC_KEY, this.rsa_sha256, 'base64')) {
-            console.log(constants.TOOL_DEFINITIONS_PUBLIC_KEY);
-            console.log(this.rsa_sha256);
-            throw `File signature verification failed for ${this.downloadUrl}`;
+            catch (e_1_1) { e_1 = { error: e_1_1 }; }
+            finally {
+                try {
+                    if (readable_1_1 && !readable_1_1.done && (_c = readable_1.return)) yield _c.call(readable_1);
+                }
+                finally { if (e_1) throw e_1.error; }
+            }
+            if (!verifier.verify(constants.TOOL_DEFINITIONS_PUBLIC_KEY, this.rsa_sha256, 'base64')) {
+                console.log(constants.TOOL_DEFINITIONS_PUBLIC_KEY);
+                console.log(this.rsa_sha256);
+                throw `File signature verification failed for ${this.downloadUrl}`;
+            }
         }
     });
 };

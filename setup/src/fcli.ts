@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import * as exec from '@actions/exec';
 import * as tc from '@actions/tool-cache';
+import * as core from '@actions/core';
 import StreamZip from 'node-stream-zip';
 import * as yaml from 'yaml';
 import * as constants from './constants';
@@ -304,16 +305,20 @@ class ArtifactDescriptor {
      * Verify the given file against the signature contained in this ArtifactDescriptor instance.
      */
     async #verify(file: string) {
-        const verifier = crypto.createVerify('RSA-SHA256');
-        const readable = fs.createReadStream(file);
-        // For some reason, readable.pipe(verifier) doesn't work
-        for await (const chunk of readable) {
-            verifier.update(chunk);
-        }
-        if (!verifier.verify(constants.TOOL_DEFINITIONS_PUBLIC_KEY, this.rsa_sha256, 'base64')) {
-            console.log(constants.TOOL_DEFINITIONS_PUBLIC_KEY)
-            console.log(this.rsa_sha256)
-            throw `File signature verification failed for ${this.downloadUrl}`;
+        if ( this.version.startsWith("dev_") ) {
+            core.warning("Fcli action-default set to development version, not verifying signature. This should be changed to fcli release version before releasingthe GitHub Action.");
+        } else {
+            const verifier = crypto.createVerify('RSA-SHA256');
+            const readable = fs.createReadStream(file);
+            // For some reason, readable.pipe(verifier) doesn't work
+            for await (const chunk of readable) {
+                verifier.update(chunk);
+            }
+            if (!verifier.verify(constants.TOOL_DEFINITIONS_PUBLIC_KEY, this.rsa_sha256, 'base64')) {
+                console.log(constants.TOOL_DEFINITIONS_PUBLIC_KEY)
+                console.log(this.rsa_sha256)
+                throw `File signature verification failed for ${this.downloadUrl}`;
+            }
         }
     }
 }

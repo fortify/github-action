@@ -1,30 +1,18 @@
 name: 'Run "fcli fod session login" command'
-description: 'Run "fcli fod session login" command based on environment variables'
+description: 'Run "fcli fod session login" command based on environment variables, auto-logout on job termination'
 author: 'Fortify'
 runs:
   using: composite
   steps:
-    # Define login options
-    - run: |
-        if [ -z "$FOD_URL" ]; then
-          echo "ERROR: FOD_URL environment variable must be set"; exit 1;
-        fi
-        if [ -n "${FOD_CLIENT_ID}" -a -n "${FOD_CLIENT_SECRET}" ]; then
-          echo '_FOD_LOGIN_OPTS=--url "${FOD_URL}" --client-id "${FOD_CLIENT_ID}" --client-secret "${FOD_CLIENT_SECRET}" ${EXTRA_FOD_LOGIN_OPTS}' >> $GITHUB_ENV
-        elif [ -n "${FOD_USER}" -a -n "${FOD_PASSWORD}" -a -n "${FOD_TENANT}" ]; then
-          echo '_FOD_LOGIN_OPTS=--url "${FOD_URL}" -t "${FOD_TENANT}" -u "${FOD_USER}" -p "${FOD_PASSWORD}" ${EXTRA_FOD_LOGIN_OPTS}' >> $GITHUB_ENV
-        else
-          echo "ERROR: Either FOD_CLIENT_ID and FOD_CLIENT_SECRET, or FOD_TENANT, FOD_USER and FOD_PASSWORD environment variables must be set"; exit 1;
-        fi
-      shell: bash
-    # Run fcli login command; note that the calling action/workflow is responsible for installing fcli
-    - uses: fortify/github-action/internal/run@main
+    # If not run before: check preconditions, run fcli login command, and run 
+    # post-job fcli logout command.
+    # Note that the calling action/workflow is responsible for installing fcli
+    - uses: fortify/github-action/internal/run-script@feat-1.3.0
+      if: ${{ !env._FOD_LOGGED_IN }}
       with:
-        cmd: '"${FCLI_CMD}" fod session login ${_FOD_LOGIN_OPTS}'  
-    # Clean up temporary environment variables
-    - run: |
-        echo '_FOD_LOGIN_OPTS=""' >> $GITHUB_ENV
-      shell: bash      
+        script: fod-login.sh
+        post: fod-logout.sh
+          
 branding:
   icon: 'shield'
   color: 'blue'

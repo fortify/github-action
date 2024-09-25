@@ -4,22 +4,23 @@ author: 'Fortify'
 runs:
   using: composite
   steps:
-    - uses: fortify/github-action/setup@main
+    - uses: fortify/github-action/internal/set-ssc-var-defaults@feat-1.3.0
+    - uses: fortify/github-action/setup@feat-1.3.0
       with:
         export-path: false
         fcli: action-default
-    - uses: fortify/github-action/internal/sc-sast-login@main
-    - uses: fortify/github-action/package@main
-    - uses: fortify/github-action/internal/run@main
+        debricked-cli: ${{ env.DO_DEBRICKED_SCAN=='true' && 'action-default' || 'skip' }}
+    - uses: fortify/github-action/internal/ssc-login@feat-1.3.0
+    - uses: fortify/github-action/internal/sc-sast-login@feat-1.3.0
+    - uses: fortify/github-action/package@feat-1.3.0
+    - uses: fortify/github-action/internal/run-script@feat-1.3.0
       with:
-        cmd: '"${FCLI_CMD}" sc-sast scan start --publish-to "${SSC_APPVERSION}" -p package.zip -v "${SC_SAST_SENSOR_VERSION}" --store sc_sast_scan ${EXTRA_SC_SAST_SCAN_OPTS}'
-    - uses: fortify/github-action/internal/run@main
-      if: env.DO_WAIT == 'true' || env.DO_EXPORT == 'true'
-      with:
-        cmd: '"${FCLI_CMD}" sc-sast scan wait-for ::sc_sast_scan::'
-    - uses: fortify/github-action/internal/sc-sast-logout@main
+        script: sc-sast-and-debricked-scan.sh
+      env: 
+        DO_SC_SAST_SCAN: true
+        GITHUB_TOKEN: ${{ github.token }}
     - if: env.DO_EXPORT == 'true'
-      uses: fortify/github-action/ssc-export@main
+      uses: fortify/github-action/ssc-export@feat-1.3.0
         
 branding:
   icon: 'shield'

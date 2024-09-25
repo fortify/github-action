@@ -8,6 +8,8 @@ This action exports the latest vulnerability data from an SSC application versio
 
 {{include:env-ssc-appversion.md}}
 
+{{include:env-do-export.md}}
+
 {{include:env-setup.md}}
 
 ### Sample usage
