@@ -19346,10 +19346,11 @@ class ArtifactDescriptor {
             const destDir = __classPrivateFieldGet(this, _ArtifactDescriptor_instances, "m", _ArtifactDescriptor_getDestDir).call(this);
             if (!fs.existsSync(destDir) || fs.readdirSync(destDir).length === 0) {
                 const binDir = `${destDir}/bin`;
-                const file = yield tc.downloadTool(this.downloadUrl);
+                let file = yield tc.downloadTool(this.downloadUrl);
                 yield __classPrivateFieldGet(this, _ArtifactDescriptor_instances, "m", _ArtifactDescriptor_verify).call(this, file);
                 if (this.downloadUrl.endsWith(".zip")) {
-                    yield tc.extractZip(this.addExtension(file, ".zip"), binDir);
+                    file = this.addExtension(file, ".zip");
+                    yield tc.extractZip(file, binDir);
                 }
                 else if (this.downloadUrl.endsWith(".tgz")) {
                     yield tc.extractTar(file, binDir);

@@ -277,10 +277,11 @@ class ArtifactDescriptor {
         const destDir = this.#getDestDir();
         if ( !fs.existsSync(destDir) || fs.readdirSync(destDir).length === 0 ) {
             const binDir = `${destDir}/bin`;
-            const file = await tc.downloadTool(this.downloadUrl);
+            let file = await tc.downloadTool(this.downloadUrl);
             await this.#verify(file);
             if ( this.downloadUrl.endsWith(".zip") ) {
-                await tc.extractZip(this.addExtension(file, ".zip"), binDir);
+                file = this.addExtension(file, ".zip");
+                await tc.extractZip(file, binDir);
             } else if ( this.downloadUrl.endsWith(".tgz") ) {
                 await tc.extractTar(file, binDir);
             } else if (this.downloadUrl.endsWith(".jar") ) {
