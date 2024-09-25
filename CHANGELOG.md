@@ -1,5 +1,25 @@
 # Changelog
 
+## [1.3.0](https://github.com/fortify/github-action/compare/v1.2.2...v1.3.0) (2024-09-25)
+
+
+### Features
+
+* Add `DO_POLICY_CHECK` and related inputs to enable policy checks after scan completion ([6ee342d](https://github.com/fortify/github-action/commit/6ee342da2f7ce5c98c8fa19b1fbeed461fbda260))
+* Add `DO_PR_COMMENT` and related inputs to enable Pull Request comment generation ([6ee342d](https://github.com/fortify/github-action/commit/6ee342da2f7ce5c98c8fa19b1fbeed461fbda260))
+* Add `DO_SETUP` and related inputs to enable application version/release creation/setup ([6ee342d](https://github.com/fortify/github-action/commit/6ee342da2f7ce5c98c8fa19b1fbeed461fbda260))
+* Add `EXPORT_ACTION` and `EXPORT_EXTRA_OPTS` inputs to allow for export customization ([6ee342d](https://github.com/fortify/github-action/commit/6ee342da2f7ce5c98c8fa19b1fbeed461fbda260))
+* Add ability to run and import Debricked scans into SSC (closes [#41](https://github.com/fortify/github-action/issues/41)) ([6ee342d](https://github.com/fortify/github-action/commit/6ee342da2f7ce5c98c8fa19b1fbeed461fbda260))
+* Use fcli instead of FortifyVulnerabilityExporter for vulnerability export (closes [#37](https://github.com/fortify/github-action/issues/37)) ([6ee342d](https://github.com/fortify/github-action/commit/6ee342da2f7ce5c98c8fa19b1fbeed461fbda260))
+
+
+### Bug Fixes
+
+* Allow tool artifacts to be extracted on older PowerShell versions (work-around for https://github.com/actions/toolkit/issues/1179) ([6375519](https://github.com/fortify/github-action/commit/6375519eb64590a413c417f4860be2f0d558197f))
+* Deprecate EXTRA_*_OPTS variables; these are replaced by *_EXTRA_OPTS variables for consistency ([6ee342d](https://github.com/fortify/github-action/commit/6ee342da2f7ce5c98c8fa19b1fbeed461fbda260))
+* Install Java version as required by ScanCentral Client (closes [#10](https://github.com/fortify/github-action/issues/10)) ([6ee342d](https://github.com/fortify/github-action/commit/6ee342da2f7ce5c98c8fa19b1fbeed461fbda260))
+* Update `FOD_RELEASE`/`SSC_APPVERSION` documentation with correct default values (fixes [#43](https://github.com/fortify/github-action/issues/43)) ([6ee342d](https://github.com/fortify/github-action/commit/6ee342da2f7ce5c98c8fa19b1fbeed461fbda260))
+
 ## [1.2.2](https://github.com/fortify/github-action/compare/v1.2.1...v1.2.2) (2024-03-11)
 
 
