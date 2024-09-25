@@ -18972,7 +18972,7 @@ exports.TOOLS = {
         "cmds": { "windows": "FortifyBugTrackerUtility.bat", "linux": "FortifyBugTrackerUtility", "darwin": "FortifyBugTrackerUtility" }
     },
     "debricked-cli": {
-        "versionAliases": { "action-default": "2.0.8" },
+        "versionAliases": { "action-default": "2.1.3" },
         "cmds": { "windows": "debricked.exe", "linux": "debricked", "darwin": "debricked" }
     }
 };
