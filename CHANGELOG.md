@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.1](https://github.com/fortify/github-action/compare/v1.3.0...v1.3.1) (2024-09-27)
+
+
+### Bug Fixes
+
+* Update to fcli 2.7.1 to fix FoD job summary exception ([6e269a5](https://github.com/fortify/github-action/commit/6e269a5ff311a92d2fc4e83b6eb75c7863b8de69))
+
 ## [1.3.0](https://github.com/fortify/github-action/compare/v1.2.2...v1.3.0) (2024-09-25)
 
 
