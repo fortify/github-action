@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.4.0](https://github.com/fortify/github-action/compare/v1.3.1...v1.4.0) (2024-10-25)
+
+
+### Features
+
+* SC-SAST: Add support for passing scan arguments through `SC_SAST_SCAN_EXTRA_OPTS` ([1bb5d5b](https://github.com/fortify/github-action/commit/1bb5d5b6b23f8b432db8ff43a04ba58c8477ff51))
+
+
+### Bug Fixes
+
+* FoD: Use `Development` as default value for `--sdlc-status` in `SETUP_EXTRA_OPTS` ([1bb5d5b](https://github.com/fortify/github-action/commit/1bb5d5b6b23f8b432db8ff43a04ba58c8477ff51))
+* FoD: Wait for new release to leave suspended state before attempting to start a scan ([1bb5d5b](https://github.com/fortify/github-action/commit/1bb5d5b6b23f8b432db8ff43a04ba58c8477ff51))
+
 ## [1.3.1](https://github.com/fortify/github-action/compare/v1.3.0...v1.3.1) (2024-09-27)
 
 
