@@ -4,7 +4,8 @@ author: 'Fortify'
 runs:
   using: composite
   steps:
-    - if: ${{ !env.FOD_RELEASE }}
+    - name: Set default FoD release name
+      if: ${{ !env.FOD_RELEASE }}
       run: |
         export FOD_RELEASE="${APP}:${REL}"
         echo FOD_RELEASE=$FOD_RELEASE >> $GITHUB_ENV
@@ -13,6 +14,25 @@ runs:
       env:
         APP: ${{ github.repository }}
         REL: ${{ github.head_ref || github.ref_name }}
+    - name: Configure --oss setup / -oss package options if Debricked scan enabled
+      if: ${{ env.DO_DEBRICKED_SCAN=='true' }}
+      run: |
+        # Configure --oss setup / -oss package options if Debricked scan enabled. Note that
+        # composite actions can't override user-provided environment variables, so we use
+        # a GitHub Action specific environment variable that will be automatically expanded
+        # in internal/run-script/scripts/common.sh.
+        #
+        # Platform-independent regexes looking for -oss/--oss options with word boundaries
+        # See 'Optional reading' section at https://stackoverflow.com/a/12696899
+        PKG_REGEX="(^|[^[:alnum:]_])-oss([^[:alnum:]_]|$)"
+        SETUP_REGEX="(^|[^[:alnum:]_])--oss([^[:alnum:]_]|$)"
+        if [[ ! $EXTRA_PACKAGE_OPTS =~ $PKG_REGEX && ! $PACKAGE_EXTRA_OPTS =~ $PKG_REGEX ]]; then
+          echo "GHA_PACKAGE_EXTRA_OPTS=-oss" >> $GITHUB_ENV
+        fi 
+        if [[ ! $SETUP_EXTRA_OPTS =~ $SETUP_REGEX ]]; then
+          echo "GHA_SETUP_EXTRA_OPTS=--oss" >> $GITHUB_ENV
+        fi 
+      shell: bash
                 
 branding:
   icon: 'shield'

@@ -4,6 +4,7 @@ author: 'Fortify'
 runs:
   using: composite
   steps:
+    - uses: fortify/github-action/internal/set-fod-var-defaults@main
     - uses: fortify/github-action/internal/setup-java-for-sc-client@main
     - uses: fortify/github-action/setup@main
       with:

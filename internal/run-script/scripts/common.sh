@@ -58,13 +58,17 @@ function run {
   for arg in "$@"; do
     # Expand environment variables that potentially contain multiple arguments.
     # This is commonly used for *_EXTRA_OPTS environment variables, needed to
-    # properly handle quoted arguments containing whitespace.
+    # properly handle quoted arguments containing whitespace. To allow composite
+    # actions to append extra arguments, we resolve both the given variable name
+    # and that same variable named prefixed with GHA_
     if [[ "$arg" == "__expand:"* ]]; then
-      local varName=${arg#"__expand:"}
-      if [ ! -z "${!varName}" ]; then
-        readarray -d '' expandedArgs < <(xargs printf '%s\0' <<<"${!varName}")
-        cmd+=("${expandedArgs[@]}")
-      fi
+      local varBaseName=${arg#"__expand:"}
+      for varName in $varBaseName GHA_$varBaseName; do
+        if [ ! -z "${!varName}" ]; then
+          readarray -d '' expandedArgs < <(xargs printf '%s\0' <<<"${!varName}")
+          cmd+=("${expandedArgs[@]}")
+        fi
+      done
     else
       cmd+=("$arg")
     fi
