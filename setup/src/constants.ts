@@ -15,7 +15,7 @@ export const TOOLS: Record<string, Record<string, Record<string, string>>> = {
      *            ScanCentral Client, but please double-check. 
      */
     "fcli": { 
-        "versionAliases": {"action-default": "2.8.0"},
+        "versionAliases": {"action-default": "2.9.0"},
         "cmds": {"windows": "fcli.exe", "linux": "fcli", "darwin": "fcli"}
     },
     "sc-client": { 
@@ -35,7 +35,7 @@ export const TOOLS: Record<string, Record<string, Record<string, string>>> = {
         "cmds": {"windows": "FortifyBugTrackerUtility.bat", "linux": "FortifyBugTrackerUtility", "darwin": "FortifyBugTrackerUtility"}
     },
     "debricked-cli": { 
-        "versionAliases": {"action-default": "2.1.6"},
+        "versionAliases": {"action-default": "2.1.7"},
         "cmds": {"windows": "debricked.exe", "linux": "debricked", "darwin": "debricked"}
     }
 };
