@@ -2,7 +2,7 @@
 
 {{include:p.marketing-intro.md}}
 
-{{include:action-ssc-debricked-scan.md}}
+{{include:action/ssc-debricked-scan/readme.md}}
 
 {{include:h2.support.md}}
 

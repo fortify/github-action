@@ -1,0 +1,2 @@
+          SC_SAST_SENSOR_VERSION: 24.4.0
+          # EXTRA_SC_SAST_SCAN_OPTS: 

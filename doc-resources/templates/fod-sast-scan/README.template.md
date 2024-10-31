@@ -2,7 +2,7 @@
 
 {{include:p.marketing-intro.md}}
 
-{{include:action-fod-sast-scan.md}}
+{{include:action/fod-sast-scan/readme.md}}
 
 {{include:h2.support.md}}
 

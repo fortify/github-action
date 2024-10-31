@@ -9,7 +9,7 @@
 
 
 
-<!-- START-INCLUDE:action-setup.md -->
+<!-- START-INCLUDE:action/setup/readme.md -->
 
 This action allows for setting up the Fortify tools listed below. Which tools and which versions to install, and whether to add the tool bin-directories to the system path, is controlled through action inputs as listed in the next section.
 
@@ -21,9 +21,12 @@ This action allows for setting up the Fortify tools listed below. Which tools an
 * [FortifyBugTrackerUtility](https://github.com/fortify-ps/FortifyBugTrackerUtility)
 
 
-<!-- START-INCLUDE:action-prerequisites.md -->
+<!-- START-INCLUDE:action/generic/prerequisites-h3.md -->
 
 ### Prerequisites
+
+
+<!-- START-INCLUDE:action/generic/prerequisites.md -->
 
 This action assumes the standard software packages as provided by GitHub-hosted runners to be available. If you are using self-hosted runners, you may need to install some of these software packages in order to successfully use this action. In particular, not having the following software installed is known to cause issues when running `fortify/github-action` or one of its sub-actions:
 
@@ -32,63 +35,11 @@ This action assumes the standard software packages as provided by GitHub-hosted 
 * Bash shell   
   If using Windows runners, this must be a Windows-based `bash` variant, for example as provided by MSYS2. You must make sure that this Windows-based `bash` variant is used for `run` steps that specify `shell: bash`. Actions will fail if the GitHub runner executes `bash` commands on the WSL-provided `bash.exe`
 
-<!-- END-INCLUDE:action-prerequisites.md -->
+<!-- END-INCLUDE:action/generic/prerequisites.md -->
 
 
-### Action inputs
+<!-- END-INCLUDE:action/generic/prerequisites-h3.md -->
 
-**`export-path`** - OPTIONAL    
-Whether to add the installed tools to the system PATH variable. Allowed values: `true` (default) or `false`
-
-**`tool-definitions`** - OPTIONAL
-Allows for overriding the location of the Fortify tool definitions bundle. This can be specified either as an action input or through the `TOOL_DEFINITIONS` environment variable; see the 'Action environment variable inputs' section below for details.
-
-**`fcli`** - OPTIONAL    
-The fcli version to install. Allowed values: `skip` (default value, do not install fcli), `latest`, or specific version number. Supports semantic versioning, for example `v2` will install the latest known `2.x.y` version. Version may be specified either with or without the `v` prefix, for example `v2.0.0` and `2.0.0` are semantically the same.
-
-**`sc-client`** - OPTIONAL    
-The ScanCentral Client version to install. Allowed values: `skip` (default value, do not install), `latest`, or specific version number. Supports semantic versioning, for example `23.1` will install the latest known `23.1.y` patch version. Version may be specified either with or without the `v` prefix, for example `v23.1` and `23.1` are semantically the same.
-
-**`fod-uploader`** - OPTIONAL    
-The FoDUploader version to install. Allowed values: `skip` (default value, do not install), `latest`, or specific version number. Supports semantic versioning, for example `v5` will install the latest known `5.x.y` version. Version may be specified either with or without the `v` prefix, for example `v5.4.0` and `5.4.0` are semantically the same.
-
-**`vuln-exporter`** - OPTIONAL    
-The FortifyVulnerabilityExporter version to install. Allowed values: `skip` (default value, do not install), `latest`, or specific version number. Supports semantic versioning, for example `v2` will install the latest known `2.x.y` version. Version may be specified either with or without the `v` prefix, for example `v2.0.4` and `2.0.4` are semantically the same.
-
-**`bugtracker-utility`** - OPTIONAL    
-The FortifyBugTrackerUtility version to install. Allowed values: `skip` (default value, do not install), `latest`, or specific version number. Supports semantic versioning, for example `v4` will install the latest known `4.x` version. Version may be specified either with or without the `v` prefix, for example `v4.12` and `4.12` are semantically the same.
-
-**`debricked-cli`** - OPTIONAL    
-The Debricked CLI version to install. Allowed values: `skip` (default value, do not install), `latest`, or specific version number. Supports semantic versioning, for example `v1` will install the latest known `1.x` version. Version may be specified either with or without the `v` prefix, for example `v1` and `1` are semantically the same.
-
-### Action environment variable inputs
-
-
-<!-- START-INCLUDE:env-setup.md -->
-
-**`TOOL_DEFINITIONS`** - OPTIONAL   
-Fortify tool definitions are used by this GitHub Action to determine available versions, download location and other details of various Fortify-related tools, as required for action execution. By default, the Fortify-provided tool definitions hosted at https://github.com/fortify/tool-definitions/releases/tag/v1 will be used. 
-
-This environment variable allows for overriding the default tool definitions, pointing to either a URL or local (workspace) file. For example, if GitHub workflows are not allowed to download tools from their public internet locations, customers may host the tool installation bundles on an internal server, together with a customized tool definitions bundle that lists the alternative download URLs.
-
-<!-- END-INCLUDE:env-setup.md -->
-
-
-### Action outputs
-
-For each tool being installed, the action outputs several environment variables for use by later workflow steps.
-
-**`PATH`**    
-If the `export-path` action input was set to `true` (default), the bin-directory of the installed tool will be added to the workflow `PATH` environment variable.
-
-**`<TOOL_NAME>_INSTALL_DIR`**    
-Directory where the corresponding tool was installed. `<TOOL_NAME>` corresponds to the various action inputs, but converted to uppercase and dashes replaced by underscore, for example `FOD_UPLOADER_INSTALL_DIR`.
-
-**`<TOOL_NAME>_BIN_DIR`**    
-Bin-directory that holds the executables for the corresponding tool. `<TOOL_NAME>` corresponds to the various action inputs, but converted to uppercase and dashes replaced by underscore, for example `FOD_UPLOADER_BIN_DIR`.
-
-**`<TOOL_NAME>_CMD`**    
-Fully qualified path to the (primary) executable/script for the corresponding tool. `<TOOL_NAME>` corresponds to the various action inputs, but converted to uppercase and dashes replaced by underscore, for example `FOD_UPLOADER_CMD`.
 
 ### Sample usage
 
@@ -116,7 +67,41 @@ The sample workflow below demonstrates how to configure the action for installin
         run: ${FCLI_CMD} -V
 ```
 
-<!-- END-INCLUDE:action-setup.md -->
+### Action inputs
+
+This section lists the inputs that can be specified in the `with:` clause for this GitHub Action. Any inputs marked in **bold** are required.
+
+| Action input | Description |
+| :--- | :--- |
+| export&#8209;path |  Whether to add the installed tools to the system PATH variable. Allowed values: `true` (default) or `false` |
+| tool&#8209;definitions | Allows for overriding the location of the Fortify tool definitions bundle. This can be specified either as an action input or through the `TOOL_DEFINITIONS` environment variable; see the 'Action environment variable inputs' section below for details. |
+| fcli | The fcli version to install. Allowed values: `skip` (default value, do not install fcli), `latest`, or specific version number. Supports semantic versioning, for example `v2` will install the latest known `2.x.y` version. Version may be specified either with or without the `v` prefix, for example `v2.0.0` and `2.0.0` are semantically the same. |
+| sc&#8209;client | The ScanCentral Client version to install. Allowed values: `skip` (default value, do not install), `latest`, or specific version number. Supports semantic versioning, for example `23.1` will install the latest known `23.1.y` patch version. Version may be specified either with or without the `v` prefix, for example `v23.1` and `23.1` are semantically the same. |
+| fod&#8209;uploader | The FoDUploader version to install. Allowed values: `skip` (default value, do not install), `latest`, or specific version number. Supports semantic versioning, for example `v5` will install the latest known `5.x.y` version. Version may be specified either with or without the `v` prefix, for example `v5.4.0` and `5.4.0` are semantically the same. |
+| vuln&#8209;exporter | The FortifyVulnerabilityExporter version to install. Allowed values: `skip` (default value, do not install), `latest`, or specific version number. Supports semantic versioning, for example `v2` will install the latest known `2.x.y` version. Version may be specified either with or without the `v` prefix, for example `v2.0.4` and `2.0.4` are semantically the same. |
+| bugtracker&#8209;utility | The FortifyBugTrackerUtility version to install. Allowed values: `skip` (default value, do not install), `latest`, or specific version number. Supports semantic versioning, for example `v4` will install the latest known `4.x` version. Version may be specified either with or without the `v` prefix, for example `v4.12` and `4.12` are semantically the same. |
+| debricked&#8209;cli | The Debricked CLI version to install. Allowed values: `skip` (default value, do not install), `latest`, or specific version number. Supports semantic versioning, for example `v1` will install the latest known `1.x` version. Version may be specified either with or without the `v` prefix, for example `v1` and `1` are semantically the same. |
+
+### Action environment variable inputs
+
+This section lists the environment variables that can be specified in the `env:` clause for this GitHub Action. Any environment variables marked in **bold** are required.
+
+| Environment variable | Description |
+| :--- | :--- |
+| TOOL_DEFINITIONS | Fortify tool definitions are used by this GitHub Action to determine available versions, download location and other details of various Fortify-related tools, as required for action execution. By default, the Fortify-provided tool definitions hosted at https://github.com/fortify/tool-definitions/releases/tag/v1 will be used.<br/><br/>This environment variable allows for overriding the default tool definitions, pointing to either a URL or local (workspace) file. For example, if GitHub workflows are not allowed to download tools from their public internet locations, customers may host the tool installation bundles on an internal server, together with a customized tool definitions bundle that lists the alternative download URLs. |
+
+### Action outputs
+
+For each tool being installed, the action outputs several environment variables for use by later workflow steps.
+
+| Environment variable | Description |
+| :--- | :--- |
+| PATH | If the `export-path` action input was set to `true` (default), the bin-directory of the installed tool will be added to the workflow `PATH` environment variable. |
+| &lt;TOOL_NAME&gt;_INSTALL_DIR | Directory where the corresponding tool was installed. `<TOOL_NAME>` corresponds to the various action inputs, but converted to uppercase and dashes replaced by underscore, for example `FOD_UPLOADER_INSTALL_DIR`. |
+| &lt;TOOL_NAME&gt;_BIN_DIR | Bin-directory that holds the executables for the corresponding tool. `<TOOL_NAME>` corresponds to the various action inputs, but converted to uppercase and dashes replaced by underscore, for example `FOD_UPLOADER_BIN_DIR`. |
+| &lt;TOOL_NAME&gt;_CMD | Fully qualified path to the (primary) executable/script for the corresponding tool. `<TOOL_NAME>` corresponds to the various action inputs, but converted to uppercase and dashes replaced by underscore, for example `FOD_UPLOADER_CMD`. |
+
+<!-- END-INCLUDE:action/setup/readme.md -->
 
 
 

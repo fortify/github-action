@@ -9,14 +9,17 @@
 
 
 
-<!-- START-INCLUDE:action-package.md -->
+<!-- START-INCLUDE:action/package/readme.md -->
 
 This action packages application source code using [ScanCentral Client](https://www.microfocus.com/documentation/fortify-software-security-center/2420/SC_SAST_Help_24.2.0/index.htm#cli/package-cmd.htm). The output package is saved as `package.zip`.
 
 
-<!-- START-INCLUDE:action-prerequisites.md -->
+<!-- START-INCLUDE:action/generic/prerequisites-h3.md -->
 
 ### Prerequisites
+
+
+<!-- START-INCLUDE:action/generic/prerequisites.md -->
 
 This action assumes the standard software packages as provided by GitHub-hosted runners to be available. If you are using self-hosted runners, you may need to install some of these software packages in order to successfully use this action. In particular, not having the following software installed is known to cause issues when running `fortify/github-action` or one of its sub-actions:
 
@@ -25,31 +28,10 @@ This action assumes the standard software packages as provided by GitHub-hosted 
 * Bash shell   
   If using Windows runners, this must be a Windows-based `bash` variant, for example as provided by MSYS2. You must make sure that this Windows-based `bash` variant is used for `run` steps that specify `shell: bash`. Actions will fail if the GitHub runner executes `bash` commands on the WSL-provided `bash.exe`
 
-<!-- END-INCLUDE:action-prerequisites.md -->
+<!-- END-INCLUDE:action/generic/prerequisites.md -->
 
 
-### Action environment variable inputs
-
-
-<!-- START-INCLUDE:env-package.md -->
-
-**`EXTRA_PACKAGE_OPTS` (deprecated), `PACKAGE_EXTRA_OPTS`** - OPTIONAL   
-By default, this action runs `scancentral package -o package.zip` to package application source code. Based on the  automated build tool detection feature provided by ScanCentral Client, this default `scancentral` command is often sufficient. Depending on your build setup, you may however need to configure the `PACKAGE_EXTRA_OPTS` environment variable to specify additional packaging options. 
-
-As an example, if the build file that you want to use for packaging doesn't adhere  to common naming conventions, you can configure the `-bf <custom build file>` option using the `PACKAGE_EXTRA_OPTS` environment variable. See [Command-line options for the package command](https://www.microfocus.com/documentation/fortify-software-security-center/2420/SC_SAST_Help_24.2.0/index.htm#cli/package-cmd.htm) for more information on available options.
-
-<!-- END-INCLUDE:env-package.md -->
-
-
-
-<!-- START-INCLUDE:env-setup.md -->
-
-**`TOOL_DEFINITIONS`** - OPTIONAL   
-Fortify tool definitions are used by this GitHub Action to determine available versions, download location and other details of various Fortify-related tools, as required for action execution. By default, the Fortify-provided tool definitions hosted at https://github.com/fortify/tool-definitions/releases/tag/v1 will be used. 
-
-This environment variable allows for overriding the default tool definitions, pointing to either a URL or local (workspace) file. For example, if GitHub workflows are not allowed to download tools from their public internet locations, customers may host the tool installation bundles on an internal server, together with a customized tool definitions bundle that lists the alternative download URLs.
-
-<!-- END-INCLUDE:env-setup.md -->
+<!-- END-INCLUDE:action/generic/prerequisites-h3.md -->
 
 
 ### Sample usage
@@ -63,11 +45,20 @@ The sample workflow below demonstrates how to configure the action for running a
       - name: Package source code
         uses: fortify/github-action/package@v1
         env:
-          # PACKAGE_EXTRA_OPTS: -bf custom-pom.xml
+          # PACKAGE_EXTRA_OPTS: -oss -bt mvn
           # TOOL_DEFINITIONS: https://ftfy.mycompany.com/tool-definitions/v1/tool-definitions.yaml.zip
 ```
 
-<!-- END-INCLUDE:action-package.md -->
+### Action environment variable inputs
+
+This section lists the environment variables that can be specified in the `env:` clause for this GitHub Action. Any environment variables marked in **bold** are required.
+
+| Environment variable | Description |
+| :--- | :--- |
+|PACKAGE_EXTRA_OPTS<br/>EXTRA_PACKAGE_OPTS| By default, this action runs `scancentral package -o package.zip` to package application source code. Use `PACKAGE_EXTRA_OPTS` to specify additional packaging options, for example `PACKAGE_EXTRA_OPTS: -bt mvn -bf <custom build file>`. See [Command-line options for the package command](https://www.microfocus.com/documentation/fortify-software-security-center/2420/SC_SAST_Help_24.2.0/index.htm#cli/package-cmd.htm) for more information on available options. Note that `EXTRA_PACKAGE_OPTS` is deprecated; please use `PACKAGE_EXTRA_OPTS`.|
+| TOOL_DEFINITIONS | Fortify tool definitions are used by this GitHub Action to determine available versions, download location and other details of various Fortify-related tools, as required for action execution. By default, the Fortify-provided tool definitions hosted at https://github.com/fortify/tool-definitions/releases/tag/v1 will be used.<br/><br/>This environment variable allows for overriding the default tool definitions, pointing to either a URL or local (workspace) file. For example, if GitHub workflows are not allowed to download tools from their public internet locations, customers may host the tool installation bundles on an internal server, together with a customized tool definitions bundle that lists the alternative download URLs. |
+
+<!-- END-INCLUDE:action/package/readme.md -->
 
 
 

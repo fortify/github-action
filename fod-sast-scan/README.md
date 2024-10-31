@@ -9,7 +9,7 @@
 
 
 
-<!-- START-INCLUDE:action-fod-sast-scan.md -->
+<!-- START-INCLUDE:action/fod-sast-scan/readme.md -->
 
 This action performs a SAST scan on Fortify on Demand (FoD). If software composition analysis of open source has been purchased and configured on the applicable release, this action can be used to perform a combined SAST and SCA (open source) scan. 
 
@@ -22,9 +22,12 @@ The SAST and optional open source scan performed by this action consists of the 
 * Optionally export scan results to the GitHub Code Scanning dashboard
 
 
-<!-- START-INCLUDE:action-prerequisites.md -->
+<!-- START-INCLUDE:action/generic/prerequisites-h3.md -->
 
 ### Prerequisites
+
+
+<!-- START-INCLUDE:action/generic/prerequisites.md -->
 
 This action assumes the standard software packages as provided by GitHub-hosted runners to be available. If you are using self-hosted runners, you may need to install some of these software packages in order to successfully use this action. In particular, not having the following software installed is known to cause issues when running `fortify/github-action` or one of its sub-actions:
 
@@ -33,161 +36,10 @@ This action assumes the standard software packages as provided by GitHub-hosted 
 * Bash shell   
   If using Windows runners, this must be a Windows-based `bash` variant, for example as provided by MSYS2. You must make sure that this Windows-based `bash` variant is used for `run` steps that specify `shell: bash`. Actions will fail if the GitHub runner executes `bash` commands on the WSL-provided `bash.exe`
 
-<!-- END-INCLUDE:action-prerequisites.md -->
+<!-- END-INCLUDE:action/generic/prerequisites.md -->
 
 
-Apart from the generic action prerequisites listed above, the following prerequisites apply to this specific action:
-
-* The appropriate application release exists on FoD and has been configured for SAST scans. Future versions of this action may add support for automating app/release creation and scan setup.
-* If open source scanning has been enabled in the FoD SAST scan configuration, be sure to pass the `-oss` option through the `PACKAGE_EXTRA_OPTS` environment variable.
-
-### Action environment variable inputs
-
-
-<!-- START-INCLUDE:env-fod-sast-scan.md -->
-
-
-
-<!-- START-INCLUDE:env-fod-login.md -->
-
-
-<!-- START-INCLUDE:env-fod-connection.md -->
-
-**`FOD_URL`** - REQUIRED   
-Fortify on Demand URL, for example https://ams.fortify.com. Note: Using GitHub Secrets to define this URL may cause links back to FoD to be rendered incorrectly, for example in GitHub Action workflow summaries. It is highly recommended to either hard-code the URL in your workflow, or to use [GitHub Variables](https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/store-information-in-variables)  instead of GitHub Secrets. 
-
-**`FOD_CLIENT_ID` & `FOD_CLIENT_SECRET`** - REQUIRED*    
-Required when authenticating with an API key: FoD Client ID (API key) and Secret (API secret).
-
-**`FOD_TENANT`, `FOD_USER` & `FOD_PASSWORD`** - REQUIRED*    
-Required when authenticating with user credentials: FoD tenant, user and password. It's recommended to use a Personal Access Token instead of an actual user password.
-
-<!-- END-INCLUDE:env-fod-connection.md -->
-
-
-**`EXTRA_FOD_LOGIN_OPTS` (deprecated), `FOD_LOGIN_EXTRA_OPTS`** - OPTIONAL   
-Extra FoD login options, for example for disabling SSL checks or changing connection time-outs; see [`fcli fod session login` documentation](https://fortify.github.io/fcli/v2.9.0//manpage/fcli-fod-session-login.html)
-
-<!-- END-INCLUDE:env-fod-login.md -->
-
-
-
-<!-- START-INCLUDE:env-fod-release.md -->
-
-**`FOD_RELEASE`** - OPTIONAL    
-Fortify on Demand release to use with this action. This can be specified either as a numeric release id, `<app-name>:<release-name>` (for non-microservices applications) or `<app-name>:<microservice-name>:<release-name>` (for microservices applications). Default value is [`<github.repository>:<github.head_ref || github.ref_name>`](https://docs.github.com/en/actions/learn-github-actions/contexts#github-context), for example `myOrg/myRepo:myBranch`. Note that you'll need to explicitly configure `FOD_RELEASE` for microservices applications, as the default value lacks a microservice name.
-
-<!-- END-INCLUDE:env-fod-release.md -->
-
-
-
-<!-- START-INCLUDE:env-do-setup.md -->
-
-**`DO_SETUP`, `SETUP_ACTION`, `SETUP_EXTRA_OPTS`** - OPTIONAL    
-If `DO_SETUP` is set to `true` (implied if any of the other two `SETUP_*` variables are set), this action will set up the FoD release / SSC application version, creating those if they do not yet exist, using the fcli-provided [FoD `setup-release`](https://fortify.github.io/fcli/v2.9.0/fod-actions.html#_setup_release)  or [SSC `setup-appversion`](https://fortify.github.io/fcli/v2.9.0/ssc-actions.html#_setup_appversion) action, or, if specified, the custom fcli action specified through `SETUP_ACTION`. `SETUP_ACTION` may point to a local file or URL; this custom fcli action must support (at least) the exact same action parameters (including any environment variable based default values for those parameters) as the built-in fcli action. Any extra options for the fcli action can be passed through the `SETUP_EXTRA_OPTS` environment variable, for example to copy from an existing release/application version, or to allow an unsigned custom action to be used.
-
-Note that if setup is enabled, `FOD_RELEASE` or `SSC_APPVERSION` must be configured with a qualified release/version name; you cannot use release/version id.
-
-<!-- END-INCLUDE:env-do-setup.md -->
-
-
-
-<!-- START-INCLUDE:env-fod-package.md -->
-
-**`EXTRA_PACKAGE_OPTS` (deprecated), `PACKAGE_EXTRA_OPTS`** - OPTIONAL     
-By default, this action runs `scancentral package -o package.zip` to package application source code. The `PACKAGE_EXTRA_OPTS` environment variable can be used to specify additional packaging options. 
-
-If FoD Software Composition Analysis has been purchased and configured on the applicable release, you'll need to pass the `-oss` option through this environment variable to generate and package the additional dependency files required. 
-
-Based on the  automated build tool detection feature provided by ScanCentral Client, this default `scancentral` command is often sufficient to properly package application source code. Depending on your build setup, you may however need to configure the `PACKAGE_EXTRA_OPTS` environment variable to specify additional packaging options. 
-
-As an example, if the build file that you want to use for packaging doesn't adhere  to common naming conventions, you can configure the `-bf <custom build file>` option using the `PACKAGE_EXTRA_OPTS` environment variable. See [Command-line options for the package command](https://www.microfocus.com/documentation/fortify-software-security-center/2420/SC_SAST_Help_24.2.0/index.htm#cli/package-cmd.htm) for more information on available options.
-
-<!-- END-INCLUDE:env-fod-package.md -->
-
-
-**`EXTRA_FOD_SAST_SCAN_OPTS` (deprecated), `FOD_SAST_SCAN_EXTRA_OPTS`** - OPTIONAL    
-Extra FoD SAST scan options; see [`fcli fod sast-scan start` documentation](https://fortify.github.io/fcli/v2.9.0//manpage/fcli-fod-sast-scan-start.html)
-
-
-<!-- START-INCLUDE:env-do-wait.md -->
-
-**`DO_WAIT`** - OPTIONAL    
-By default, this action will not wait until scans have been completed. To have the workflow wait until all scans have been completed, set the `DO_WAIT` environment variable to `true`. Note that some other environment variables imply `DO_WAIT`, for example when exporting vulnerability data or generating job summaries. This behavior is documented in the applicable environment variable descriptions.
-
-<!-- END-INCLUDE:env-do-wait.md -->
-
-
-
-<!-- START-INCLUDE:env-do-policy-check.md -->
-
-**`DO_POLICY_CHECK`, `CHECK_POLICY_ACTION`, `CHECK_POLICY_EXTRA_OPTS`** - OPTIONAL    
-If `DO_POLICY_CHECK` is set to `true` (implied if any of the other two `CHECK_POLICY_*` variables are set, and implies `DO_WAIT`), a policy check will be run after scan completion using the fcli-provided [FoD `check-policy`](https://fortify.github.io/fcli/v2.9.0/fod-actions.html#_check_policy) or [SSC `check-policy`](https://fortify.github.io/fcli/v2.9.0/ssc-actions.html#_check_policy) action or, if specified, the custom fcli action specified through `CHECK_POLICY_ACTION`. `POLICY_CHECK_ACTION` may point to a local file or URL; this custom fcli action must accept at least the `--av` (for SSC) or `--rel` (for FoD) option. Any extra options for this custom fcli action can be passed through the `CHECK_POLICY_EXTRA_OPTS` environment variable, which may include fcli options to allow unsigned custom actions to be used. Note that for FoD, the fcli-provided `check-policy` action will check the outcome of the FoD security policy. As SSC doesn't provide any similar security policy features, the fcli-provided action executes some sample policy checks that will likely fail in many cases. As security policies are different for every Fortify customer, you should consider implementing your own custom fcli policy check action(s), unless FoD-provided security policy functionality is sufficient.
-
-<!-- END-INCLUDE:env-do-policy-check.md -->
-
-
-
-<!-- START-INCLUDE:env-do-job-summary.md -->
-
-**`DO_JOB_SUMMARY`, `JOB_SUMMARY_ACTION`, `JOB_SUMMARY_EXTRA_OPTS`** - OPTIONAL    
-If `DO_JOB_SUMMARY` is set to `true` (implied if any of the other two `JOB_SUMMARY_*` variables are set, and implies `DO_WAIT`), this action will generate a job summary listing scan status and issue counts using the fcli-provided [FoD `release-summary`](https://fortify.github.io/fcli/v2.9.0/fod-actions.html#_release_summary) or [SSC `appversion-summary`](https://fortify.github.io/fcli/v2.9.0/ssc-actions.html#_appversion_summary) action, or, if specified, the custom fcli action specified through `JOB_SUMMARY_ACTION`. `JOB_SUMMARY_ACTION` may point to a local file or URL; this custom fcli action must support (at least) the exact same action parameters (including any environment variable based default values for those parameters) as the built-in fcli action. Any extra options for the fcli action can be passed through the `JOB_SUMMARY_EXTRA_OPTS` environment variable, for example to specify the SSC filter sets to be included in the summary, or to allow an unsigned custom action to be used.
-
-<!-- END-INCLUDE:env-do-job-summary.md -->
-
-
-
-<!-- START-INCLUDE:env-do-export.md -->
-
-**`DO_EXPORT`, `EXPORT_ACTION`, `EXPORT_EXTRA_OPTS`** - OPTIONAL    
-If `DO_EXPORT` is set to `true` (implied if any of the other two `EXPORT_*` variables are set, and implies `DO_WAIT`) or when explicitly invoking the `fortify/github-action/fod-export` or `fortify/github-action/ssc-export` actions, this action will will export scan results to the GitHub Security Code Scanning dashboard using the fcli-provided [FoD `github-sast-report`](https://fortify.github.io/fcli/v2.9.0/fod-actions.html#_github_sast_report) or [SSC `github-sast-action`](https://fortify.github.io/fcli/v2.9.0/ssc-actions.html#_github_sast_report) action or, if specified, the custom fcli action specified through `EXPORT_ACTION`.  `EXPORT_ACTION` may point to a local file or URL; this custom fcli action must support (at least) the exact same action parameters (including any environment variable based default values for those parameters) as the built-in fcli action. Any extra options for the fcli action can be passed through the `EXPORT_EXTRA_OPTS` environment variable, for example to specify the SSC filter set from which to load issue data, or to allow an unsigned custom action to be used.
-
-Note that this may require a [GitHub Advanced Security](https://docs.github.com/en/get-started/learning-about-github/about-github-advanced-security) subscription, unless you're running this action on a public github.com repository. GitHub only supports importing SAST results; other results will not exported to GitHub.
-
-<!-- END-INCLUDE:env-do-export.md -->
-
-
-
-<!-- START-INCLUDE:env-do-pr-comment.md -->
-
-**`DO_PR_COMMENT`, `PR_COMMENT_ACTION`, `PR_COMMENT_EXTRA_OPTS`** - OPTIONAL *(PREVIEW)*    
-If `DO_PR_COMMENT` is set to `true` (implied if any of the other two `PR_COMMENT_*` variables are set, and implies `DO_WAIT`), this action will generate a pull request comment listing new, re-introduced and removed issues using the fcli-provided [FoD `github-pr-comment`](https://fortify.github.io/fcli/v2.9.0/fod-actions.html#_github_pr_comment) or [SSC `github-pr-comment`](https://fortify.github.io/fcli/v2.9.0/ssc-actions.html#_github_pr_comment) action or, if specified, the custom fcli action specified through `PR_COMMENT_ACTION`. `PR_COMMENT_ACTION` may point to a local file or URL; this custom fcli action must support (at least) the exact same action parameters (including any environment variable based default values for those parameters) as the built-in fcli action. Any extra options for the fcli action can be passed through the `PR_COMMENT_EXTRA_OPTS` environment variable, for example to specify the SSC filter set from which to load issue data, or to allow an unsigned custom action to be used.
-
-Note that pull request comments will only be generated under the following conditions:
-
-* Standard `GITHUB_REF_NAME` environment variable points to a pull request, which is only the case on GitHub `pull_request` triggers and not for example `manual` triggers (even if the branch is associated with a current pull request).
-* All other standard GitHub environment variables like `GITHUB_TOKEN`, `GITHUB_REPOSITORY` and `GITHUB_SHA` are set.
-
-PR comments are generated by comparing scan results from the current GitHub Action run against the previous scan in the same application version/release; it won't detect any new/removed issues from older scans. For best results, you should configure your workflow as follows:
-
-- For any branches for which you might want to generate PR comments, have the workflow trigger only on `pull_request` events. Note that you can have a single workflow that is triggered on both `push` events for your main branch, and only `pull_request` events for all other branches.
-- Don't set `FOD_RELEASE` or `SSC_APPVERSION`, to use the default value that corresponds to repository and branch name.
-- Set `DO_RELEASE_SETUP` or `DO_APPVERSION_SETUP` to `true`, to allow a branch-specific application version/release to be automatically created.
-- Include `--copy-from` option in `RELEASE_SETUP_EXTRA_OPTS` or `APPVERSION_SETUP_EXTRA_OPTS` to copy state from the version/release that represents the PR target branch into the newly created application version/release.
-
-With a setup like this, whenever a new PR is created, the GitHub Action will:
-- Create a new application version/release named `<repository owner>/<repository name>:<branch name>`.
-- Copy state from the application version/release identified by the `--copy-from` option to this new application version/release.
-- Run a new scan of the branch associated with the current PR, and upload results to the application version/release created above.
-- Generate a PR comment listing new and removed issues, based on comparing the results of the new scan that was run in the previous step against the scan results that were copied from the version/release identified by the `--copy-from` option.
-
-If any subsequent updates are pushed to the PR and the workflow is also being triggered on PR update events, the GitHub Action will run a new scan of the branch associated with the PR, publish results to the existing branch-specific application version/release, and generate a new PR comment that shows any new/removed issues in the new scan compared to the previous scan for the same branch/PR.
-
-<!-- END-INCLUDE:env-do-pr-comment.md -->
-
-
-<!-- END-INCLUDE:env-fod-sast-scan.md -->
-
-
-
-<!-- START-INCLUDE:env-setup.md -->
-
-**`TOOL_DEFINITIONS`** - OPTIONAL   
-Fortify tool definitions are used by this GitHub Action to determine available versions, download location and other details of various Fortify-related tools, as required for action execution. By default, the Fortify-provided tool definitions hosted at https://github.com/fortify/tool-definitions/releases/tag/v1 will be used. 
-
-This environment variable allows for overriding the default tool definitions, pointing to either a URL or local (workspace) file. For example, if GitHub workflows are not allowed to download tools from their public internet locations, customers may host the tool installation bundles on an internal server, together with a customized tool definitions bundle that lists the alternative download URLs.
-
-<!-- END-INCLUDE:env-setup.md -->
+<!-- END-INCLUDE:action/generic/prerequisites-h3.md -->
 
 
 ### Sample usage
@@ -207,13 +59,112 @@ The sample workflow below demonstrates how to configure the action for running a
           FOD_PASSWORD: ${{secrets.FOD_PAT}}
           # FOD_LOGIN_EXTRA_OPTS: --socket-timeout=60s
           # FOD_RELEASE: MyApp:MyRelease
-          # PACKAGE_EXTRA_OPTS: -oss
-          # DO_WAIT: true
+          # DO_SETUP: true
+          # SETUP_ACTION: https://scm.my.org/shared-repos/fcli-actions/setup.yaml
+          # SETUP_EXTRA_OPTS: --on-unsigned=ignore
+          # PACKAGE_EXTRA_OPTS: -oss -bt mvn
+          # FOD_SAST_SCAN_EXTRA_OPTS:
+          # DO_DEBRICKED_SCAN: true
+          # DO_POLICY_CHECK: true
+          # POLICY_CHECK_ACTION: https://scm.my.org/shared-repos/fcli-actions/check-policy.yaml
+          # POLICY_CHECK_EXTRA_OPTS: --on-unsigned=ignore
+          # DO_POLICY_CHECK: true
+          # POLICY_CHECK_ACTION: https://scm.my.org/shared-repos/fcli-actions/check-policy.yaml
+          # POLICY_CHECK_EXTRA_OPTS: --on-unsigned=ignore
+          # DO_JOB_SUMMARY: true
+          # JOB_SUMMARY_ACTION: https://scm.my.org/shared-repos/fcli-actions/job-summary.yaml
+          # JOB_SUMMARY_EXTRA_OPTS: --on-unsigned=ignore
+          # DO_PR_COMMENT: true
+          # PR_COMMENT_ACTION: https://scm.my.org/shared-repos/fcli-actions/github-pr-comment.yaml
+          # PR_COMMENT_EXTRA_OPTS: --on-unsigned=ignore
           # DO_EXPORT: true
+          # EXPORT_ACTION: https://scm.my.org/shared-repos/fcli-actions/github-sast-report.yaml
+          # EXPORT_EXTRA_OPTS: --on-unsigned=ignore
           # TOOL_DEFINITIONS: https://ftfy.mycompany.com/tool-definitions/v1/tool-definitions.yaml.zip
 ```
 
-<!-- END-INCLUDE:action-fod-sast-scan.md -->
+
+### Action environment variable inputs
+
+This section lists the environment variables that can be specified in the `env:` clause for this GitHub Action. Any environment variables marked in **bold** are required.
+
+| Environment variable | Description |
+| :--- | :--- |
+| **FOD_URL** | Fortify on Demand URL, for example https://ams.fortify.com. Note: Using GitHub Secrets to define this URL may cause links back to FoD to be rendered incorrectly, for example in GitHub Action workflow summaries. It is highly recommended to either hard-code the URL in your workflow, or to use [GitHub Variables](https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/store-information-in-variables) instead of GitHub Secrets. |
+| **FOD_CLIENT_ID**<br>**FOD_CLIENT_SECRET** | Required when authenticating with an API key: FoD Client ID (API key) and Secret (API secret). |
+| **FOD_TENANT**<br/>**FOD_USER**<br/>**FOD_PASSWORD** | Required when authenticating with user credentials: FoD tenant, user and password. It's recommended to use a Personal Access Token instead of an actual user password. |
+| FOD_LOGIN_EXTRA_OPTS<br/>EXTRA_FOD_LOGIN_OPTS | Extra FoD login options, for example for disabling SSL checks or changing connection time-outs; see [`fcli fod session login` documentation](https://fortify.github.io/fcli/v2.9.0//manpage/fcli-fod-session-login.html) . Note that `EXTRA_FOD_LOGIN_OPTS` is deprecated; please use `FOD_LOGIN_EXTRA_OPTS`.|
+| FOD_RELEASE | Fortify on Demand release to use with this action. This can be specified either as a numeric release id, `<app-name>:<release-name>` (for non-microservices applications) or `<app-name>:<microservice-name>:<release-name>` (for microservices applications). Default value is based on repository and branch name, for example `myOrg/myRepo:myBranch`. Note that you'll need to explicitly configure `FOD_RELEASE` for microservices applications, as the default value lacks a microservice name. |
+|DO_SETUP<br/>SETUP_ACTION<br/>SETUP_EXTRA_OPTS|If `DO_SETUP` is set to `true` (implied if any of the other two `SETUP_*` variables are set), the FoD application and/or release will be automatically created if they do not yet exist and static scan settings will be configured if not configured already, using the fcli-provided [FoD `setup-release`](https://fortify.github.io/fcli/v2.9.0/fod-actions.html#_setup_release) or, if specified, the custom fcli action specified through `SETUP_ACTION`. Extra options for the fcli action can be passed through the `SETUP_EXTRA_OPTS` environment variable, for example to copy state from an existing release using the `--copy-from` option, or to allow an unsigned custom action to be used. If the FoD application may need to be created, you must configure at least the `--app-owner` option. Note that if setup is enabled, `FOD_RELEASE` must be configured with a qualified release name; you cannot use release id. Please see the [FoD Fcli Actions](#fod-fcli-actions) section below for more details.|
+|PACKAGE_EXTRA_OPTS<br/>EXTRA_PACKAGE_OPTS| By default, this action runs `scancentral package -o package.zip` to package application source code. Use `PACKAGE_EXTRA_OPTS` to specify additional packaging options, for example `PACKAGE_EXTRA_OPTS: -bt mvn -bf <custom build file>`. See [Command-line options for the package command](https://www.microfocus.com/documentation/fortify-software-security-center/2420/SC_SAST_Help_24.2.0/index.htm#cli/package-cmd.htm) for more information on available options. Note that `EXTRA_PACKAGE_OPTS` is deprecated; please use `PACKAGE_EXTRA_OPTS`.|
+|FOD_SAST_SCAN_EXTRA_OPTS<br/>EXTRA_FOD_SAST_SCAN_OPTS|Extra FoD SAST scan options; see [`fcli fod sast-scan start` documentation](https://fortify.github.io/fcli/v2.9.0//manpage/fcli-fod-sast-scan-start.html). Note that `EXTRA_FOD_SAST_SCAN_OPTS` is deprecated; please use `FOD_SAST_SCAN_EXTRA_OPTS`.|
+|DO_DEBRICKED_SCAN|Configure the static scan to also run an open-source scan. Depending on FoD configuration, this may be either a Debricked or a Sonatype scan. Effectively, this adds dependency data to the scan payload, and enables the open-source scan setting in the FoD scan configuration. Note that any existing FoD scan configuration will not be updated, so if the scan has already been configured in FoD, an open-source scan will only be performed if previously enabled in the existing scan configuration.|
+| DO_WAIT | By default, this action will not wait until scans have been completed. To have the workflow wait until all scans have been completed, set the `DO_WAIT` environment variable to `true`. Note that some other environment variables imply `DO_WAIT`, for example when exporting vulnerability data or generating job summaries. This behavior is documented in the applicable environment variable descriptions. |
+|DO_POLICY_CHECK<br/>CHECK_POLICY_ACTION<br/>CHECK_POLICY_EXTRA_OPTS|If `DO_POLICY_CHECK` is set to `true` (implied if any of the other two `CHECK_POLICY_*` variables are set, and implies `DO_WAIT`), a policy check will be run after scan completion using the fcli-provided [FoD `check-policy`](https://fortify.github.io/fcli/v2.9.0/fod-actions.html#_check_policy) or, if specified, the custom fcli action specified through `CHECK_POLICY_ACTION`. Extra options for a custom fcli action can be passed through the `CHECK_POLICY_EXTRA_OPTS` environment variable, which may include fcli options to allow unsigned custom actions to be used. Please see the [FoD Fcli Actions](#fod-fcli-actions) section below for more details.|
+|DO_JOB_SUMMARY<br/>JOB_SUMMARY_ACTION<br/>JOB_SUMMARY_EXTRA_OPTS|If `DO_JOB_SUMMARY` is set to `true` (implied if any of the other two `JOB_SUMMARY_*` variables are set, and implies `DO_WAIT`), a job summary listing scan status and issue counts will be generated using the fcli-provided [FoD `release-summary`](https://fortify.github.io/fcli/v2.9.0/fod-actions.html#_release_summary) or, if specified, the custom fcli action specified through `JOB_SUMMARY_ACTION`. Extra options for the fcli action can be passed through the `JOB_SUMMARY_EXTRA_OPTS` environment variable, for example to allow an unsigned custom action to be used. Please see the [FoD Fcli Actions](#fod-fcli-actions) section below for more details. |
+| DO_EXPORT<br/>EXPORT_ACTION<br/>EXPORT_EXTRA_OPTS | If `DO_EXPORT` is set to `true` (implied if any of the other two `EXPORT_*` variables are set, and implies `DO_WAIT`), scan results will be exported to the GitHub Security Code Scanning dashboard using the fcli-provided [FoD `github-sast-report`](https://fortify.github.io/fcli/v2.9.0/fod-actions.html#_github_sast_report) action or, if specified, the custom fcli action specified through `EXPORT_ACTION`. Extra options for the fcli action can be passed through the `EXPORT_EXTRA_OPTS` environment variable, for example to to allow an unsigned custom action to be used. Please see the [FoD Fcli Actions](#fod-fcli-actions) section below for more details.<br/><br/>Note that this may require a [GitHub Advanced Security](https://docs.github.com/en/get-started/learning-about-github/about-github-advanced-security) subscription, unless you're running this action on a public github.com repository. GitHub only supports importing SAST results; other results will not exported to GitHub. |
+|(PREVIEW)<br/>DO_PR_COMMENT<br/>PR_COMMENT_ACTION<br/>PR_COMMENT_EXTRA_OPTS|If `DO_PR_COMMENT` is set to `true` (implied if any of the other two `PR_COMMENT_*` variables are set, and implies `DO_WAIT`), a pull request comment listing new, re-introduced and removed issues will be generated using the fcli-provided [FoD `github-pr-comment`](https://fortify.github.io/fcli/v2.9.0/fod-actions.html#_github_pr_comment) action or, if specified, the custom fcli action specified through `PR_COMMENT_ACTION`. Extra options for the fcli action can be passed through the `PR_COMMENT_EXTRA_OPTS` environment variable, for example to allow an unsigned custom action to be used. Please see the [FoD Fcli Actions](#fod-fcli-actions) and [FoD Pull Request Comments](#fod-pull-request-comments) sections below for more details.|
+| TOOL_DEFINITIONS | Fortify tool definitions are used by this GitHub Action to determine available versions, download location and other details of various Fortify-related tools, as required for action execution. By default, the Fortify-provided tool definitions hosted at https://github.com/fortify/tool-definitions/releases/tag/v1 will be used.<br/><br/>This environment variable allows for overriding the default tool definitions, pointing to either a URL or local (workspace) file. For example, if GitHub workflows are not allowed to download tools from their public internet locations, customers may host the tool installation bundles on an internal server, together with a customized tool definitions bundle that lists the alternative download URLs. |
+
+
+<!-- START-INCLUDE:action/generic/fod/fod-fcli-actions.md -->
+
+### FoD Fcli Actions
+
+<!-- Note that similar instructions are provided for SSC in ssc-fcli-actions.md; when updating these instructions, ssc-fcli-actions.md will likely need to be updated accordingly -->
+
+
+<!-- START-INCLUDE:action/generic/fcli-actions.md -->
+
+As indicated in the [Action environment variable inputs](#action-environment-variable-inputs) section above, this GitHub Action utilizes one or more fcli actions to perform certain activities. These fcli-provided actions are used as building blocks that can be re-used across different CI/CD platforms to provide consistent behavior across those platforms. This GitHub Action also provides the ability to override the default built-in fcli actions with custom fcli actions, allowing for rich customization capabilities. For example, such custom fcli actions could define different default values for some action options, perform some additional activities, and/or provide fully customized behavior.
+
+For more information on fcli actions and custom action development, please see the [fcli action documentation](https://fortify.github.io/fcli/v2.9.0/#_actions). Such custom actions may be hosted either on the local file system (for example stored in your source code repository) or some remote location; the `*_ACTION` environment variables may point to either a local file or URL. To easily share custom actions across multiple pipelines, you may want to consider hosting these in a dedicated source code repository that's accessible by all pipelines. This provides an easy hosting location, and allows for easy maintenance of such custom actions.
+
+<!-- END-INCLUDE:action/generic/fcli-actions.md -->
+
+
+When developing custom actions, please note that the GitHub Action expects certain action parameters to be supported by such a custom action. A common example is the `--rel` / `--release` command-line option, which the GitHub Action will automatically pass to most or all fcli actions to specify the FoD release to operate on. What command-line options are automatically passed to the fcli action may also depend on GitHub Action configuration. If the custom action doesn't support those action parameters, the action invocation will fail. You will also need to consider any options explicitly configured through the `*_EXTRA_OPTS` environment variable; for backward compatibility with existing GitHub Action workflows that have been configured with some extra action options, you should be careful with removing or renaming any action parameters.
+
+Future versions of this documentation may provide more details on what command-line options are automatically passed to fcli actions. Until then, you'll need to review workflow logs and/or GitHub Action source code to identify what action parameters are being automatically passed by the GitHub Action. Alternatively, you may want to consider simply duplicating all action parameters from the fcli built-in action, even if some of those parameters will not be used by your custom action.
+
+<!-- END-INCLUDE:action/generic/fod/fod-fcli-actions.md -->
+
+
+
+<!-- START-INCLUDE:action/generic/fod/fod-pr.md -->
+
+### FoD Pull Request Comments
+
+<!-- Note that similar instructions are provided for SSC in ssc-pr.md; when updating these instructions, ssc-pr.md will likely need to be updated accordingly -->
+
+This section provides more information on Pull Request Comments that will be generated if `DO_PR_COMMENT` is set to `true`. This information is based on the fcli-provided [FoD `github-pr-comment`](https://fortify.github.io/fcli/v2.9.0/fod-actions.html#_github_pr_comment) action and may not apply when using a custom fcli action through `PR_COMMENT_ACTION`. 
+
+**Important note:** Pull Request comments are currently considered preview functionality. Configuration settings, behavior and output may significantly change in future GitHub Action releases as we work on improving and fine-tuning our PR decoration capabilities.
+
+Pull request comments will only be generated under the following conditions:
+
+* Standard `GITHUB_REF_NAME` environment variable points to a pull request, which is only the case on GitHub `pull_request` triggers and not for example `manual` triggers (even if the branch is associated with a current pull request).
+* All other standard GitHub environment variables like `GITHUB_TOKEN`, `GITHUB_REPOSITORY` and `GITHUB_SHA` are set.
+
+PR comments are generated by comparing scan results from the current GitHub Action run against the previous scan in the same application release; it won't detect any new/removed issues from older scans. For best results, you should configure your workflow as follows:
+
+- For any branches for which you might want to generate PR comments, have the workflow trigger only on `pull_request` events. Note that you can have a single workflow that is triggered on both `push` events for your main branch, and only `pull_request` events for all other branches.
+- Don't set `FOD_RELEASE`, to use the default value that corresponds to repository and branch name.
+- Set `DO_SETUP` to `true`, to allow a branch-specific application release to be automatically created.
+- Include `--copy-from` option in `SETUP_EXTRA_OPTS` to copy state from the release that represents the PR target branch or your main branch into the newly created application release.
+
+With a setup like this, whenever a new PR is created, the GitHub Action will:
+- Create a new application release named `<repository owner>/<repository name>:<branch name>`.
+- Copy state from the application release identified by the `--copy-from` option to this new application release.
+- Run a new scan of the branch associated with the current PR, and upload results to the application release created above.
+- Generate a PR comment listing new and removed issues, based on comparing the results of the new scan that was run in the previous step against the scan results that were copied from the application release identified by the `--copy-from` option.
+
+If any subsequent updates are pushed to the PR and the workflow is also being triggered on PR update events, the GitHub Action will run a new scan of the branch associated with the PR, publish results to the existing branch-specific application release, and generate a new PR comment that shows any new/removed issues in the new scan compared to the previous scan for the same branch/PR.
+
+<!-- END-INCLUDE:action/generic/fod/fod-pr.md -->
+
+
+<!-- END-INCLUDE:action/fod-sast-scan/readme.md -->
 
 
 
