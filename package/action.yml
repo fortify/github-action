@@ -4,13 +4,13 @@ author: 'Fortify'
 runs:
   using: composite
   steps:
-    - uses: fortify/github-action/internal/set-fod-var-defaults@main
-    - uses: fortify/github-action/internal/setup-java-for-sc-client@main
-    - uses: fortify/github-action/setup@main
+    - uses: fortify/github-action/internal/set-fod-var-defaults@doc-updates
+    - uses: fortify/github-action/internal/setup-java-for-sc-client@doc-updates
+    - uses: fortify/github-action/setup@doc-updates
       with:
         export-path: false
         sc-client: action-default
-    - uses: fortify/github-action/internal/run-script@main
+    - uses: fortify/github-action/internal/run-script@doc-updates
       with:
         script: package.sh
         

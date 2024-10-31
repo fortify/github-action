@@ -2,7 +2,7 @@
 
 {{include:p.marketing-intro.md}}
 
-{{include:repo-readme.md}}
+{{include:action/_root/readme.md}}
 
 {{include:h2.support.md}}
 

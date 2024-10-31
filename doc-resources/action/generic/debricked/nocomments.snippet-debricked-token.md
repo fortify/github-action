@@ -1,0 +1,1 @@
+          DEBRICKED_TOKEN: ${{secrets.DEBRICKED_TOKEN}}
