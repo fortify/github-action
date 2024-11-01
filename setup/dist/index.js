@@ -18956,7 +18956,7 @@ exports.TOOLS = {
         "cmds": { "windows": "fcli.exe", "linux": "fcli", "darwin": "fcli" }
     },
     "sc-client": {
-        "versionAliases": { "action-default": "24.2.0" },
+        "versionAliases": { "action-default": "24.4.0" },
         "cmds": { "windows": "scancentral.bat", "linux": "scancentral", "darwin": "scancentral" }
     },
     "vuln-exporter": {
