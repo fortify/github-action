@@ -7,7 +7,7 @@ runs:
     # If not run before: check preconditions, run fcli login command, and run 
     # post-job fcli logout command.
     # Note that the calling action/workflow is responsible for installing fcli
-    - uses: fortify/github-action/internal/run-script@main
+    - uses: fortify/github-action/internal/run-script@v1.5.1
       if: ${{ !env._FOD_LOGGED_IN }}
       with:
         script: fod-login.sh
