@@ -224,7 +224,7 @@ function requireFcli {
 
 #############################################################################
 # Function to be called by scripts that require ScanCentral Client.
-function requireScancentralClient {
+function requireScanCentralClient {
     requireVar "SC_CLIENT_CMD" "ERROR: fortify/github-action/setup must be run to set up ScanCentral Client (sc-client) before running this action"
 }
 
