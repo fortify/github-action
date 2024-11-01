@@ -4,23 +4,23 @@ author: 'Fortify'
 runs:
   using: composite
   steps:
-    - uses: fortify/github-action/internal/set-ssc-var-defaults@main
-    - uses: fortify/github-action/setup@main
+    - uses: fortify/github-action/internal/set-ssc-var-defaults@release-please--branches--main--components--github-action
+    - uses: fortify/github-action/setup@release-please--branches--main--components--github-action
       with:
         export-path: false
         fcli: action-default
         debricked-cli: ${{ env.DO_DEBRICKED_SCAN=='true' && 'action-default' || 'skip' }}
-    - uses: fortify/github-action/internal/ssc-login@main
-    - uses: fortify/github-action/internal/sc-sast-login@main
-    - uses: fortify/github-action/package@main
-    - uses: fortify/github-action/internal/run-script@main
+    - uses: fortify/github-action/internal/ssc-login@release-please--branches--main--components--github-action
+    - uses: fortify/github-action/internal/sc-sast-login@release-please--branches--main--components--github-action
+    - uses: fortify/github-action/package@release-please--branches--main--components--github-action
+    - uses: fortify/github-action/internal/run-script@release-please--branches--main--components--github-action
       with:
         script: sc-sast-and-debricked-scan.sh
       env: 
         DO_SC_SAST_SCAN: true
         GITHUB_TOKEN: ${{ github.token }}
     - if: env.DO_EXPORT == 'true'
-      uses: fortify/github-action/ssc-export@main
+      uses: fortify/github-action/ssc-export@release-please--branches--main--components--github-action
         
 branding:
   icon: 'shield'
