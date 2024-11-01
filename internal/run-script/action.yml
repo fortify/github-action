@@ -30,7 +30,7 @@ runs:
     - run: echo "TEMP_DIR=$(pwd)" >> $GITHUB_ENV
       shell: bash
       working-directory: ${{ runner.temp }}
-    - uses: fortify/github-action/internal/run-script/js@v1.5.0
+    - uses: fortify/github-action/internal/run-script/js@release-please--branches--main--components--github-action
       with: 
         dir:    ${{ env._RUN_SCRIPTS_DIR }}
         script: ${{ inputs.script }}
