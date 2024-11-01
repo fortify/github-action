@@ -28,7 +28,6 @@ The sample workflow below demonstrates how to configure the action for running a
 {{include:action/fod-sast-scan/nocomments.snippet-fod-sast-scan.md}}
           # DO_DEBRICKED_SCAN: true
 {{include:action/generic/nocomments.snippet-policy-check.md}}
-{{include:action/generic/nocomments.snippet-policy-check.md}}
 {{include:action/generic/nocomments.snippet-job-summary.md}}
 {{include:action/generic/nocomments.snippet-pr-comment.md}}
 {{include:action/generic/nocomments.snippet-export-optional.md}}

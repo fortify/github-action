@@ -57,6 +57,8 @@ The sample workflow below demonstrates how to configure the action for running a
           FOD_TENANT: ${{secrets.FOD_TENANT}}
           FOD_USER: ${{secrets.FOD_USER}}
           FOD_PASSWORD: ${{secrets.FOD_PAT}}
+          # FOD_CLIENT_ID: ${{secrets.FOD_CLIENT_ID}}
+          # FOD_CLIENT_SECRET: ${{secrets.FOD_CLIENT_SECRET}}
           # FOD_LOGIN_EXTRA_OPTS: --socket-timeout=60s
           # FOD_RELEASE: MyApp:MyRelease
           # DO_SETUP: true
@@ -65,9 +67,6 @@ The sample workflow below demonstrates how to configure the action for running a
           # PACKAGE_EXTRA_OPTS: -oss -bt mvn
           # FOD_SAST_SCAN_EXTRA_OPTS:
           # DO_DEBRICKED_SCAN: true
-          # DO_POLICY_CHECK: true
-          # POLICY_CHECK_ACTION: https://scm.my.org/shared-repos/fcli-actions/check-policy.yaml
-          # POLICY_CHECK_EXTRA_OPTS: --on-unsigned=ignore
           # DO_POLICY_CHECK: true
           # POLICY_CHECK_ACTION: https://scm.my.org/shared-repos/fcli-actions/check-policy.yaml
           # POLICY_CHECK_EXTRA_OPTS: --on-unsigned=ignore
