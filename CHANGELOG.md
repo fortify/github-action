@@ -19,6 +19,15 @@
 
 # Changelog
 
+## [1.5.2](https://github.com/fortify/github-action/compare/v1.5.1...v1.5.2) (2024-11-07)
+
+
+### Bug Fixes
+
+* `fcli ssc action run appversion-summary`: Add note about removed issue count ([4a8f3f3](https://github.com/fortify/github-action/commit/4a8f3f320f4fea2a2ea24d3d4018dbc8985026a0))
+* `fcli ssc action run appversion-summary`: Fix exception if application version has artifacts with 0 issues ([4a8f3f3](https://github.com/fortify/github-action/commit/4a8f3f320f4fea2a2ea24d3d4018dbc8985026a0))
+* Update fcli to 2.9.1 ([4a8f3f3](https://github.com/fortify/github-action/commit/4a8f3f320f4fea2a2ea24d3d4018dbc8985026a0))
+
 ## [1.5.1](https://github.com/fortify/github-action/compare/v1.4.0...v1.5.1) (2024-11-01)
 
 
