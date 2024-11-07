@@ -67,6 +67,7 @@ The sample workflow below demonstrates how to configure the action for running a
           # PACKAGE_EXTRA_OPTS: -oss -bt mvn
           # FOD_SAST_SCAN_EXTRA_OPTS:
           # DO_DEBRICKED_SCAN: true
+          # DO_WAIT: true
           # DO_POLICY_CHECK: true
           # POLICY_CHECK_ACTION: https://scm.my.org/shared-repos/fcli-actions/check-policy.yaml
           # POLICY_CHECK_EXTRA_OPTS: --on-unsigned=ignore

@@ -28,6 +28,7 @@ The standard workflow provided by this GitHub Action allows for running a Static
 {{include:action/generic/nocomments.snippet-setup.md}}
 {{include:action/package/nocomments.snippet-package-extra-opts.md}}
 {{include:action/fod-sast-scan/nocomments.snippet-fod-sast-scan.md}}
+{{include:action/generic/nocomments.snippet-do-wait.md}}
 {{include:action/generic/nocomments.snippet-policy-check.md}}
 {{include:action/generic/nocomments.snippet-job-summary.md}}
 {{include:action/generic/nocomments.snippet-pr-comment.md}}

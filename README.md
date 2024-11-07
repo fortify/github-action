@@ -68,6 +68,7 @@ The standard workflow provided by this GitHub Action allows for running a Static
           # SETUP_EXTRA_OPTS: --on-unsigned=ignore
           # PACKAGE_EXTRA_OPTS: -oss -bt mvn
           # FOD_SAST_SCAN_EXTRA_OPTS:
+          # DO_WAIT: true
           # DO_POLICY_CHECK: true
           # POLICY_CHECK_ACTION: https://scm.my.org/shared-repos/fcli-actions/check-policy.yaml
           # POLICY_CHECK_EXTRA_OPTS: --on-unsigned=ignore
