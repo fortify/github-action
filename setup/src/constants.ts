@@ -15,7 +15,7 @@ export const TOOLS: Record<string, Record<string, Record<string, string>>> = {
      *            ScanCentral Client, but please double-check. 
      */
     "fcli": { 
-        "versionAliases": {"action-default": "2.9.0"},
+        "versionAliases": {"action-default": "2.9.1"},
         "cmds": {"windows": "fcli.exe", "linux": "fcli", "darwin": "fcli"}
     },
     "sc-client": { 
