@@ -1,6 +1,7 @@
 import * as core from '@actions/core';
 import * as fcli from './fcli'
 import * as constants from './constants';
+import { env } from 'node:process';
 
 /** 
  * Exported function for installing the given version of the given tool.
@@ -39,8 +40,13 @@ export async function install(toolName: string, version: string) {
 async function installActionDefault(toolName: string) {
     switch(toolName) {
         case 'fcli': await installActionDefaultFcli(); break;
-        default: await installVersion(toolName, constants.TOOLS[toolName]['versionAliases']['action-default']); break;
+        default: await installVersion(toolName, getActionDefault(toolName)); break;
     }
+}
+
+function getActionDefault(toolName: string) {
+    const versionFromEnv = env[getEnvVarBaseName(toolName)+"_VERSION"];
+    return versionFromEnv ? versionFromEnv : constants.TOOLS[toolName]['versionAliases']['action-default'];
 }
 
 /**

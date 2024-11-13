@@ -4,21 +4,21 @@ author: 'Fortify'
 runs:
   using: composite
   steps:
-    - uses: fortify/github-action/internal/set-fod-var-defaults@main
-    - uses: fortify/github-action/setup@main
+    - uses: fortify/github-action/internal/set-fod-var-defaults@feat-version-override
+    - uses: fortify/github-action/setup@feat-version-override
       with:
         export-path: false
         fcli: action-default
-    - uses: fortify/github-action/internal/fod-login@main
-    - uses: fortify/github-action/package@main
-    - uses: fortify/github-action/internal/run-script@main
+    - uses: fortify/github-action/internal/fod-login@feat-version-override
+    - uses: fortify/github-action/package@feat-version-override
+    - uses: fortify/github-action/internal/run-script@feat-version-override
       with:
         script: fod-scan.sh
       env: 
         DO_SAST_SCAN: true # Not used for now
         GITHUB_TOKEN: ${{ github.token }}
     - if: env.DO_EXPORT == 'true'
-      uses: fortify/github-action/fod-export@main
+      uses: fortify/github-action/fod-export@feat-version-override
         
 branding:
   icon: 'shield'

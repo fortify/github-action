@@ -19443,6 +19443,7 @@ exports.install = void 0;
 const core = __importStar(__nccwpck_require__(2186));
 const fcli = __importStar(__nccwpck_require__(6386));
 const constants = __importStar(__nccwpck_require__(9042));
+const node_process_1 = __nccwpck_require__(8760);
 /**
  * Exported function for installing the given version of the given tool.
  *
@@ -19490,10 +19491,14 @@ function installActionDefault(toolName) {
                 yield installActionDefaultFcli();
                 break;
             default:
-                yield installVersion(toolName, constants.TOOLS[toolName]['versionAliases']['action-default']);
+                yield installVersion(toolName, getActionDefault(toolName));
                 break;
         }
     });
+}
+function getActionDefault(toolName) {
+    const versionFromEnv = node_process_1.env[getEnvVarBaseName(toolName) + "_VERSION"];
+    return versionFromEnv ? versionFromEnv : constants.TOOLS[toolName]['versionAliases']['action-default'];
 }
 /**
  * Install the 'action-default' fcli version using the internal fcli
@@ -19695,6 +19700,14 @@ module.exports = require("net");
 
 "use strict";
 module.exports = require("node:crypto");
+
+/***/ }),
+
+/***/ 8760:
+/***/ ((module) => {
+
+"use strict";
+module.exports = require("node:process");
 
 /***/ }),
 
