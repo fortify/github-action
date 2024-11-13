@@ -1,8 +1,8 @@
-### FoD Pull Request Comments
+### Fortify on Demand Pull Request Comments
 
 <!-- Note that similar instructions are provided for SSC in ssc-pr.md; when updating these instructions, ssc-pr.md will likely need to be updated accordingly -->
 
-This section provides more information on Pull Request Comments that will be generated if `DO_PR_COMMENT` is set to `true`. This information is based on the fcli-provided [FoD `github-pr-comment`]({{var:fcli-doc-base-url}}fod-actions.html#_github_pr_comment) action and may not apply when using a custom fcli action through `PR_COMMENT_ACTION`. 
+This section provides more information on Pull Request Comments that will be generated if `DO_PR_COMMENT` is set to `true`. This information is based on the fcli-provided [`github-pr-comment`]({{var:fcli-doc-base-url}}fod-actions.html#_github_pr_comment) action and may not apply when using a custom fcli action through `PR_COMMENT_ACTION`. 
 
 **Important note:** Pull Request comments are currently considered preview functionality. Configuration settings, behavior and output may significantly change in future GitHub Action releases as we work on improving and fine-tuning our PR decoration capabilities.
 

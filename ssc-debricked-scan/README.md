@@ -21,12 +21,12 @@ This action performs a Debricked Software Composition Analysis (SCA) scan, consi
 Note that this action is explicitly meant for Debricked/SSC integration. If you wish to run a Debricked scan without publishing the results to SSC, please see the [Debricked GitHub Integration documentation](https://portal.debricked.com/integrations-48/integration-with-github-214#github-actions)
 
 
-<!-- START-INCLUDE:action/generic/prerequisites-h3.md -->
+<!-- START-INCLUDE:action/_generic/prerequisites-h3.md -->
 
 ### Prerequisites
 
 
-<!-- START-INCLUDE:action/generic/prerequisites.md -->
+<!-- START-INCLUDE:action/_generic/prerequisites.md -->
 
 This action assumes the standard software packages as provided by GitHub-hosted runners to be available. If you are using self-hosted runners, you may need to install some of these software packages in order to successfully use this action. In particular, not having the following software installed is known to cause issues when running `fortify/github-action` or one of its sub-actions:
 
@@ -35,10 +35,10 @@ This action assumes the standard software packages as provided by GitHub-hosted 
 * Bash shell   
   If using Windows runners, this must be a Windows-based `bash` variant, for example as provided by MSYS2. You must make sure that this Windows-based `bash` variant is used for `run` steps that specify `shell: bash`. Actions will fail if the GitHub runner executes `bash` commands on the WSL-provided `bash.exe`
 
-<!-- END-INCLUDE:action/generic/prerequisites.md -->
+<!-- END-INCLUDE:action/_generic/prerequisites.md -->
 
 
-<!-- END-INCLUDE:action/generic/prerequisites-h3.md -->
+<!-- END-INCLUDE:action/_generic/prerequisites-h3.md -->
 
 
 Apart from the generic action prerequisites listed above, the following prerequisites apply to this specific action:
@@ -92,7 +92,7 @@ This section lists the environment variables that can be specified in the `env:`
 |SSC_LOGIN_EXTRA_OPTS<br/>EXTRA_SSC_LOGIN_OPTS|Extra SSC login options, for example for disabling SSL checks or changing connection time-outs; see [`fcli ssc session login` documentation](https://fortify.github.io/fcli/v2.9.1//manpage/fcli-ssc-session-login.html). Note that `EXTRA_SSC_LOGIN_OPTS` is deprecated; please use `SSC_LOGIN_EXTRA_OPTS`.|
 |**DEBRICKED_TOKEN**|Required when performing a Debricked Software Composition Analysis scan; see the [Generate access token](https://docs.debricked.com/product/administration/generate-access-token) section in the Debricked documentation for details on how to generate this token.|
 |SSC_APPVERSION|Fortify SSC application version to use with this action. This can be specified either as a numeric application version id, or by providing application and version name in the format `<app-name>:<version-name>`. Default value is based on repository and branch name, for example `myOrg/myRepo:myBranch`.|
-|DO_SETUP<br/>SETUP_ACTION<br/>SETUP_EXTRA_OPTS|If `DO_SETUP` is set to `true` (implied if any of the other two `SETUP_*` variables are set), the FoD application and/or release will be automatically created if they do not yet exist and static scan settings will be configured if not configured already, using the fcli-provided [SSC `setup-appversion`](https://fortify.github.io/fcli/v2.9.1/ssc-actions.html#_setup_appversion) or, if specified, the custom fcli action specified through `SETUP_ACTION`. Extra options for the fcli action can be passed through the `SETUP_EXTRA_OPTS` environment variable, for example to copy state from an existing application version using the `--copy-from` option, or to allow an unsigned custom action to be used. Note that if setup is enabled, `SSC_APPVERSION` must be configured with a qualified application version name; you cannot use application version id. Please see the [SSC Fcli Actions](#ssc-fcli-actions) section below for more details.|
+|DO_SETUP<br/>SETUP_ACTION<br/>SETUP_EXTRA_OPTS|If `DO_SETUP` is set to `true` (implied if any of the other two `SETUP_*` variables are set), the SSC application version will be automatically created if they do not yet exist, using the fcli-provided [`setup-appversion`](https://fortify.github.io/fcli/v2.9.1/ssc-actions.html#_setup_appversion) or, if specified, the custom fcli action specified through `SETUP_ACTION`. Extra options for the fcli action can be passed through the `SETUP_EXTRA_OPTS` environment variable, for example to copy state from an existing application version using the `--copy-from` option, or to allow an unsigned custom action to be used. Note that if setup is enabled, `SSC_APPVERSION` must be configured with a qualified application version name; you cannot use application version id. Please see the [SSC Fcli Actions](#ssc-fcli-actions) section below for more details.|
 | DO_WAIT | By default, this action will not wait until scans have been completed. To have the workflow wait until all scans have been completed, set the `DO_WAIT` environment variable to `true`. Note that some other environment variables imply `DO_WAIT`, for example when exporting vulnerability data or generating job summaries. This behavior is documented in the applicable environment variable descriptions. |
 |DO_POLICY_CHECK<br/>CHECK_POLICY_ACTION<br/>CHECK_POLICY_EXTRA_OPTS|If `DO_POLICY_CHECK` is set to `true` (implied if any of the other two `CHECK_POLICY_*` variables are set, and implies `DO_WAIT`), a policy check will be run after scan completion using the fcli-provided [SSC `check-policy`](https://fortify.github.io/fcli/v2.9.1/ssc-actions.html#_check_policy) or, if specified, the custom fcli action specified through `CHECK_POLICY_ACTION`. Extra options for a custom fcli action can be passed through the `CHECK_POLICY_EXTRA_OPTS` environment variable, which may include fcli options to allow unsigned custom actions to be used. Please see the [SSC Fcli Actions](#ssc-fcli-actions) section below for more details.|
 |DO_JOB_SUMMARY<br/>JOB_SUMMARY_ACTION<br/>JOB_SUMMARY_EXTRA_OPTS|If `DO_JOB_SUMMARY` is set to `true` (implied if any of the other two `JOB_SUMMARY_*` variables are set, and implies `DO_WAIT`), a job summary listing scan status and issue counts will be generated using the fcli-provided [SSC `appversion-summary`](https://fortify.github.io/fcli/v2.9.1/ssc-actions.html#_appversion_summary) or, if specified, the custom fcli action specified through `JOB_SUMMARY_ACTION`. Extra options for the fcli action can be passed through the `JOB_SUMMARY_EXTRA_OPTS` environment variable, for example to allow an unsigned custom action to be used or to specify an SSC filter set. Please see the [SSC Fcli Actions](#ssc-fcli-actions) section below for more details. |
@@ -101,31 +101,31 @@ This section lists the environment variables that can be specified in the `env:`
 | TOOL_DEFINITIONS | Fortify tool definitions are used by this GitHub Action to determine available versions, download location and other details of various Fortify-related tools, as required for action execution. By default, the Fortify-provided tool definitions hosted at https://github.com/fortify/tool-definitions/releases/tag/v1 will be used.<br/><br/>This environment variable allows for overriding the default tool definitions, pointing to either a URL or local (workspace) file. For example, if GitHub workflows are not allowed to download tools from their public internet locations, customers may host the tool installation bundles on an internal server, together with a customized tool definitions bundle that lists the alternative download URLs. |
 
 
-<!-- START-INCLUDE:action/generic/ssc/ssc-fcli-actions.md -->
+<!-- START-INCLUDE:action/_generic/ssc/ssc-fcli-actions.md -->
 
 ### SSC Fcli Actions
 
 <!-- Note that similar instructions are provided for FoD in fod-fcli-actions.md; when updating these instructions, fod-fcli-actions.md will likely need to be updated accordingly -->
 
 
-<!-- START-INCLUDE:action/generic/fcli-actions.md -->
+<!-- START-INCLUDE:action/_generic/fcli-actions.md -->
 
 As indicated in the [Action environment variable inputs](#action-environment-variable-inputs) section above, this GitHub Action utilizes one or more fcli actions to perform certain activities. These fcli-provided actions are used as building blocks that can be re-used across different CI/CD platforms to provide consistent behavior across those platforms. This GitHub Action also provides the ability to override the default built-in fcli actions with custom fcli actions, allowing for rich customization capabilities. For example, such custom fcli actions could define different default values for some action options, perform some additional activities, and/or provide fully customized behavior.
 
 For more information on fcli actions and custom action development, please see the [fcli action documentation](https://fortify.github.io/fcli/v2.9.1/#_actions). Such custom actions may be hosted either on the local file system (for example stored in your source code repository) or some remote location; the `*_ACTION` environment variables may point to either a local file or URL. To easily share custom actions across multiple pipelines, you may want to consider hosting these in a dedicated source code repository that's accessible by all pipelines. This provides an easy hosting location, and allows for easy maintenance of such custom actions.
 
-<!-- END-INCLUDE:action/generic/fcli-actions.md -->
+<!-- END-INCLUDE:action/_generic/fcli-actions.md -->
 
 
 When developing custom actions, please note that the GitHub Action expects certain action parameters to be supported by such a custom action. A common example is the `--av` / `--appversion` command-line option, which the GitHub Action will automatically pass to most or all fcli actions to specify the SSC application version to operate on. What command-line options are automatically passed to the fcli action may also depend on GitHub Action configuration. If the custom action doesn't support those action parameters, the action invocation will fail. You will also need to consider any options explicitly configured through the `*_EXTRA_OPTS` environment variable; for backward compatibility with existing GitHub Action workflows that have been configured with some extra action options, you should be careful with removing or renaming any action parameters.
 
 Future versions of this documentation may provide more details on what command-line options are automatically passed to fcli actions. Until then, you'll need to review workflow logs and/or GitHub Action source code to identify what action parameters are being automatically passed by the GitHub Action. Alternatively, you may want to consider simply duplicating all action parameters from the fcli built-in action, even if some of those parameters will not be used by your custom action.
 
-<!-- END-INCLUDE:action/generic/ssc/ssc-fcli-actions.md -->
+<!-- END-INCLUDE:action/_generic/ssc/ssc-fcli-actions.md -->
 
 
 
-<!-- START-INCLUDE:action/generic/ssc/ssc-pr.md -->
+<!-- START-INCLUDE:action/_generic/ssc/ssc-pr.md -->
 
 ### SSC Pull Request Comments
 
@@ -155,7 +155,7 @@ With a setup like this, whenever a new PR is created, the GitHub Action will:
 
 If any subsequent updates are pushed to the PR and the workflow is also being triggered on PR update events, the GitHub Action will run a new scan of the branch associated with the PR, publish results to the existing branch-specific application version, and generate a new PR comment that shows any new/removed issues in the new scan compared to the previous scan for the same branch/PR.
 
-<!-- END-INCLUDE:action/generic/ssc/ssc-pr.md -->
+<!-- END-INCLUDE:action/_generic/ssc/ssc-pr.md -->
 
 
 <!-- END-INCLUDE:action/ssc-debricked-scan/readme.md -->

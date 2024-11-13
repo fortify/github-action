@@ -21,12 +21,12 @@ This action allows for setting up the Fortify tools listed below. Which tools an
 * [FortifyBugTrackerUtility](https://github.com/fortify-ps/FortifyBugTrackerUtility)
 
 
-<!-- START-INCLUDE:action/generic/prerequisites-h3.md -->
+<!-- START-INCLUDE:action/_generic/prerequisites-h3.md -->
 
 ### Prerequisites
 
 
-<!-- START-INCLUDE:action/generic/prerequisites.md -->
+<!-- START-INCLUDE:action/_generic/prerequisites.md -->
 
 This action assumes the standard software packages as provided by GitHub-hosted runners to be available. If you are using self-hosted runners, you may need to install some of these software packages in order to successfully use this action. In particular, not having the following software installed is known to cause issues when running `fortify/github-action` or one of its sub-actions:
 
@@ -35,10 +35,10 @@ This action assumes the standard software packages as provided by GitHub-hosted 
 * Bash shell   
   If using Windows runners, this must be a Windows-based `bash` variant, for example as provided by MSYS2. You must make sure that this Windows-based `bash` variant is used for `run` steps that specify `shell: bash`. Actions will fail if the GitHub runner executes `bash` commands on the WSL-provided `bash.exe`
 
-<!-- END-INCLUDE:action/generic/prerequisites.md -->
+<!-- END-INCLUDE:action/_generic/prerequisites.md -->
 
 
-<!-- END-INCLUDE:action/generic/prerequisites-h3.md -->
+<!-- END-INCLUDE:action/_generic/prerequisites-h3.md -->
 
 
 ### Sample usage

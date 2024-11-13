@@ -1,3 +1,3 @@
-{{include:action/generic/ssc/nocomments.env-ssc-login.md}}
+{{include:action/_generic/ssc/nocomments.env-ssc-login.md}}
 |**SC_SAST_TOKEN**|ScanCentral SAST Client Authentication Token for authenticating with ScanCentral SAST Controller. This environment variable is required when running a ScanCentral SAST scan.|
 |SC_SAST_LOGIN_EXTRA_OPTS<br/>EXTRA_SC_SAST_LOGIN_OPTS|Extra ScanCentral SAST login options, for example for disabling SSL checks or changing connection time-outs; see [`fcli sc-sast session login` documentation]({{var:fcli-doc-base-url}}/manpage/fcli-sc-sast-session-login.html). Note that `EXTRA_SC_SAST_LOGIN_OPTS` is deprecated; please use `SC_SAST_LOGIN_EXTRA_OPTS`.|
