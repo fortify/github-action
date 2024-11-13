@@ -26,6 +26,7 @@ The standard workflow provided by this GitHub Action allows for running a Static
 {{include:action/generic/fod/nocomments.snippet-fod-login.md}}
 {{include:action/generic/fod/nocomments.snippet-fod-release.md}}
 {{include:action/generic/nocomments.snippet-setup.md}}
+{{include:action/package/nocomments.snippet-sc-client-version.md}}
 {{include:action/package/nocomments.snippet-package-extra-opts.md}}
 {{include:action/fod-sast-scan/nocomments.snippet-fod-sast-scan.md}}
 {{include:action/generic/nocomments.snippet-do-wait.md}}
@@ -44,6 +45,7 @@ The standard workflow provided by this GitHub Action allows for running a Static
 {{include:action/generic/fod/nocomments.env-fod-login.md}}
 {{include:action/generic/fod/nocomments.env-fod-release.md}}
 {{include:action/fod-sast-scan/nocomments.env-setup.md}}
+{{include:action/package/nocomments.env-sc-client-version.md}}
 {{include:action/package/nocomments.env-package-extra-opts.md}}
 {{include:action/fod-sast-scan/nocomments.env-fod-sast-scan.md}}
 {{include:action/generic/nocomments.env-do-wait.md}}
@@ -75,6 +77,7 @@ The standard workflow provided by this GitHub Action allows for running a static
 {{include:action/generic/debricked/nocomments.snippet-debricked-token.md}}
 {{include:action/generic/ssc/nocomments.snippet-ssc-appversion.md}}
 {{include:action/generic/nocomments.snippet-setup.md}}
+{{include:action/package/nocomments.snippet-sc-client-version.md}}
 {{include:action/package/nocomments.snippet-package-extra-opts.md}}
 {{include:action/sc-sast-scan/nocomments.snippet-sc-sast-scan.md}}
 {{include:action/generic/nocomments.snippet-do-wait.md}}
@@ -94,6 +97,7 @@ The standard workflow provided by this GitHub Action allows for running a static
 {{include:action/generic/debricked/nocomments.env-debricked-token.md}}
 {{include:action/generic/ssc/nocomments.env-ssc-appversion.md}}
 {{include:action/sc-sast-scan/nocomments.env-setup.md}}
+{{include:action/package/nocomments.env-sc-client-version.md}}
 {{include:action/package/nocomments.env-package-extra-opts.md}}
 {{include:action/sc-sast-scan/nocomments.env-sc-sast-scan.md}}
 {{include:action/generic/nocomments.env-do-wait.md}}

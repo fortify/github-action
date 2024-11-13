@@ -24,6 +24,7 @@ The sample workflow below demonstrates how to configure the action for running a
 {{include:action/generic/fod/nocomments.snippet-fod-login.md}}
 {{include:action/generic/fod/nocomments.snippet-fod-release.md}}
 {{include:action/generic/nocomments.snippet-setup.md}}
+{{include:action/package/nocomments.snippet-sc-client-version.md}}
 {{include:action/package/nocomments.snippet-package-extra-opts.md}}
 {{include:action/fod-sast-scan/nocomments.snippet-fod-sast-scan.md}}
           # DO_DEBRICKED_SCAN: true
@@ -40,6 +41,7 @@ The sample workflow below demonstrates how to configure the action for running a
 {{include:action/generic/fod/nocomments.env-fod-login.md}}
 {{include:action/generic/fod/nocomments.env-fod-release.md}}
 {{include:action/fod-sast-scan/nocomments.env-setup.md}}
+{{include:action/package/nocomments.env-sc-client-version.md}}
 {{include:action/package/nocomments.env-package-extra-opts.md}}
 {{include:action/fod-sast-scan/nocomments.env-fod-sast-scan.md}}
 |DO_DEBRICKED_SCAN|Configure the static scan to also run an open-source scan. Depending on FoD configuration, this may be either a Debricked or a Sonatype scan. Effectively, this adds dependency data to the scan payload, and enables the open-source scan setting in the FoD scan configuration. Note that any existing FoD scan configuration will not be updated, so if the scan has already been configured in FoD, an open-source scan will only be performed if previously enabled in the existing scan configuration.|

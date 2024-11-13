@@ -1,0 +1,1 @@
+| SC_CLIENT_VERSION | By default, this action uses ScanCentral Client {{var:sc-client-version}} for packaging. This environment variable allows for overriding the ScanCentral Client version used for packaging. |

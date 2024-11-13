@@ -28,6 +28,7 @@ The sample workflow below demonstrates how to configure the action for running a
 {{include:action/generic/debricked/nocomments.snippet-debricked-token.md}}
 {{include:action/generic/ssc/nocomments.snippet-ssc-appversion.md}}
 {{include:action/generic/nocomments.snippet-setup.md}}
+{{include:action/package/nocomments.snippet-sc-client-version.md}}
 {{include:action/package/nocomments.snippet-package-extra-opts.md}}
 {{include:action/sc-sast-scan/nocomments.snippet-sc-sast-scan.md}}
           # DO_DEBRICKED_SCAN: true
@@ -45,6 +46,7 @@ The sample workflow below demonstrates how to configure the action for running a
 {{include:action/generic/ssc/nocomments.env-ssc-appversion.md}}
 {{include:action/sc-sast-scan/nocomments.env-setup.md}}
 |DO_DEBRICKED_SCAN|If set to `true`, this GitHub Action will also run a Debricked Software Composition Analysis scan and publish the results to SSC. Note that this requires the [Fortify SSC Parser Plugin for Debricked results](https://github.com/fortify/fortify-ssc-parser-debricked-cyclonedx) to be installed on Fortify SSC, to allow for SSC to accept and process the Debricked scan results submitted by this action.|
+{{include:action/package/nocomments.env-sc-client-version.md}}
 {{include:action/package/nocomments.env-package-extra-opts.md}}
 {{include:action/sc-sast-scan/nocomments.env-sc-sast-scan.md}}
 {{include:action/generic/nocomments.env-do-wait.md}}
