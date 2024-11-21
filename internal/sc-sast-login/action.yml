@@ -11,7 +11,7 @@ runs:
     # If not run before: check preconditions, run fcli login command, and run 
     # post-job fcli logout command.
     # Note that the calling action/workflow is responsible for installing fcli
-    - uses: fortify/github-action/internal/run-script@v1.6.1
+    - uses: fortify/github-action/internal/run-script@main
       if: ${{ !env._SC_SAST_LOGGED_IN }}
       with:
         script: sc-sast-login.sh
