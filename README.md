@@ -65,7 +65,7 @@ The standard workflow provided by this GitHub Action allows for running a Static
           # FOD_RELEASE: MyApp:MyRelease
           # DO_SETUP: true
           # SETUP_ACTION: https://scm.my.org/shared-repos/fcli-actions/setup.yaml
-          # SETUP_EXTRA_OPTS: --copy-from "${{ github.repository }}:${{ github.event.repository.default_branch }}
+          # SETUP_EXTRA_OPTS: --copy-from "${{ github.repository }}:${{ github.event.repository.default_branch }}"
           # SC_CLIENT_VERSION: 24.2
           # PACKAGE_EXTRA_OPTS: -oss -bt mvn
           # FOD_SAST_SCAN_EXTRA_OPTS:
