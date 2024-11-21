@@ -4,12 +4,12 @@ author: 'Fortify'
 runs:
   using: composite
   steps:
-    - uses: fortify/github-action/internal/setup-java-for-sc-client@v1.6.2
-    - uses: fortify/github-action/setup@v1.6.2
+    - uses: fortify/github-action/internal/setup-java-for-sc-client@main
+    - uses: fortify/github-action/setup@main
       with:
         export-path: false
         sc-client: action-default
-    - uses: fortify/github-action/internal/run-script@v1.6.2
+    - uses: fortify/github-action/internal/run-script@main
       with:
         script: package.sh
         
