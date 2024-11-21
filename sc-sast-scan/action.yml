@@ -4,23 +4,23 @@ author: 'Fortify'
 runs:
   using: composite
   steps:
-    - uses: fortify/github-action/internal/set-ssc-var-defaults@main
-    - uses: fortify/github-action/setup@main
+    - uses: fortify/github-action/internal/set-ssc-var-defaults@v1.6.2
+    - uses: fortify/github-action/setup@v1.6.2
       with:
         export-path: false
         fcli: action-default
         debricked-cli: ${{ env.DO_DEBRICKED_SCAN=='true' && 'action-default' || 'skip' }}
-    - uses: fortify/github-action/internal/ssc-login@main
-    - uses: fortify/github-action/internal/sc-sast-login@main
-    - uses: fortify/github-action/package@main
-    - uses: fortify/github-action/internal/run-script@main
+    - uses: fortify/github-action/internal/ssc-login@v1.6.2
+    - uses: fortify/github-action/internal/sc-sast-login@v1.6.2
+    - uses: fortify/github-action/package@v1.6.2
+    - uses: fortify/github-action/internal/run-script@v1.6.2
       with:
         script: sc-sast-and-debricked-scan.sh
       env: 
         DO_SC_SAST_SCAN: true
         GITHUB_TOKEN: ${{ github.token }}
     - if: env.DO_EXPORT == 'true'
-      uses: fortify/github-action/ssc-export@main
+      uses: fortify/github-action/ssc-export@v1.6.2
         
 branding:
   icon: 'shield'

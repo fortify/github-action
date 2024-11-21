@@ -19,6 +19,13 @@
 
 # Changelog
 
+## [1.6.2](https://github.com/fortify/github-action/compare/v1.6.1...v1.6.2) (2024-11-21)
+
+
+### Bug Fixes
+
+* Minor documentation fix ([434e78d](https://github.com/fortify/github-action/commit/434e78d2dcd675cf2b62a929755beaf37732886b))
+
 ## [1.6.1](https://github.com/fortify/github-action/compare/v1.6.0...v1.6.1) (2024-11-21)
 
 
