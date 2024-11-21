@@ -19,6 +19,16 @@
 
 # Changelog
 
+## [1.6.1](https://github.com/fortify/github-action/compare/v1.6.0...v1.6.1) (2024-11-21)
+
+
+### Bug Fixes
+
+* Configure static scan on `DO_SETUP` if needed ([9d54346](https://github.com/fortify/github-action/commit/9d543461f910f6408e354456d376e38cb219e1ab))
+* Improve FoD `SETUP_EXTRA_OPTS` documentation ([9d54346](https://github.com/fortify/github-action/commit/9d543461f910f6408e354456d376e38cb219e1ab))
+* Update Debricked CLI to 2.4.0 ([9d54346](https://github.com/fortify/github-action/commit/9d543461f910f6408e354456d376e38cb219e1ab))
+* Update fcli to 2.1.0 ([9d54346](https://github.com/fortify/github-action/commit/9d543461f910f6408e354456d376e38cb219e1ab))
+
 ## [1.6.0](https://github.com/fortify/github-action/compare/v1.5.2...v1.6.0) (2024-11-13)
 
 
