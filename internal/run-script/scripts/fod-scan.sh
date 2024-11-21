@@ -10,7 +10,7 @@ checkRequirements
 
 if doSetup; then
   run "SETUP" "${FCLI_CMD}" fod action run "${SETUP_ACTION:-setup-release}" \
-    --rel "${FOD_RELEASE}" __expand:SETUP_EXTRA_OPTS
+    --rel "${FOD_RELEASE}" --scan-types sast __expand:SETUP_EXTRA_OPTS
 fi
 
 run "SAST_SCAN" "${FCLI_CMD}" fod sast-scan start \

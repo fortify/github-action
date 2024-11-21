@@ -23,7 +23,7 @@ The sample workflow below demonstrates how to configure the action for running a
         env:
 {{include:action/_generic/fod/nocomments.snippet-fod-login.md}}
 {{include:action/_generic/fod/nocomments.snippet-fod-release.md}}
-{{include:action/_generic/nocomments.snippet-setup.md}}
+{{include:action/_generic/fod/nocomments.snippet-fod-setup.md}}
 {{include:action/package/nocomments.snippet-sc-client-version.md}}
 {{include:action/package/nocomments.snippet-package-extra-opts.md}}
 {{include:action/fod-sast-scan/nocomments.snippet-fod-sast-scan.md}}
