@@ -19,6 +19,13 @@
 
 # Changelog
 
+## [1.6.3](https://github.com/fortify/github-action/compare/v1.6.2...v1.6.3) (2024-12-11)
+
+
+### Bug Fixes
+
+* `DO_PR_COMMENT`: Use `GITHUB_API_URL` environment variable instead of hardcoded api.github.com to avoid failure on GitHub Enterprise ([a804808](https://github.com/fortify/github-action/commit/a804808adae91155d7a6d272fc0fc727d99c715f))
+
 ## [1.6.2](https://github.com/fortify/github-action/compare/v1.6.1...v1.6.2) (2024-11-21)
 
 
