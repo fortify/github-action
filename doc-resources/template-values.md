@@ -11,7 +11,7 @@ https://github.com/fortify/github-action
 v1
 
 # fcli-doc-base-url
-https://fortify.github.io/fcli/v2.10.0/
+https://fortify.github.io/fcli/v2.11.1/
 
 # sc-client-version
 24.4.0
