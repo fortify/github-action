@@ -19,6 +19,13 @@
 
 # Changelog
 
+## [1.6.4](https://github.com/fortify/github-action/compare/v1.6.3...v1.6.4) (2025-01-14)
+
+
+### Bug Fixes
+
+* Add `DO_PACKAGE_DEBUG` setting to enable debug logging and publish package.zip & logs as job artifacts ([29b093c](https://github.com/fortify/github-action/commit/29b093c0698c5be532f37c4d5160542cb6692891))
+
 ## [1.6.3](https://github.com/fortify/github-action/compare/v1.6.2...v1.6.3) (2024-12-11)
 
 
