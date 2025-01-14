@@ -4,12 +4,12 @@ author: 'Fortify'
 runs:
   using: composite
   steps:
-    - uses: fortify/github-action/internal/setup-java-for-sc-client@feat-package-debug
-    - uses: fortify/github-action/setup@feat-package-debug
+    - uses: fortify/github-action/internal/setup-java-for-sc-client@develop
+    - uses: fortify/github-action/setup@develop
       with:
         export-path: false
         sc-client: action-default
-    - uses: fortify/github-action/internal/run-script@feat-package-debug
+    - uses: fortify/github-action/internal/run-script@develop
       with:
         script: package.sh
     - name: Store ScanCentral package
