@@ -19,6 +19,19 @@
 
 # Changelog
 
+## [1.7.0](https://github.com/fortify/github-action/compare/v1.6.4...v1.7.0) (2025-01-21)
+
+
+### Features
+
+* Update Debricked CLI 2.5.1-&gt;2.6.4 ([222ec90](https://github.com/fortify/github-action/commit/222ec9048301eeb76511ec95b6c7aa07a60f3b07))
+* Update fcli 2.11.1-&gt;2.12.2 ([222ec90](https://github.com/fortify/github-action/commit/222ec9048301eeb76511ec95b6c7aa07a60f3b07))
+
+
+### Bug Fixes
+
+* Update ScanCentral Client 24.4.0-&gt;24.4.1 ([222ec90](https://github.com/fortify/github-action/commit/222ec9048301eeb76511ec95b6c7aa07a60f3b07))
+
 ## [1.6.4](https://github.com/fortify/github-action/compare/v1.6.3...v1.6.4) (2025-01-14)
 
 
