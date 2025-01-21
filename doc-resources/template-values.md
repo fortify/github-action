@@ -11,10 +11,10 @@ https://github.com/fortify/github-action
 v1
 
 # fcli-doc-base-url
-https://fortify.github.io/fcli/v2.11.1/
+https://fortify.github.io/fcli/v2.12.2/
 
 # sc-client-version
-24.4.0
+24.4.1
 
 # sc-client-doc-base-url
 https://www.microfocus.com/documentation/fortify-software-security-center/2440/SC_SAST_Help_24.4.0/index.htm

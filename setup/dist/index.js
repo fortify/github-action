@@ -18952,11 +18952,11 @@ exports.TOOLS = {
      *            ScanCentral Client, but please double-check.
      */
     "fcli": {
-        "versionAliases": { "action-default": "2.11.1" },
+        "versionAliases": { "action-default": "2.12.2" },
         "cmds": { "windows": "fcli.exe", "linux": "fcli", "darwin": "fcli" }
     },
     "sc-client": {
-        "versionAliases": { "action-default": "24.4.0" },
+        "versionAliases": { "action-default": "24.4.1" },
         "cmds": { "windows": "scancentral.bat", "linux": "scancentral", "darwin": "scancentral" }
     },
     "vuln-exporter": {
@@ -18972,7 +18972,7 @@ exports.TOOLS = {
         "cmds": { "windows": "FortifyBugTrackerUtility.bat", "linux": "FortifyBugTrackerUtility", "darwin": "FortifyBugTrackerUtility" }
     },
     "debricked-cli": {
-        "versionAliases": { "action-default": "2.5.1" },
+        "versionAliases": { "action-default": "2.6.4" },
         "cmds": { "windows": "debricked.exe", "linux": "debricked", "darwin": "debricked" }
     }
 };
