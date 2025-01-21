@@ -17,7 +17,7 @@ The following sections describe these topics in more detail:
 
 * [Prerequisites](#prerequisites)
 * [Application Security Testing with Fortify on Demand](#application-security-testing-with-fortify-on-demand)
-* [Application Security Testing with SSC/ScanCentral](#application-security-testing-with-ssc-scancentral)
+* [Application Security Testing with SSC/ScanCentral](#application-security-testing-with-sscscancentral)
 * [Building blocks for custom workflows](#building-blocks-for-custom-workflows)
 
 
