@@ -4,23 +4,23 @@ author: 'Fortify'
 runs:
   using: composite
   steps:
-    - uses: fortify/github-action/internal/setup-java-for-sc-client@main
-    - uses: fortify/github-action/setup@main
+    - uses: fortify/github-action/internal/setup-java-for-sc-client@ghes-workaround
+    - uses: fortify/github-action/setup@ghes-workaround
       with:
         export-path: false
         sc-client: action-default
-    - uses: fortify/github-action/internal/run-script@main
+    - uses: fortify/github-action/internal/run-script@ghes-workaround
       with:
         script: package.sh
     - name: Store ScanCentral package
       if: env.DO_PACKAGE_DEBUG == 'true'
-      uses: actions/upload-artifact@v4
+      uses: fortify/github-action/internal/upload-artifact@ghes-workaround
       with:
         name: ${{ github.job }}-${{ strategy.job-index }}-scancentral-package
         path: package.zip
     - name: Store ScanCentral logs
       if: env.DO_PACKAGE_DEBUG == 'true'
-      uses: actions/upload-artifact@v4
+      uses: fortify/github-action/internal/upload-artifact@ghes-workaround
       with:
         name: ${{ github.job }}-${{ strategy.job-index }}-scancentral-logs
         path: |

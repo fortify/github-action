@@ -1,0 +1,28 @@
+name: 'Upload artifacts'
+description: 'Upload artifacts using either actions/upload-artifact@v4 (for github.com) or @v3 (for GHES)'
+author: 'Fortify'
+inputs:
+  name:
+    description: 'Artifact name'
+    required: true
+  path:
+    description: 'Artifact path'
+    required: true
+runs:
+  using: composite
+  steps:
+    - uses: actions/upload-artifact@v4
+      id: upload_v4
+      continue-on-error: true
+      with:
+        name: ${{ inputs['name'] }}
+        path: ${{ inputs['path'] }}
+    - if: steps.upload_v4.outcome == 'failure'
+      shell: bash
+      run: |
+        echo "::warning::Unable to upload artifacts"
+
+branding:
+  icon: 'shield'
+  color: 'blue'
+

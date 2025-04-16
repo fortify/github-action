@@ -4,21 +4,21 @@ author: 'Fortify'
 runs:
   using: composite
   steps:
-    - uses: fortify/github-action/internal/set-fod-var-defaults@main
-    - uses: fortify/github-action/setup@main
+    - uses: fortify/github-action/internal/set-fod-var-defaults@ghes-workaround
+    - uses: fortify/github-action/setup@ghes-workaround
       with:
         export-path: false
         fcli: action-default
-    - uses: fortify/github-action/internal/fod-login@main
-    - uses: fortify/github-action/package@main
-    - uses: fortify/github-action/internal/run-script@main
+    - uses: fortify/github-action/internal/fod-login@ghes-workaround
+    - uses: fortify/github-action/package@ghes-workaround
+    - uses: fortify/github-action/internal/run-script@ghes-workaround
       with:
         script: fod-scan.sh
       env: 
         DO_SAST_SCAN: true # Not used for now
         GITHUB_TOKEN: ${{ github.token }}
     - if: env.DO_EXPORT == 'true'
-      uses: fortify/github-action/fod-export@main
+      uses: fortify/github-action/fod-export@ghes-workaround
         
 branding:
   icon: 'shield'
