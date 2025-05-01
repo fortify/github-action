@@ -45,7 +45,7 @@ The sample workflow below demonstrates how to configure the action packaging app
       - name: Package source code
         uses: fortify/github-action/package@v1
         env:
-          # SC_CLIENT_VERSION: 24.2
+          # SC_CLIENT_VERSION: 24.4.1
           # DO_PACKAGE_DEBUG: true
           # PACKAGE_EXTRA_OPTS: -oss -bt mvn
           # TOOL_DEFINITIONS: https://ftfy.mycompany.com/tool-definitions/v1/tool-definitions.yaml.zip

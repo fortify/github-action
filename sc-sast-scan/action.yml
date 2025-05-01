@@ -11,7 +11,6 @@ runs:
         fcli: action-default
         debricked-cli: ${{ env.DO_DEBRICKED_SCAN=='true' && 'action-default' || 'skip' }}
     - uses: fortify/github-action/internal/ssc-login@dev/v2.x
-    - uses: fortify/github-action/internal/sc-sast-login@dev/v2.x
     - uses: fortify/github-action/package@dev/v2.x
     - uses: fortify/github-action/internal/run-script@dev/v2.x
       with:

@@ -73,7 +73,7 @@ The standard workflow provided by this GitHub Action allows for running a static
           sast-scan: true
           debricked-sca-scan: true
         env:
-{{include:action/_generic/sc-sast/nocomments.snippet-ssc-and-sc-sast-login.md}}
+{{include:action/_generic/ssc/nocomments.snippet-ssc-login.md}}
 {{include:action/_generic/debricked/nocomments.snippet-debricked-token.md}}
 {{include:action/_generic/ssc/nocomments.snippet-ssc-appversion.md}}
 {{include:action/_generic/nocomments.snippet-setup.md}}
@@ -93,7 +93,7 @@ The standard workflow provided by this GitHub Action allows for running a static
 | debricked&#8209;sca&#8209;scan | If set to `true`, run Debricked Software Composition Analysis. If not specified or set to `false`, no software composition analysis will be performed. |
 
 {{include:action/_generic/nocomments.env-section-and-table-header.md}}
-{{include:action/_generic/sc-sast/nocomments.env-ssc-and-sc-sast-login.md}}
+{{include:action/_generic/ssc/nocomments.env-ssc-login.md}}
 {{include:action/_generic/debricked/nocomments.env-debricked-token.md}}
 {{include:action/_generic/ssc/nocomments.env-ssc-appversion.md}}
 {{include:action/sc-sast-scan/nocomments.env-setup.md}}

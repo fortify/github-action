@@ -23,7 +23,7 @@ So, suppose we'd generate a `BASH_ACTION_PATH` environment variable that contain
         post:   ${{ env.BASH_ACTION_PATH }}/ssc-logout.sh
 ```
 
-This works fine for `script:`, but the `post:` script would use whatever the value of `BASH_ACTION_PATH` is during post-job execution. So, if we'd run both `ssc-login` and `sc-sast-login` actions, the post-job action would try to run `..../internal/sc-sast-login/ssc-logout.sh`, which would fail because of the incorrect directory name.
+This works fine for `script:`, but the `post:` script would use whatever the value of `BASH_ACTION_PATH` is during post-job execution. So, if we'd run both `ssc-login` and `sc-sast-login` actions, the post-job action would try to run `..../internal/sc-sast-login/ssc-logout.sh`, which would fail because of the incorrect directory name. (Note though that SC SAST login/logout has now been integrated into SSC login/logout, so not sure whether this issue is still relevant)
 
 Several work-arounds were tried, but failed. Only way that this would likely work is to have the calling action pass something like a static action id, which would then be used by this action to set a `POST_<id>_SCRIPT=${{inputs.POST}}` environment variable. During post-job execution, we wouldn't look at any actual inputs, but instead just execute the script identified in the `POST_<id>_SCRIPT` environment variable.
 

@@ -1,1 +1,1 @@
-          # SC_CLIENT_VERSION: 24.2
+          # SC_CLIENT_VERSION: 24.4.1

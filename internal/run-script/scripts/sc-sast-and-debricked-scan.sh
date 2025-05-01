@@ -5,16 +5,17 @@
 # and that any necessary fcli sessions have been created.
 
 requireFcli
+requireSSCSession
 requireVar "SSC_APPVERSION"
-if [ "${DO_SC_SAST_SCAN}" == "true" ]; then
-  requireSCSastSession
-  requireVar "SC_SAST_SENSOR_VERSION"
-fi
 if [ "${DO_DEBRICKED_SCAN}" == "true" ]; then
   requireDebrickedCLI
   requireVar "DEBRICKED_TOKEN"
 fi
 checkRequirements
+
+if [[ -n "${SC_SAST_SENSOR_VERSION}" ]]; then
+  export _SC_SAST_SENSOR_VERSION_OPTS="-v ${SC_SAST_SENSOR_VERSION}"
+fi
 
 # Disable Debricked CLI colors 
 export NO_COLOR=true
@@ -26,7 +27,7 @@ fi
 
 if [ "${DO_SC_SAST_SCAN}" == "true" ]; then
   run "SAST_SCAN" "${FCLI_CMD}" sc-sast scan start \
-    --publish-to "${SSC_APPVERSION}" -p package.zip -v "${SC_SAST_SENSOR_VERSION}" \
+    --publish-to "${SSC_APPVERSION}" -f package.zip ${_SC_SAST_SENSOR_VERSION_OPTS} \
     --store sc_sast_scan __expand:EXTRA_SC_SAST_SCAN_OPTS __expand:SC_SAST_SCAN_EXTRA_OPTS
 fi
 if [ "${DO_DEBRICKED_SCAN}" == "true" ]; then

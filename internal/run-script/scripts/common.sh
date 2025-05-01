@@ -247,12 +247,6 @@ function requireSSCSession {
 }
 
 #############################################################################
-# Function to be called by scripts that require an active ScanCentral SAST session.
-function requireSCSastSession {
-    requireVar _SC_SAST_LOGGED_IN "ERROR: This script requires an active ScanCentral SAST session"
-}
-
-#############################################################################
 # Function to determine whether appversion/release setup is enabled. Setup 
 # is enabled if any of the SETUP variables is set.
 function doSetup {

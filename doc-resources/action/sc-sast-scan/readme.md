@@ -24,7 +24,7 @@ The sample workflow below demonstrates how to configure the action for running a
       - name: Run ScanCentral SAST Scan
         uses: fortify/github-action/sc-sast-scan@{{var:action-major-version}}
         env:
-{{include:action/_generic/sc-sast/nocomments.snippet-ssc-and-sc-sast-login.md}}
+{{include:action/_generic/ssc/nocomments.snippet-ssc-login.md}}
 {{include:action/_generic/debricked/nocomments.snippet-debricked-token.md}}
 {{include:action/_generic/ssc/nocomments.snippet-ssc-appversion.md}}
 {{include:action/_generic/nocomments.snippet-setup.md}}
@@ -41,7 +41,7 @@ The sample workflow below demonstrates how to configure the action for running a
 ```
 
 {{include:action/_generic/nocomments.env-section-and-table-header.md}}
-{{include:action/_generic/sc-sast/nocomments.env-ssc-and-sc-sast-login.md}}
+{{include:action/_generic/ssc/nocomments.env-ssc-login.md}}
 {{include:action/_generic/debricked/nocomments.env-debricked-token.md}}
 {{include:action/_generic/ssc/nocomments.env-ssc-appversion.md}}
 {{include:action/sc-sast-scan/nocomments.env-setup.md}}
