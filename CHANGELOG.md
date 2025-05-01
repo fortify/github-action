@@ -19,6 +19,29 @@
 
 # Changelog
 
+## [2.0.0](https://github.com/fortify/github-action/compare/v1.7.0...v2.0.0) (2025-05-01)
+
+
+### ⚠ BREAKING CHANGES
+
+* Upgrade fcli to v3.4.1
+* Removed `SC_SAST_LOGIN_EXTRA_OPTS`
+* `EXTRA_SC_SAST_SCAN_OPTS` may need to be updated according to new `fcli sc-sast scan start` syntax
+* Any custom fcli actions referenced in `*_ACTION` inputs will need to be migrated to fcli 3.x action syntax
+
+### Features
+
+* `EXTRA_SC_SAST_SCAN_OPTS` may need to be updated according to new `fcli sc-sast scan start` syntax ([63455f2](https://github.com/fortify/github-action/commit/63455f2b62ca4e61d4e76a5a34ce26175b83f389))
+* `SC_SAST_SENSOR_VERSION` is now optional ([63455f2](https://github.com/fortify/github-action/commit/63455f2b62ca4e61d4e76a5a34ce26175b83f389))
+* Any custom fcli actions referenced in `*_ACTION` inputs will need to be migrated to fcli 3.x action syntax ([63455f2](https://github.com/fortify/github-action/commit/63455f2b62ca4e61d4e76a5a34ce26175b83f389))
+* Removed `SC_SAST_LOGIN_EXTRA_OPTS` ([63455f2](https://github.com/fortify/github-action/commit/63455f2b62ca4e61d4e76a5a34ce26175b83f389))
+* Upgrade fcli to v3.4.1 ([63455f2](https://github.com/fortify/github-action/commit/63455f2b62ca4e61d4e76a5a34ce26175b83f389))
+
+
+### Bug Fixes
+
+* Upgrade Debricked CLI to v2.6.7 ([63455f2](https://github.com/fortify/github-action/commit/63455f2b62ca4e61d4e76a5a34ce26175b83f389))
+
 ## [1.7.0](https://github.com/fortify/github-action/compare/v1.6.4...v1.7.0) (2025-01-21)
 
 
