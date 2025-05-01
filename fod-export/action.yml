@@ -4,13 +4,13 @@ author: 'Fortify'
 runs:
   using: composite
   steps:
-    - uses: fortify/github-action/internal/set-fod-var-defaults@v2.0.0
-    - uses: fortify/github-action/setup@v2.0.0
+    - uses: fortify/github-action/internal/set-fod-var-defaults@main
+    - uses: fortify/github-action/setup@main
       with:
         export-path: false
         fcli: action-default
-    - uses: fortify/github-action/internal/fod-login@v2.0.0
-    - uses: fortify/github-action/internal/run-script@v2.0.0
+    - uses: fortify/github-action/internal/fod-login@main
+    - uses: fortify/github-action/internal/run-script@main
       with:
         script: export.sh
       env: 
