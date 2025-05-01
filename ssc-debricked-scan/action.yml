@@ -4,14 +4,14 @@ author: 'Fortify'
 runs:
   using: composite
   steps:
-    - uses: fortify/github-action/internal/set-ssc-var-defaults@main
-    - uses: fortify/github-action/setup@main
+    - uses: fortify/github-action/internal/set-ssc-var-defaults@dev/v2.x
+    - uses: fortify/github-action/setup@dev/v2.x
       with:
         export-path: false
         fcli: action-default
         debricked-cli: action-default
-    - uses: fortify/github-action/internal/ssc-login@main
-    - uses: fortify/github-action/internal/run-script@main
+    - uses: fortify/github-action/internal/ssc-login@dev/v2.x
+    - uses: fortify/github-action/internal/run-script@dev/v2.x
       with:
         script: sc-sast-and-debricked-scan.sh
       env: 
