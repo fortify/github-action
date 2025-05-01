@@ -13,15 +13,15 @@ inputs:
 runs:
   using: composite
   steps:
-    - uses: fortify/github-action/fod-sast-scan@dev/v2.x
+    - uses: fortify/github-action/fod-sast-scan@main
       if: inputs['sast-scan']=='true' && env.FOD_URL 
       env:
         DO_DEBRICKED_SCAN: ${{ inputs['debricked-sca-scan'] }}
-    - uses: fortify/github-action/sc-sast-scan@dev/v2.x
+    - uses: fortify/github-action/sc-sast-scan@main
       if: inputs['sast-scan']=='true' && env.SSC_URL 
       env:
         DO_DEBRICKED_SCAN: ${{ inputs['debricked-sca-scan'] }}
-    - uses: fortify/github-action/ssc-debricked-scan@dev/v2.x
+    - uses: fortify/github-action/ssc-debricked-scan@main
       if: inputs['sast-scan']=='false' && inputs['debricked-sca-scan']=='true' && env.SSC_URL 
         
 branding:
