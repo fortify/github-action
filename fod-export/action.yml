@@ -15,7 +15,7 @@ runs:
         script: export.sh
       env: 
         PRODUCT: fod
-        DEFAULT_OPTS: --rel "${{env.FOD_RELEASE}}" -f ./gh-fortify-sast.sarif
+        DEFAULT_OPTS: --rel "${{env.FOD_RELEASE}}" --source-dir="${{github.workspace}}" -f ./gh-fortify-sast.sarif
     - uses: github/codeql-action/upload-sarif@v3
       with:
         sarif_file: ./gh-fortify-sast.sarif

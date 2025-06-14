@@ -15,7 +15,7 @@ runs:
         script: export.sh
       env: 
         PRODUCT: ssc
-        DEFAULT_OPTS: --av "${{env.SSC_APPVERSION}}" -f ./gh-fortify-sast.sarif
+        DEFAULT_OPTS: --av "${{env.SSC_APPVERSION}}" --source-dir="${{github.workspace}}" -f ./gh-fortify-sast.sarif
     - uses: github/codeql-action/upload-sarif@v3
       with:
         sarif_file: ./gh-fortify-sast.sarif
