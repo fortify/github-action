@@ -19,6 +19,13 @@
 
 # Changelog
 
+## [2.1.1](https://github.com/fortify/github-action/compare/v2.1.0...v2.1.1) (2025-06-14)
+
+
+### Bug Fixes
+
+* Fix potential source file path inconsistencies in SAST security report (see https://github.com/fortify/fcli/issues/749) ([cc61a88](https://github.com/fortify/github-action/commit/cc61a887416d048428bb8a2ae6b157c2da83f36f))
+
 ## [2.1.0](https://github.com/fortify/github-action/compare/v2.0.0...v2.1.0) (2025-06-14)
 
 
