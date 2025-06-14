@@ -8,13 +8,13 @@ https://github.com/fortify/github-action
 {{var:current-year}}
 
 # action-major-version
-v1
+v2
 
 # fcli-doc-base-url
-https://fortify.github.io/fcli/v3.4.1/
+https://fortify.github.io/fcli/v3.6.0/
 
 # sc-client-version
-24.4.1
+25.2.0
 
 # sc-client-doc-base-url
-https://www.microfocus.com/documentation/fortify-software-security-center/2440/SC_SAST_Help_24.4.0/index.htm
+https://www.microfocus.com/documentation/fortify-software-security-center/2520/sc-sast-ugd-html-25.2.0/index.htm

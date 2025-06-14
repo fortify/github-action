@@ -18952,11 +18952,11 @@ exports.TOOLS = {
      *            ScanCentral Client, but please double-check.
      */
     "fcli": {
-        "versionAliases": { "action-default": "3.4.1" },
+        "versionAliases": { "action-default": "3.6.0" },
         "cmds": { "windows": "fcli.exe", "linux": "fcli", "darwin": "fcli" }
     },
     "sc-client": {
-        "versionAliases": { "action-default": "24.4.1" },
+        "versionAliases": { "action-default": "25.2.0" },
         "cmds": { "windows": "scancentral.bat", "linux": "scancentral", "darwin": "scancentral" }
     },
     "vuln-exporter": {

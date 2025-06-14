@@ -1,4 +1,4 @@
-# fortify/github-action/setup@v1 
+# fortify/github-action/setup@v2 
 
 
 <!-- START-INCLUDE:p.marketing-intro.md -->
@@ -15,7 +15,7 @@ This action allows for setting up the Fortify tools listed below. Which tools an
 
 * [fcli](https://github.com/fortify/fcli)
 * [Debricked CLI](https://github.com/debricked/cli)
-* [ScanCentral Client](https://www.microfocus.com/documentation/fortify-software-security-center/2440/SC_SAST_Help_24.4.0/index.htm#cli/intro.htm)
+* [ScanCentral Client](https://www.microfocus.com/documentation/fortify-software-security-center/2520/sc-sast-ugd-html-25.2.0/index.htm#cli/intro.htm)
 * [FoDUploader](https://github.com/fod-dev/fod-uploader-java)
 * [FortifyVulnerabilityExporter](https://github.com/fortify/FortifyVulnerabilityExporter)
 * [FortifyBugTrackerUtility](https://github.com/fortify-ps/FortifyBugTrackerUtility)
@@ -51,7 +51,7 @@ The sample workflow below demonstrates how to configure the action for installin
 ```yaml
     steps:    
       - name: Setup Fortify tools
-        uses: fortify/github-action/setup@v1
+        uses: fortify/github-action/setup@v2
         with:
           tool-definitions: https://github.com/fortify/tool-definitions/releases/download/v1/tool-definitions.yaml.zip
           export-path: true
