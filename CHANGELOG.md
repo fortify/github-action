@@ -19,6 +19,19 @@
 
 # Changelog
 
+## [2.1.0](https://github.com/fortify/github-action/compare/v2.0.0...v2.1.0) (2025-06-14)
+
+
+### Features
+
+* Update fcli to 3.6.0 ([4822149](https://github.com/fortify/github-action/commit/4822149a8a15ae2a1e47e80b096590e8d30fa056))
+* Update ScanCentral Client to 25.2.0 ([4822149](https://github.com/fortify/github-action/commit/4822149a8a15ae2a1e47e80b096590e8d30fa056))
+
+
+### Bug Fixes
+
+* Documentation: Update action references to `v2` ([4822149](https://github.com/fortify/github-action/commit/4822149a8a15ae2a1e47e80b096590e8d30fa056))
+
 ## [2.0.0](https://github.com/fortify/github-action/compare/v1.7.0...v2.0.0) (2025-05-01)
 
 
