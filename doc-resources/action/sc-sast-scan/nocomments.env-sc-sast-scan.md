@@ -1,2 +1,0 @@
-|SC_SAST_SENSOR_VERSION|Version of the ScanCentral SAST sensor on which the scan should be performed; see [`fcli sc-sast scan start` documentation]({{var:fcli-doc-base-url}}/manpage/fcli-sc-sast-scan-start.html) for details.|
-|SC_SAST_SCAN_EXTRA_OPTS<br/>EXTRA_SC_SAST_SCAN_OPTS|Extra ScanCentral SAST scan options; see [`fcli sc-sast scan start` documentation]({{var:fcli-doc-base-url}}/manpage/fcli-sc-sast-scan-start.html). Note that `EXTRA_SC_SAST_SCAN_OPTS` is deprecated; please use `SC_SAST_SCAN_EXTRA_OPTS`.|

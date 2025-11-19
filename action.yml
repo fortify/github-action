@@ -1,28 +1,14 @@
 name: 'Fortify AST Scan'
 description: 'Find and fix vulnerabilities to build secure software with Fortify Code Security.'
 author: 'Fortify'
-inputs:
-  sast-scan:
-    description: 'Run a SAST scan, takes either true or false (default)'
-    default: 'false'
-    required: false
-  debricked-sca-scan:
-    description: 'Run a Debricked Software Composition Analysis, takes either true or false (default)'
-    default: 'false'
-    required: false
+#inputs:
 runs:
   using: composite
   steps:
-    - uses: fortify/github-action/fod-sast-scan@main
-      if: inputs['sast-scan']=='true' && env.FOD_URL 
-      env:
-        DO_DEBRICKED_SCAN: ${{ inputs['debricked-sca-scan'] }}
-    - uses: fortify/github-action/sc-sast-scan@main
-      if: inputs['sast-scan']=='true' && env.SSC_URL 
-      env:
-        DO_DEBRICKED_SCAN: ${{ inputs['debricked-sca-scan'] }}
-    - uses: fortify/github-action/ssc-debricked-scan@main
-      if: inputs['sast-scan']=='false' && inputs['debricked-sca-scan']=='true' && env.SSC_URL 
+    - uses: fortify/github-action/setup@feat/fcli-ci
+      with:
+        fcli: v3
+    - ls -laR ${RUNNER_TOOL_CACHE} | fgrep 'fcli'
         
 branding:
   icon: 'shield'

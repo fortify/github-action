@@ -3,7 +3,7 @@
 
 ## Usage instructions
 
-Please see the README.md file for usage instructions.
+TODO
 
 <!-- END-INCLUDE:repo-usage.md -->
 

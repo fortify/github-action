@@ -1,1 +1,0 @@
-          # SSC_APPVERSION: MyApp:MyVersion
