@@ -2,7 +2,7 @@ This action allows for setting up the Fortify tools listed below. Which tools an
 
 * [fcli](https://github.com/fortify/fcli)
 * [Debricked CLI](https://github.com/debricked/cli)
-* [ScanCentral Client]({{var:sc-client-doc-base-url}}#cli/intro.htm)
+* [ScanCentral Client]({{var:sc-client-doc-url}})
 * [FoDUploader](https://github.com/fod-dev/fod-uploader-java)
 * [FortifyVulnerabilityExporter](https://github.com/fortify/FortifyVulnerabilityExporter)
 * [FortifyBugTrackerUtility](https://github.com/fortify-ps/FortifyBugTrackerUtility)

@@ -15,7 +15,7 @@ This action allows for setting up the Fortify tools listed below. Which tools an
 
 * [fcli](https://github.com/fortify/fcli)
 * [Debricked CLI](https://github.com/debricked/cli)
-* [ScanCentral Client](https://www.microfocus.com/documentation/fortify-software-security-center/2520/sc-sast-ugd-html-25.2.0/index.htm#cli/intro.htm)
+* [ScanCentral Client](https://www.microfocus.com/documentation/fortify-software-security-center/2540/sc-sast-ugd-html-25.4.0/doc/2404_25.4/home.html)
 * [FoDUploader](https://github.com/fod-dev/fod-uploader-java)
 * [FortifyVulnerabilityExporter](https://github.com/fortify/FortifyVulnerabilityExporter)
 * [FortifyBugTrackerUtility](https://github.com/fortify-ps/FortifyBugTrackerUtility)

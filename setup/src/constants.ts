@@ -15,11 +15,11 @@ export const TOOLS: Record<string, Record<string, Record<string, string>>> = {
      *            ScanCentral Client, but please double-check. 
      */
     "fcli": { 
-        "versionAliases": {"action-default": "3.6.0"},
+        "versionAliases": {"action-default": "3.13.1"},
         "cmds": {"windows": "fcli.exe", "linux": "fcli", "darwin": "fcli"}
     },
     "sc-client": { 
-        "versionAliases": {"action-default": "25.2.0"},
+        "versionAliases": {"action-default": "25.4.0"},
         "cmds": {"windows": "scancentral.bat", "linux": "scancentral", "darwin": "scancentral"}
     },
     "vuln-exporter": { 
@@ -27,7 +27,7 @@ export const TOOLS: Record<string, Record<string, Record<string, string>>> = {
         "cmds": {"windows": "FortifyVulnerabilityExporter.bat", "linux": "FortifyVulnerabilityExporter", "darwin": "FortifyVulnerabilityExporter"}
     },
     "fod-uploader": { 
-        "versionAliases": {"action-default": "5.4.1"},
+        "versionAliases": {"action-default": "5.4.3"},
         "cmds": {"windows": "FoDUploader.bat", "linux": "FoDUploader", "darwin": "FoDUploader"}
     },
     "bugtracker-utility": { 

@@ -1,4 +1,4 @@
-This action packages application source code using [ScanCentral Client]({{var:sc-client-doc-base-url}}#cli/package-cmd.htm). The output package is saved as `package.zip`.
+This action packages application source code using [ScanCentral Client]({{var:sc-client-doc-url}}). The output package is saved as `package.zip`.
 
 {{include:action/_generic/prerequisites-h3.md}}
 
