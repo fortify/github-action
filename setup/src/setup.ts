@@ -26,14 +26,6 @@ async function main(): Promise<void> {
 			args.push('--install-dir-pattern', `${runnerToolCache}/{tool}/{version}/${arch}`);
 		}
 		
-		// Get export-path input (default: true)
-		const exportPath = core.getBooleanInput('export-path');
-		if (!exportPath) {
-			core.warning('export-path is set to false - tools will not be added to PATH');
-			// Prevent fcli from automatically adding tools to PATH in GitHub Actions
-			core.exportVariable('SETUP_EXPORT_PATH', 'false');
-		}
-		
 		// Map tool inputs to fcli action arguments
 		const tools = [
 			'fcli',
@@ -81,6 +73,8 @@ async function main(): Promise<void> {
 			if (envToolSpecs.length > 0) {
 				envArgs.push('--tools', envToolSpecs.join(','));
 			}
+			// Get export-path input (default: true)
+			const exportPath = core.getBooleanInput('export-path');
 			if (!exportPath) {
 				envArgs.push('--exclude=path');
 			}
