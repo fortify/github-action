@@ -23,7 +23,7 @@ async function main(): Promise<void> {
 		const runnerToolCache = process.env.RUNNER_TOOL_CACHE;
 		const arch = process.env.RUNNER_ARCH ?? process.arch;
 		if (runnerToolCache) {
-			args.push('--tool-cache-pattern', `${runnerToolCache}/{tool}/{version}/${arch}`);
+			args.push('--install-dir-pattern', `${runnerToolCache}/{tool}/{version}/${arch}`);
 		}
 		
 		// Map tool inputs to fcli action arguments
