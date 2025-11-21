@@ -1,5 +1,5 @@
 import * as core from '@actions/core';
-import { runFortifySetup } from '@fortify/setup';
+import { runFortifySetup, runFortifyEnv } from '@fortify/setup';
 
 /**
  * Main entrypoint for the Fortify Setup GitHub Action.
@@ -17,6 +17,13 @@ async function main(): Promise<void> {
 		const toolDefinitions = core.getInput('tool-definitions');
 		if (toolDefinitions) {
 			args.push('--tool-definitions', toolDefinitions);
+		}
+		
+		// Set tool cache pattern using GitHub Actions runner tool cache directory
+		const runnerToolCache = process.env.RUNNER_TOOL_CACHE;
+		const arch = process.env.RUNNER_ARCH ?? process.arch;
+		if (runnerToolCache) {
+			args.push('--install-dir-pattern', `${runnerToolCache}/{tool}/{version}/${arch}`);
 		}
 		
 		// Get export-path input (default: true)
@@ -37,11 +44,18 @@ async function main(): Promise<void> {
 			'debricked-cli'
 		];
 		
+		const setupToolSpecs: string[] = [];
+		const envToolSpecs: string[] = [];
 		for (const tool of tools) {
 			const version = core.getInput(tool);
 			if (version && version !== 'skip') {
-				args.push(`--${tool}`, version);
+				setupToolSpecs.push(`${tool}:${version}`);
+				envToolSpecs.push(tool);
 			}
+		}
+		
+		if (setupToolSpecs.length > 0) {
+			args.push('--tools', setupToolSpecs.join(','));
 		}
 		
 		// Run fortify-setup action using @fortify/setup
@@ -58,6 +72,29 @@ async function main(): Promise<void> {
 		} else {
 			core.info('');
 			core.info('✓ Fortify tools setup complete');
+			
+			// Set up environment variables for GitHub Actions
+			core.info('');
+			core.info('Setting up environment variables...');
+			
+			const envArgs: string[] = ['github'];
+			if (envToolSpecs.length > 0) {
+				envArgs.push('--tools', envToolSpecs.join(','));
+			}
+			if (!exportPath) {
+				envArgs.push('--exclude=path');
+			}
+			
+			const envResult = await runFortifyEnv({
+				args: envArgs,
+				verbose: true
+			});
+			
+			if (envResult.exitCode === 0) {
+				core.info('✓ Environment setup complete');
+			} else {
+				core.warning('Failed to set up environment variables');
+			}
 		}
 	} catch (err) {
 		core.setFailed(`Action failed with error: ${err}`);
