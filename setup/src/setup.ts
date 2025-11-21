@@ -19,13 +19,6 @@ async function main(): Promise<void> {
 			args.push('--tool-definitions', toolDefinitions);
 		}
 		
-		// Set tool cache pattern using GitHub Actions runner tool cache directory
-		const runnerToolCache = process.env.RUNNER_TOOL_CACHE;
-		const arch = process.env.RUNNER_ARCH ?? process.arch;
-		if (runnerToolCache) {
-			args.push('--install-dir-pattern', `${runnerToolCache}/{tool}/{version}/${arch}`);
-		}
-		
 		// Map tool inputs to fcli action arguments
 		const tools = [
 			'fcli',
