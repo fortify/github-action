@@ -1,12 +1,12 @@
 import * as core from '@actions/core';
-import { runFortifySetup, runFortifyEnv } from '@fortify/setup';
+import { runFortifyEnv } from '@fortify/setup';
 
 /**
  * Main entrypoint for the Fortify Setup GitHub Action.
  * 
  * This action uses the @fortify/setup npm package to bootstrap fcli and run
- * the fortify-setup action, which detects, registers, and installs Fortify
- * tools for use in CI/CD workflows.
+ * the 'fcli tool env init' command, which detects, registers, and installs
+ * Fortify tools for use in CI/CD workflows.
  */
 async function main(): Promise<void> {
 	try {
@@ -43,12 +43,12 @@ async function main(): Promise<void> {
 			args.push('--tools', setupToolSpecs.join(','));
 		}
 		
-		// Run fortify-setup action using @fortify/setup
+		// Run tool env init using @fortify/setup
 		core.info('Setting up Fortify tools...');
 		core.info('');
 		
-		const result = await runFortifySetup({
-			args,
+		const result = await runFortifyEnv({
+			args: ['init', ...args],
 			verbose: true
 		});
 		
