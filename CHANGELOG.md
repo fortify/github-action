@@ -1,22 +1,3 @@
-## [1.5.1](https://github.com/fortify/github-action/compare/v1.4.0...v1.5.1) (2024-11-01)
-
-
-### Features
-
-* FoD: Add support for creating application through `DO_SETUP` ([2d91e3c](https://github.com/fortify/github-action/commit/2d91e3c5c405391e5ee2cfe725a77b0ded38dcd0))
-* FoD: Automatically set `--app-owner` if `FOD_USER` is configured ([345ddda](https://github.com/fortify/github-action/commit/345ddda04de863b34e9566df5ea088f5872eeef4))
-* FoD: Improve handling of `--copy-from` option in `SETUP_EXTRA_OPTS` ([2d91e3c](https://github.com/fortify/github-action/commit/2d91e3c5c405391e5ee2cfe725a77b0ded38dcd0))
-* Major documentation usability improvements ([22ea8e9](https://github.com/fortify/github-action/commit/22ea8e9ef9edb24e364d1dc66230649726ad450c))
-* Simplify setup of Debricked scans on FoD ([7c25788](https://github.com/fortify/github-action/commit/7c25788b4c57582d2039d70a1ad9aeb228e34c6c))
-* Update fcli to 2.9.0 ([2d91e3c](https://github.com/fortify/github-action/commit/2d91e3c5c405391e5ee2cfe725a77b0ded38dcd0))
-* Update ScanCentral Client to 24.4.0 ([f3246ac](https://github.com/fortify/github-action/commit/f3246ac1d35a20a34df0a2d404479f1fabeae574))
-
-
-### Bug Fixes
-
-* Improve parsing of boolean flags in `*_EXTRA_OPTS` ([2d91e3c](https://github.com/fortify/github-action/commit/2d91e3c5c405391e5ee2cfe725a77b0ded38dcd0))
-* Update Debricked CLI to 2.1.7 ([2d91e3c](https://github.com/fortify/github-action/commit/2d91e3c5c405391e5ee2cfe725a77b0ded38dcd0))
-
 # Changelog
 
 ## [2.2.0](https://github.com/fortify/github-action/compare/v2.1.1...v2.2.0) (2025-11-19)
