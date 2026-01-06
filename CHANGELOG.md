@@ -19,6 +19,14 @@
 
 # Changelog
 
+## [2.2.0](https://github.com/fortify/github-action/compare/v2.1.1...v2.2.0) (2025-11-19)
+
+
+### Features
+
+* Update fcli to 3.13.1 ([603d05a](https://github.com/fortify/github-action/commit/603d05aa10cfab9f642fc7ed6a76372789a6471a))
+* Update ScanCentral Client to 25.4.0 ([603d05a](https://github.com/fortify/github-action/commit/603d05aa10cfab9f642fc7ed6a76372789a6471a))
+
 ## [2.1.1](https://github.com/fortify/github-action/compare/v2.1.0...v2.1.1) (2025-06-14)
 
 
