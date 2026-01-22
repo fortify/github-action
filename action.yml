@@ -14,8 +14,8 @@ runs:
       shell: bash
       env:
         GITHUB_TOKEN: ${{ github.token }}
-        SAST_EXPORT_EXTRA_OPTS: --publish=true ${SAST_EXPORT_EXTRA_OPTS:-}
-        DEBRICKED_EXPORT_EXTRA_OPTS: --publish=true ${DEBRICKED_EXPORT_EXTRA_OPTS:-}
+        SAST_EXPORT_EXTRA_OPTS: --publish=true ${{ env.SAST_EXPORT_EXTRA_OPTS || '' }}
+        DEBRICKED_EXPORT_EXTRA_OPTS: --publish=true ${{ env.DEBRICKED_EXPORT_EXTRA_OPTS || '' }}
         
 branding:
   icon: 'shield'
