@@ -12,6 +12,8 @@ runs:
     - run: |
         "${FCLI_CMD}" action run ci
       shell: bash
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
         
 branding:
   icon: 'shield'
