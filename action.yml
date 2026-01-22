@@ -7,12 +7,11 @@ runs:
   steps:
     - uses: fortify/github-action/setup@feat/fcli-ci
       with:
-        fcli: v3
+        fcli: bootstrapped
         export-path: false
     - run: |
         "${FCLI_CMD}" action run ci
       shell: bash
-    # TODO CodeQL upload, ... See GitLab Component for inspiration
         
 branding:
   icon: 'shield'

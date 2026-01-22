@@ -1,4 +1,5 @@
 import * as core from '@actions/core';
+import * as path from 'path';
 import { runFortifyEnv } from '@fortify/setup';
 
 /**
@@ -43,13 +44,24 @@ async function main(): Promise<void> {
 			args.push('--tools', setupToolSpecs.join(','));
 		}
 		
+		// Configure bootstrap settings for job-specific temporary storage
+		// Use same directory structure as default (~/.fortify/fcli/bootstrap) but relative to RUNNER_TEMP
+		// RUNNER_TEMP is cleaned up after each job, ensuring fresh fcli bootstrap per workflow run
+		// while allowing cache reuse within the same job (multiple action calls)
+		const bootstrapConfig = {
+			cacheDir: process.env.RUNNER_TEMP 
+				? path.join(process.env.RUNNER_TEMP, '.fortify', 'fcli', 'bootstrap')
+				: undefined
+		};
+		
 		// Run tool env init using @fortify/setup
 		core.info('Setting up Fortify tools...');
 		core.info('');
 		
 		const result = await runFortifyEnv({
 			args: ['init', ...args],
-			verbose: true
+			verbose: true,
+			config: bootstrapConfig
 		});
 		
 		if (result.exitCode !== 0) {
@@ -74,7 +86,8 @@ async function main(): Promise<void> {
 			
 			const envResult = await runFortifyEnv({
 				args: envArgs,
-				verbose: true
+				verbose: true,
+				config: bootstrapConfig
 			});
 			
 			if (envResult.exitCode === 0) {
