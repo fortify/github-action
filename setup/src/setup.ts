@@ -44,14 +44,24 @@ async function main(): Promise<void> {
 			args.push('--tools', setupToolSpecs.join(','));
 		}
 		
-		// Configure bootstrap settings for job-specific temporary storage
-		// Use same directory structure as default (~/.fortify/fcli/bootstrap) but relative to RUNNER_TEMP
-		// RUNNER_TEMP is cleaned up after each job, ensuring fresh fcli bootstrap per workflow run
-		// while allowing cache reuse within the same job (multiple action calls)
+		// Determine cache directory and fcli version for bootstrap configuration
+		// - If FCLI_BOOTSTRAP_VERSION is set to a full major.minor.patch version (e.g., 3.14.1),
+		//   use RUNNER_TOOL_CACHE for persistent caching across workflow runs
+		// - Otherwise, use RUNNER_TEMP for job-specific temporary storage (cleaned after each job)
+		const fcliBootstrapVersion = process.env.FCLI_BOOTSTRAP_VERSION;
+		const isFullVersion = fcliBootstrapVersion && /^v?\d+\.\d+\.\d+$/.test(fcliBootstrapVersion);
+		
+		let cacheDir: string | undefined;
+		if (isFullVersion && process.env.RUNNER_TOOL_CACHE) {
+			// Use tool cache for specific versions (persistent across runs)
+			cacheDir = path.join(process.env.RUNNER_TOOL_CACHE, 'fortify', 'fcli', fcliBootstrapVersion!);
+		} else if (process.env.RUNNER_TEMP) {
+			// Use temp directory for latest/partial versions (cleaned after job)
+			cacheDir = path.join(process.env.RUNNER_TEMP, '.fortify', 'fcli', 'bootstrap');
+		}
+		
 		const bootstrapConfig = {
-			cacheDir: process.env.RUNNER_TEMP 
-				? path.join(process.env.RUNNER_TEMP, '.fortify', 'fcli', 'bootstrap')
-				: undefined
+			cacheDir
 		};
 		
 		// Run tool env init using @fortify/setup

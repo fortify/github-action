@@ -1,4 +1,4 @@
-# Contributing to Fortify GitHub Actions
+# Contributing to Fortify GitHub Action
 
 ## Contribution Agreement
 
@@ -10,33 +10,32 @@ Contributions like bug fixes and enhancements may be submitted through Pull Requ
 ## Information for Developers
 
 ### Repository initialization
-After cloning this repository, please run ./configure.sh to install npm modules and configure git hooks. When adding a new NodeJS-based action, you'll need to update `<repo-root>/configure.sh` to add the action directory to the for-loop.
+After cloning this repository, please run `./configure.sh` to install npm modules and configure git hooks.
 
-### Action documentation
-Action documentation is generated from the `doc-resources` directory, using functionality provided by https://github.com/fortify/shared-doc-resources. The `doc-resources` directory contains the following:
+### Documentation structure
+Documentation is generated from the `doc-resources` directory using functionality provided by https://github.com/fortify/shared-doc-resources. The structure is straightforward:
 
-* `action/_generic/**/*`: Generic includes referenced from action documentation
-* `action/_root/readme.md`: Documentation for the top-level action
-* `action/<action-name>`: 
-    * `readme.md`: Documentation for `<action-name>` sub-action
-    * `nocomments.env-*.md`: Markdown table rows describing environment variable inputs
-    * `nocomments.snippet-*.md`: Sample YAML snippets
-* `repo-devinfo.md`: Information for developers
-* `repo-usage.md`: Used to generated top-level USAGE.md, just refers to README.md
-* `template-values.md`: Defines variables used in documentation resources
-* `templates/README.template.md`: Template for the top-level `README.md` file
-* `templates/<action-name>/README.template.md`: Template for the README.md file for each sub-action
-* `update-repo-docs.sh`: Script to generate documentation resources
+* `repo-intro.md`: Introduction text included in README.md
+* `repo-usage.md`: Usage instructions included in USAGE.md
+* `repo-resources.md`: Links to resources (contributing, license, etc.)
+* `repo-devinfo.md`: Information for developers (this file)
+* `repo-usage-text.md`: Include file with links to detailed documentation (used in both intro and usage)
+* `template-values.md`: Variables used throughout the documentation
+* `update-repo-docs.sh`: Script to regenerate README.md, USAGE.md, and other files
 
-If you need to update the documentation for an existing action, you'll want to edit the corresponding `action/<action-name>/readme.md` file or the included files. 
+To update documentation, edit the appropriate `.md` files in `doc-resources/`, then run `doc-resources/update-repo-docs.sh` to regenerate the top-level documentation files.
 
-When adding a new action, you should:
-* Create a corresponding directory in the `doc-resources/templates` directory
-* Copy an existing `README.template.md` from one of the other action template directories
-* Change the header and include statement in the new `README.template.md` to match the new action
-* Create a new `action/<action-name>/readme.md` file in the `doc-resources` directory
+### Building the action
 
-After any documentation updates, you may want to manually run `doc-resources/update-repo-docs.sh` to verify whether all includes can be found, and to review the generated README.md files for each action.
+The action uses the `@fortify/setup` NPM package published to [npmjs.org](https://www.npmjs.com/package/@fortify/setup). To build:
+
+```bash
+cd setup
+npm install
+npm run build
+```
+
+This creates a bundled `dist/index.js` file that includes all dependencies. The action is ready to use once the dist directory is committed.
 
 <!-- END-INCLUDE:repo-devinfo.md -->
 

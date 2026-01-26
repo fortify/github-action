@@ -1,4 +1,4 @@
 ## Usage instructions
 
-TODO
+{{include:repo-usage-text.md}}
 
