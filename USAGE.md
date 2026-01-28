@@ -8,9 +8,9 @@
 
 Given that these GitHub Actions are just thin wrappers around `@fortify/setup` and `fcli`, detailed usage documentation is available on the fcli documentation website:
 
-* [`fortify/github-action` for OpenText Application Security Code (Fortify on Demand)](https://fortify.github.io/fcli/dev_doc.ci-updates//ci/github-ci-fod-v3.0.x.html)
-* [`fortify/github-action` for OpenText Software Security Center (Fortify SSC)](https://fortify.github.io/fcli/dev_doc.ci-updates//ci/github-ci-ssc-v3.0.x.html)
-* [`fortify/github-action/setup`](https://fortify.github.io/fcli/dev_doc.ci-updates//ci/github-setup-v3.0.x.html)
+* [`fortify/github-action` for OpenText Application Security Code (Fortify on Demand)](https://fortify.github.io/fcli/dev_doc.ci-updates/ci/github/v3.0.x/ast-action-fod.html)
+* [`fortify/github-action` for OpenText Software Security Center (Fortify SSC)](https://fortify.github.io/fcli/dev_doc.ci-updates/ci/github/v3.0.x/ast-action-ssc.html)
+* [`fortify/github-action/setup`](https://fortify.github.io/fcli/dev_doc.ci-updates/ci/github/v3.0.x/setup-action.html)
 
 <!-- END-INCLUDE:repo-usage-text.md -->
 
