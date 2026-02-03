@@ -1,21 +1,44 @@
 name: 'Fortify AST Scan'
 description: 'Find and fix vulnerabilities to build secure software with Fortify Code Security.'
 author: 'Fortify'
-#inputs:
+inputs:
+  debug:
+    description: 'Whether to generate and collect debug logs; note that these may contain sensitive data like access tokens or credentials. Automatically enabled when workflow is re-run with "Enable debug logging" checked.'
+    required: false
+    default: 'false'
+  debug-artifact-name:
+    description: 'Name for the debug artifacts archive; defaults to "fortify-debug-logs"'
+    required: false
+    default: 'fortify-debug-logs'
+  debug-retention-days:
+    description: 'Number of days to retain debug artifacts; defaults to 1'
+    required: false
+    default: '1'
 runs:
   using: composite
   steps:
+    - name: Set Fortify data directory
+      run: echo "FORTIFY_DATA_DIR=${{ runner.temp }}/fortify-data" >> $GITHUB_ENV
+      shell: bash
     - uses: fortify/github-action/setup@feat/fcli-ci
       with:
         fcli: bootstrapped
         export-path: false
     - run: |
-        "${FCLI_CMD}" action run ci
+        mkdir -p "${FORTIFY_DATA_DIR}" && cd "${FORTIFY_DATA_DIR}"
+        "${FCLI_CMD}" action run ci --debug=${{ inputs.debug == 'true' || runner.debug == '1' }}
       shell: bash
       env:
         GITHUB_TOKEN: ${{ github.token }}
         SAST_EXPORT_EXTRA_OPTS: --publish=true ${{ env.SAST_EXPORT_EXTRA_OPTS || '' }}
         DEBRICKED_EXPORT_EXTRA_OPTS: --publish=true ${{ env.DEBRICKED_EXPORT_EXTRA_OPTS || '' }}
+    - name: Upload debug logs
+      if: ${{ always() && (inputs.debug == 'true' || runner.debug == '1') }}
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{ inputs.debug-artifact-name }}-${{ github.job }}
+        path: ${{ env.FORTIFY_DATA_DIR }}
+        retention-days: ${{ inputs.debug-retention-days }}
         
 branding:
   icon: 'shield'
