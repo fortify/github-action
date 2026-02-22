@@ -107,9 +107,9 @@ jobs:
 
 Given that these GitHub Actions are just thin wrappers around `@fortify/setup` and `fcli`, detailed usage documentation is available on the fcli documentation website:
 
-* [`fortify/github-action` for OpenText Application Security Code (Fortify on Demand)](https://fortify.github.io/fcli/dev_v3.x/ci/github/v3.0.x/ast-action-fod.html)
-* [`fortify/github-action` for OpenText Software Security Center (Fortify SSC)](https://fortify.github.io/fcli/dev_v3.x/ci/github/v3.0.x/ast-action-ssc.html)
-* [`fortify/github-action/setup`](https://fortify.github.io/fcli/dev_v3.x/ci/github/v3.0.x/setup-action.html)
+* [`fortify/github-action` for OpenText Application Security Code (Fortify on Demand)](https://fortify.github.io/fcli/v3/ci/github/v3.0.x/ast-action-fod.html)
+* [`fortify/github-action` for OpenText Software Security Center (Fortify SSC)](https://fortify.github.io/fcli/v3/ci/github/v3.0.x/ast-action-ssc.html)
+* [`fortify/github-action/setup`](https://fortify.github.io/fcli/v3/ci/github/v3.0.x/setup-action.html)
 
 <!-- END-INCLUDE:repo-usage-text.md -->
 

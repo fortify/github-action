@@ -8,7 +8,7 @@ https://github.com/fortify/github-action
 {{var:current-year}}
 
 # fcli-doc-base-url
-https://fortify.github.io/fcli/dev_v3.x
+https://fortify.github.io/fcli/v3
 
 # action-doc-version
 v3.0.x
