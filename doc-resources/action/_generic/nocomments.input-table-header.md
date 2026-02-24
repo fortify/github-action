@@ -1,2 +1,0 @@
-| Action input | Description |
-| :--- | :--- |

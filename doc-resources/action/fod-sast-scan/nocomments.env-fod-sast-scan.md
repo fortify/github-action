@@ -1,1 +1,0 @@
-|FOD_SAST_SCAN_EXTRA_OPTS<br/>EXTRA_FOD_SAST_SCAN_OPTS|Extra SAST scan options; see [`fcli fod sast-scan start` documentation]({{var:fcli-doc-base-url}}/manpage/fcli-fod-sast-scan-start.html). Note that `EXTRA_FOD_SAST_SCAN_OPTS` is deprecated; please use `FOD_SAST_SCAN_EXTRA_OPTS`.|

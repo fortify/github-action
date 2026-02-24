@@ -1,11 +1,3 @@
-
-<!-- START-INCLUDE:repo-usage.md -->
-
-## Usage instructions
-
-
-<!-- START-INCLUDE:repo-usage-text.md -->
-
 ### Quick Start
 
 #### OpenText Core Application Security (Fortify on Demand)
@@ -93,16 +85,8 @@ jobs:
 
 Given that these GitHub Actions are just thin wrappers around `@fortify/setup` and `fcli`, detailed usage documentation is available on the fcli documentation website:
 
-* [`fortify/github-action` for OpenText Application Security Code (Fortify on Demand)](https://fortify.github.io/fcli/v3/ci/github/v3.0.x/ast-action-fod.html)
-* [`fortify/github-action` for OpenText Software Security Center (Fortify SSC)](https://fortify.github.io/fcli/v3/ci/github/v3.0.x/ast-action-ssc.html)
-* [`fortify/github-action/setup`](https://fortify.github.io/fcli/v3/ci/github/v3.0.x/setup-action.html)
-
-<!-- END-INCLUDE:repo-usage-text.md -->
+* [`fortify/github-action` for OpenText Application Security Code (Fortify on Demand)]({{var:fcli-doc-base-url}}/ci/github/{{var:action-doc-version}}/ast-action-fod.html)
+* [`fortify/github-action` for OpenText Software Security Center (Fortify SSC)]({{var:fcli-doc-base-url}}/ci/github/{{var:action-doc-version}}/ast-action-ssc.html)
+* [`fortify/github-action/setup`]({{var:fcli-doc-base-url}}/ci/github/{{var:action-doc-version}}/setup-action.html)
 
 
-<!-- END-INCLUDE:repo-usage.md -->
-
-
----
-
-*[This document was auto-generated from USAGE.template.md; do not edit by hand](https://github.com/fortify/shared-doc-resources/blob/main/USAGE.md)*
