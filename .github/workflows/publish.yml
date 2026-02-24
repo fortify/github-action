@@ -37,10 +37,9 @@ jobs:
       
       - name: Generate and process release PR
         id: release_please
-        uses: google-github-actions/release-please-action@v3
+        uses: googleapis/release-please-action@v4
         with:
           release-type: simple
-          package-name: ${{ github.event.repository.name }}
           
       - name: Publish v{major}.{minor} tag
         if: steps.release_please.outputs.release_created
