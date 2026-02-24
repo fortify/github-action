@@ -1,5 +1,20 @@
 # Changelog
 
+## [3.0.0](https://github.com/fortify/github-action/compare/v2.2.0...v3.0.0) (2026-02-24)
+
+
+### ⚠ BREAKING CHANGES
+
+* `fortify/github-action/setup`: Now uses `@fortify/setup` NPM component instead of GitHub-specific implementation, resulting in changes to supported action inputs and environment variables
+* `fortify/github-action`: Now uses `fcli action run ci` instead of GitHub-specific scripts, resulting in changes to supported action inputs and environment variables
+* `fortify/github-action/*`: All sub-actions except for the `setup` action have been removed; use the top-level `fortify/github-action` to run a full AST scan pipeline, or use the `setup` action in combination with `fcli` commands or actions to implement custom workflows
+
+### Features
+
+* `fortify/github-action/*`: All sub-actions except for the `setup` action have been removed; use the top-level `fortify/github-action` to run a full AST scan pipeline, or use the `setup` action in combination with `fcli` commands or actions to implement custom workflows ([899cd9b](https://github.com/fortify/github-action/commit/899cd9b608be9c835b3943bc58ac92020608eae4))
+* `fortify/github-action/setup`: Now uses `@fortify/setup` NPM component instead of GitHub-specific implementation, resulting in changes to supported action inputs and environment variables ([899cd9b](https://github.com/fortify/github-action/commit/899cd9b608be9c835b3943bc58ac92020608eae4))
+* `fortify/github-action`: Now uses `fcli action run ci` instead of GitHub-specific scripts, resulting in changes to supported action inputs and environment variables ([899cd9b](https://github.com/fortify/github-action/commit/899cd9b608be9c835b3943bc58ac92020608eae4))
+
 ## [2.2.0](https://github.com/fortify/github-action/compare/v2.1.1...v2.2.0) (2025-11-19)
 
 
