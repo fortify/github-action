@@ -20,7 +20,7 @@ runs:
     - name: Set Fortify data directory
       run: echo "FORTIFY_DATA_DIR=${{ runner.temp }}/fortify-data" >> $GITHUB_ENV
       shell: bash
-    - uses: fortify/github-action/setup@mjain6/review-github-actions-vulnerabilities
+    - uses: fortify/github-action/setup@main
       with:
         fcli: bootstrapped
         export-path: false
