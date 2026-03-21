@@ -1,0 +1,35 @@
+name: 'Fortify AST Scan (with debug upload - GHES)'
+description: 'Run Fortify AST Scan and upload debug artifacts using actions/upload-artifact@v3 (GHES-compatible).'
+author: 'Fortify'
+inputs:
+  debug:
+    description: 'Whether to generate & collect debug artifacts; note that these may contain sensitive data like access tokens or credentials. Automatically enabled when workflow is re-run with "Enable debug logging" checked.'
+    required: false
+    default: 'false'
+  debug-artifact-name:
+    description: 'Name for the debug artifacts archive; defaults to "fortify-debug-artifacts"'
+    required: false
+    default: 'fortify-debug-artifacts'
+  debug-retention-days:
+    description: 'Number of days to retain debug artifacts; defaults to 1 due to sensitivity of data'
+    required: false
+    default: '1'
+
+runs:
+  using: composite
+  steps:
+    - name: Run Fortify AST Scan
+      id: run_ast_scan
+      uses: fortify/github-action@feat/configurable-debug-upload
+      with:
+        debug: ${{ inputs.debug }}
+        debug-artifact-name: ${{ inputs.debug-artifact-name }}
+        debug-retention-days: ${{ inputs.debug-retention-days }}
+
+    - name: Upload debug artifacts (GHES)
+      if: ${{ always() && steps.run_ast_scan.outputs.upload-debug-artifacts == 'true' }}
+      uses: actions/upload-artifact@v3
+      with:
+        name: ${{ inputs.debug-artifact-name }}-${{ github.job }}
+        path: ${{ steps.run_ast_scan.outputs.debug-artifacts-dir }}
+        retention-days: ${{ inputs.debug-retention-days }}

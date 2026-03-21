@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check-out source code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
       - name: Configure git
         run: |
           git config user.name github-actions
@@ -33,7 +33,7 @@ jobs:
     needs: update-action-references
     steps:
       - name: Check-out source code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
       
       - name: Generate and process release PR
         id: release_please
