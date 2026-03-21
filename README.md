@@ -15,7 +15,7 @@ The `fortify/github-action` GitHub Action allows for easy integration of OpenTex
 
 As such, this GitHub Action automatically benefits from new features and bug fixes as they are introduced in fcli, although there are options to use a fixed fcli version in case you need more stability. At the time of writing, the fcli `ci` action provides out-of-the-box support for Static Application Security Testing (SAST) and Software Composition Analysis (SCA); support for Dynamic or Mobile Application Security Testing (DAST & MAST) may be added in the future.
 
-Apart from the top-level `fortify/github-action` for running the fcli-based `ci` workflow, this repository also provides the `fortify/github-action/setup` GitHub Action. This action allows for setting up fcli and other Fortify tools like ScanCentral Client for use in a custom GitHub Actions workflow, for example for implementing a fully customized AST scan workflow or some other automation workflow that needs to interact with Fortify products.
+Apart from the top-level `fortify/github-action` (and related `fortify/github-action/with-debug-upload-*` sub-actions) for running the fcli-based `ci` workflow, this repository also provides the `fortify/github-action/setup` GitHub Action. This action allows for setting up fcli and other Fortify tools like ScanCentral Client for use in a custom GitHub Actions workflow, for example for implementing a fully customized AST scan workflow or some other automation workflow that needs to interact with Fortify products.
 
 
 <!-- START-INCLUDE:repo-usage-text.md -->
@@ -42,13 +42,28 @@ jobs:
     steps:
       - uses: actions/checkout@v4            # Check out source code
       - uses: actions/setup-<build-tool>@vX  # Set up build tool(s) required to build your project
-      - uses: fortify/github-action@v3       # Run Fortify scans
+      # Run Fortify scans and upload debug artifacts if debugging is enabled; use one of
+      # the following:
+      # - Upload debug artifacts using github.com-compatible actions/upload-artifact@v7:
+      #   uses: fortify/github-action/with-debug-upload-github@v3
+      # - Upload debug artifacts using GHES-compatible actions/upload-artifact@v3:
+      #   uses: fortify/github-action/with-debug-upload-ghes@v3
+      # - Don't upload debug artifacts; use subsequent step to upload to alternative storage:
+      #   uses: fortify/github-action@v3
+      - uses: fortify/github-action/with-debug-upload-github@v3
+        name: Run Fortify Scan
+        id: fortify_scan
         env:
           FOD_URL: ${{ vars.FOD_URL }}
           FOD_CLIENT_ID: ${{ secrets.FOD_CLIENT_ID }}
           FOD_CLIENT_SECRET: ${{ secrets.FOD_CLIENT_SECRET }}
           # FOD_RELEASE: MyApp:main        # Optional: defaults to repo:branch
           # FCLI_BOOTSTRAP_VERSION: v3.15  # Optional if you prefer stability over latest
+      # - name: Upload Fortify debug artifacts (custom)
+      #   if: ${{ always() && steps.fortify_scan.outputs.upload-debug-artifacts == 'true' }}
+      #   uses: <custom upload action>
+      #   with:
+      #     path: ${{ steps.fortify_scan.outputs.debug-artifacts-dir }}
 ```
 
 #### OpenText Application Security (Fortify Software Security Center)
@@ -71,12 +86,27 @@ jobs:
     steps:
       - uses: actions/checkout@v4            # Check out source code
       - uses: actions/setup-<build-tool>@vX  # Set up build tool(s) required to build your project
-      - uses: fortify/github-action@v3       # Run Fortify scans
+      # Run Fortify scans and upload debug artifacts if debugging is enabled; use one of
+      # the following:
+      # - Upload debug artifacts using github.com-compatible actions/upload-artifact@v7:
+      #   uses: fortify/github-action/with-debug-upload-github@v3
+      # - Upload debug artifacts using GHES-compatible actions/upload-artifact@v3:
+      #   uses: fortify/github-action/with-debug-upload-ghes@v3
+      # - Don't upload debug artifacts; use subsequent step to upload to alternative storage:
+      #   uses: fortify/github-action@v3
+      - uses: fortify/github-action/with-debug-upload-github@v3
+        name: Run Fortify Scan
+        id: fortify_scan
         env:
           SSC_URL: ${{ vars.SSC_URL }}
           SSC_TOKEN: ${{ secrets.SSC_TOKEN }}
           SC_SAST_TOKEN: ${{ secrets.SC_SAST_TOKEN }}
           # SSC_APPVERSION: MyApp:main  # Optional: defaults to repo:branch
+      # - name: Upload Fortify debug artifacts (custom)
+      #   if: ${{ always() && steps.fortify_scan.outputs.upload-debug-artifacts == 'true' }}
+      #   uses: <custom upload action>
+      #   with:
+      #     path: ${{ steps.fortify_scan.outputs.debug-artifacts-dir }}
 ```
 
 #### Custom workflow
