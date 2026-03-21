@@ -43,7 +43,7 @@ jobs:
           
       - name: Publish v{major}.{minor} tag
         if: steps.release_please.outputs.release_created
-        uses: richardsimko/update-tag@v1
+        uses: richardsimko/update-tag@aab2434e9a5040687874aa39d1c6377ec0cb0d94
         with:
           tag_name: v${{steps.release_please.outputs.major}}.${{steps.release_please.outputs.minor}}
         env:
@@ -51,7 +51,7 @@ jobs:
           
       - name: Publish v{major} tag
         if: steps.release_please.outputs.release_created
-        uses: richardsimko/update-tag@v1
+        uses: richardsimko/update-tag@aab2434e9a5040687874aa39d1c6377ec0cb0d94
         with:
           tag_name: v${{steps.release_please.outputs.major}}
         env:
