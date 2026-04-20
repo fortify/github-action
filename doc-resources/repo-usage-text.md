@@ -23,12 +23,12 @@ jobs:
       # Run Fortify scans and upload debug artifacts if debugging is enabled; use one of
       # the following:
       # - Upload debug artifacts using github.com-compatible actions/upload-artifact@v7:
-      #   uses: fortify/github-action/with-debug-upload-github@v3
+      #   uses: fortify/github-action/with-debug-upload-github@v4
       # - Upload debug artifacts using GHES-compatible actions/upload-artifact@v3:
-      #   uses: fortify/github-action/with-debug-upload-ghes@v3
+      #   uses: fortify/github-action/with-debug-upload-ghes@v4
       # - Don't upload debug artifacts; use subsequent step to upload to alternative storage:
-      #   uses: fortify/github-action@v3
-      - uses: fortify/github-action/with-debug-upload-github@v3
+      #   uses: fortify/github-action@v4
+      - uses: fortify/github-action/with-debug-upload-github@v4
         name: Run Fortify Scan
         id: fortify_scan
         env:
@@ -67,12 +67,12 @@ jobs:
       # Run Fortify scans and upload debug artifacts if debugging is enabled; use one of
       # the following:
       # - Upload debug artifacts using github.com-compatible actions/upload-artifact@v7:
-      #   uses: fortify/github-action/with-debug-upload-github@v3
+      #   uses: fortify/github-action/with-debug-upload-github@v4
       # - Upload debug artifacts using GHES-compatible actions/upload-artifact@v3:
-      #   uses: fortify/github-action/with-debug-upload-ghes@v3
+      #   uses: fortify/github-action/with-debug-upload-ghes@v4
       # - Don't upload debug artifacts; use subsequent step to upload to alternative storage:
-      #   uses: fortify/github-action@v3
-      - uses: fortify/github-action/with-debug-upload-github@v3
+      #   uses: fortify/github-action@v4
+      - uses: fortify/github-action/with-debug-upload-github@v4
         name: Run Fortify Scan
         id: fortify_scan
         env:
@@ -98,7 +98,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: fortify/github-action/setup@v3
+      - uses: fortify/github-action/setup@v4
         with:
           fcli: bootstrapped               # Set up bootstrapped fcli version. May also specify specific version, but
                                            # then fcli may be downloaded twice (bootstrap version and requested version).

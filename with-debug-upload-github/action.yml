@@ -23,8 +23,6 @@ runs:
       uses: fortify/github-action@feat/configurable-debug-upload
       with:
         debug: ${{ inputs.debug }}
-        debug-artifact-name: ${{ inputs.debug-artifact-name }}
-        debug-retention-days: ${{ inputs.debug-retention-days }}
 
     - name: Upload debug artifacts (github.com)
       if: ${{ always() && steps.run_ast_scan.outputs.upload-debug-artifacts == 'true' }}

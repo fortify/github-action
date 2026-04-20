@@ -6,14 +6,6 @@ inputs:
     description: 'Whether to output debug artifacts; note that these may contain sensitive data like access tokens or credentials. Automatically enabled when workflow is re-run with "Enable debug logging" checked.'
     required: false
     default: 'false'
-  debug-artifact-name:
-    description: 'Deprecated & ignored - This action no longer uploads debug artifacts; see the `with-debug-upload-*` sub-actions for uploading debug artifacts.'
-    required: false
-    default: 'fortify-debug-artifacts'
-  debug-retention-days:
-    description: 'Deprecated & ignored - This action no longer uploads debug artifacts; see the `with-debug-upload-*` sub-actions for uploading debug artifacts.'
-    required: false
-    default: '1'
 outputs:
   upload-debug-artifacts:
     description: '"true" if debug artifacts should be uploaded (inputs.debug==true or runner.debug==1)'
