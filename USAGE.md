@@ -30,7 +30,7 @@ jobs:
       - uses: actions/setup-<build-tool>@vX  # Set up build tool(s) required to build your project
         # Bootstrap fcli, run the fcli-based Fortify CI workflow, and upload any debug artifacts
         # to GitHub artifact storage (see artifact storage section below for alternative options)
-      - uses: fortify/github-action@v3.1
+      - uses: fortify/github-action@v3
         name: Run Fortify Scan
         env:
           FOD_URL: ${{ vars.FOD_URL }}
@@ -62,7 +62,7 @@ jobs:
       - uses: actions/setup-<build-tool>@vX  # Set up build tool(s) required to build your project
         # Bootstrap fcli, run the fcli-based Fortify CI workflow, and upload any debug artifacts
         # to GitHub artifact storage (see artifact storage section below for alternative options)
-      - uses: fortify/github-action@v3.1
+      - uses: fortify/github-action@v3
         name: Run Fortify Scan
         env:
           SSC_URL: ${{ vars.SSC_URL }}
@@ -82,7 +82,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: fortify/github-action/setup@v3.1
+      - uses: fortify/github-action/setup@v3
         with:
           fcli: bootstrapped               # Set up bootstrapped fcli version. May also specify specific version, but
                                            # then fcli may be downloaded twice (bootstrap version and requested version).
