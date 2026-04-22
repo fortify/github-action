@@ -1,5 +1,5 @@
-name: 'Fortify AST Scan'
-description: 'Run Fortify AST Scan and upload debug artifacts using actions/upload-artifact@v7 (GitHub.com).'
+name: 'Fortify AST Scan (with GHES artifacts)'
+description: 'Run Fortify AST Scan and upload debug artifacts using actions/upload-artifact@v3 (GHES-compatible).'
 author: 'Fortify'
 inputs:
   debug:
@@ -18,13 +18,16 @@ inputs:
 runs:
   using: composite
   steps:
-    - uses: fortify/github-action/with-github-artifacts@feat/configurable-debug-upload
+    - name: Run Fortify AST Scan
+      id: run_ast_scan
+      uses: fortify/github-action/without-artifacts@feat/configurable-debug-upload
       with:
         debug: ${{ inputs.debug }}
-        debug-artifact-name: ${{ inputs.debug-artifact-name }}
-        debug-retention-days: ${{ inputs.debug-retention-days }}
 
-branding:
-  icon: 'shield'
-  color: 'blue'
-
+    - name: Upload debug artifacts (GHES)
+      if: ${{ always() && steps.run_ast_scan.outputs.upload-debug-artifacts == 'true' }}
+      uses: actions/upload-artifact@v3
+      with:
+        name: ${{ inputs.debug-artifact-name }}-${{ github.job }}
+        path: ${{ steps.run_ast_scan.outputs.debug-artifacts-dir }}
+        retention-days: ${{ inputs.debug-retention-days }}
