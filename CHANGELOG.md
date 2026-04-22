@@ -1,5 +1,14 @@
 # Changelog
 
+## [3.1.0](https://github.com/fortify/github-action/compare/v3.0.0...v3.1.0) (2026-04-22)
+
+
+### Features
+
+* Add `fortify/github-action/with-ghes-artifacts` sub-action to upload CI workflow debug artifacts to GitHub Enterprise Server artifact storage ([15c59a7](https://github.com/fortify/github-action/commit/15c59a785645801d7830cc6e25f57f87e25659e0))
+* Add `fortify/github-action/with-github-artifacts` sub-action to upload CI workflow debug artifacts to github.com artifact storage (same as top-level `fortify/github-action`) ([15c59a7](https://github.com/fortify/github-action/commit/15c59a785645801d7830cc6e25f57f87e25659e0))
+* Add `fortify/github-action/without-artifacts` sub-action that doesn't upload CI workflow debug artifacts, allowing users to upload debug artifacts to a custom storage provider ([15c59a7](https://github.com/fortify/github-action/commit/15c59a785645801d7830cc6e25f57f87e25659e0))
+
 ## [3.0.0](https://github.com/fortify/github-action/compare/v2.2.0...v3.0.0) (2026-02-24)
 
 
