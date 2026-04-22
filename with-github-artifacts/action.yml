@@ -20,7 +20,7 @@ runs:
   steps:
     - name: Run Fortify AST Scan
       id: run_ast_scan
-      uses: fortify/github-action/without-artifacts@v3.1.0
+      uses: fortify/github-action/without-artifacts@main
       with:
         debug: ${{ inputs.debug }}
 
