@@ -18,7 +18,7 @@ inputs:
 runs:
   using: composite
   steps:
-      uses: fortify/github-action/with-github-artifacts@feat/configurable-debug-upload
+    - uses: fortify/github-action/with-github-artifacts@feat/configurable-debug-upload
       with:
         debug: ${{ inputs.debug }}
         debug-artifact-name: ${{ inputs.debug-artifact-name }}
