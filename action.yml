@@ -1,48 +1,29 @@
 name: 'Fortify AST Scan'
-description: 'Run Fortify AST Scan.'
+description: 'Run Fortify AST Scan and upload debug artifacts using actions/upload-artifact@v7 (GitHub.com).'
 author: 'Fortify'
 inputs:
   debug:
-    description: 'Whether to output debug artifacts; note that these may contain sensitive data like access tokens or credentials. Automatically enabled when workflow is re-run with "Enable debug logging" checked.'
+    description: 'Whether to generate & collect debug artifacts; note that these may contain sensitive data like access tokens or credentials. Automatically enabled when workflow is re-run with "Enable debug logging" checked.'
     required: false
     default: 'false'
-outputs:
-  upload-debug-artifacts:
-    description: '"true" if debug artifacts should be uploaded (inputs.debug==true or runner.debug==1)'
-    value: ${{ steps.set-outputs.outputs.upload-debug-artifacts }}
-  debug-artifacts-dir:
-    description: 'Path to the debug artifacts directory (env.FORTIFY_DATA_DIR)'
-    value: ${{ steps.set-outputs.outputs.debug-artifacts-dir }}
+  debug-artifact-name:
+    description: 'Name for the debug artifacts archive; defaults to "fortify-debug-artifacts"'
+    required: false
+    default: 'fortify-debug-artifacts'
+  debug-retention-days:
+    description: 'Number of days to retain debug artifacts; defaults to 1 due to sensitivity of data'
+    required: false
+    default: '1'
+
 runs:
   using: composite
   steps:
-    - name: Set Fortify data directory
-      run: echo "FORTIFY_DATA_DIR=${{ runner.temp }}/fortify-data" >> $GITHUB_ENV
-      shell: bash
-    - uses: fortify/github-action/setup@feat/configurable-debug-upload
+      uses: fortify/github-action/with-github-artifacts@feat/configurable-debug-upload
       with:
-        fcli: bootstrapped
-        export-path: false
-    - run: |
-        mkdir -p "${FORTIFY_DATA_DIR}" && cd "${FORTIFY_DATA_DIR}"
-        "${FCLI_CMD}" action run ci --debug=${{ inputs.debug == 'true' || runner.debug == '1' }}
-      shell: bash
-      env:
-        GITHUB_TOKEN: ${{ github.token }}
-        SAST_EXPORT_EXTRA_OPTS: --publish=true ${{ env.SAST_EXPORT_EXTRA_OPTS || '' }}
-        DEBRICKED_EXPORT_EXTRA_OPTS: --publish=true ${{ env.DEBRICKED_EXPORT_EXTRA_OPTS || '' }}
-    - name: Set action outputs
-      if: always() # Ensure outputs are set even if the previous step fails, so that debug artifacts can be uploaded when enabled
-      id: set-outputs
-      run: |
-        if [ "${{ inputs.debug }}" = "true" ] || [ "${{ runner.debug }}" = "1" ]; then
-          echo "upload-debug-artifacts=true" >> $GITHUB_OUTPUT
-        else
-          echo "upload-debug-artifacts=false" >> $GITHUB_OUTPUT
-        fi
-        echo "debug-artifacts-dir=${FORTIFY_DATA_DIR}" >> $GITHUB_OUTPUT
-      shell: bash
-        
+        debug: ${{ inputs.debug }}
+        debug-artifact-name: ${{ inputs.debug-artifact-name }}
+        debug-retention-days: ${{ inputs.debug-retention-days }}
+
 branding:
   icon: 'shield'
   color: 'blue'

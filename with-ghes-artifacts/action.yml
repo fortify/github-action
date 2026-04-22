@@ -1,5 +1,5 @@
-name: 'Fortify AST Scan (with debug upload - GitHub.com)'
-description: 'Run Fortify AST Scan and upload debug artifacts using actions/upload-artifact@v7 (GitHub.com).'
+name: 'Fortify AST Scan (with GHES artifacts)'
+description: 'Run Fortify AST Scan and upload debug artifacts using actions/upload-artifact@v3 (GHES-compatible).'
 author: 'Fortify'
 inputs:
   debug:
@@ -20,13 +20,13 @@ runs:
   steps:
     - name: Run Fortify AST Scan
       id: run_ast_scan
-      uses: fortify/github-action@feat/configurable-debug-upload
+      uses: fortify/github-action/without-artifacts@feat/configurable-debug-upload
       with:
         debug: ${{ inputs.debug }}
 
-    - name: Upload debug artifacts (github.com)
+    - name: Upload debug artifacts (GHES)
       if: ${{ always() && steps.run_ast_scan.outputs.upload-debug-artifacts == 'true' }}
-      uses: actions/upload-artifact@v7
+      uses: actions/upload-artifact@v3
       with:
         name: ${{ inputs.debug-artifact-name }}-${{ github.job }}
         path: ${{ steps.run_ast_scan.outputs.debug-artifacts-dir }}

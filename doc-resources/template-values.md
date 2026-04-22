@@ -11,4 +11,4 @@ https://github.com/fortify/github-action
 https://fortify.github.io/fcli/v3
 
 # action-doc-version
-v4.0.x
+v3.1.x
