@@ -40,7 +40,6 @@ jobs:
         uses: fortify/3rdparty-actions/actions/googleapis/release-please-action/v5@main
         with:
           release-type: simple
-          skip-github-release: true
           target-branch: ${{ github.ref_name }}
           
       - name: Publish v{major}.{minor} tag
