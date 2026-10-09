@@ -35,7 +35,7 @@ inputs:
     required: false  
 runs:
   using: node24
-  main: 'dist/index.js'
+  main: 'index.cjs'
 branding:
   icon: 'shield'
   color: 'blue'

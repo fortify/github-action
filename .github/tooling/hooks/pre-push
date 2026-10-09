@@ -1,0 +1,2 @@
+#!/bin/sh
+exec node .github/tooling/git-hooks.mjs --pre-push

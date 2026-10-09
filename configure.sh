@@ -1,13 +1,24 @@
-#! /bin/bash
-
-echo "#!/bin/sh" > .git/hooks/pre-commit
-echo './doc-resources/update-repo-docs.sh' >> .git/hooks/pre-commit 
-for dir in setup; do
-  (cd $dir && npm install)
-  echo "(cd "$dir" && NODE_OPTIONS=--openssl-legacy-provider npm run build && git add dist/)" >> .git/hooks/pre-commit
+#!/usr/bin/env bash
+set -euo pipefail
+cd "$(dirname "$0")"
+install_hooks=false
+if [[ $# -eq 1 && "$1" == "--hooks" ]]; then
+  install_hooks=true
+elif [[ $# -ne 0 ]]; then
+  printf 'Usage: %s [--hooks]\n' "$0" >&2
+  exit 2
+fi
+npm ci --prefix .github/tooling --ignore-scripts --no-audit --no-fund
+npm run build --prefix .github/tooling
+npm run generate --prefix .github/tooling
+npm run typecheck --prefix .github/tooling
+npm test --prefix .github/tooling
+if [[ "$install_hooks" == true ]]; then
+  node .github/tooling/git-hooks.mjs --install
+fi
+for hook in pre-commit post-checkout; do
+  hook_path="$(git rev-parse --git-path "hooks/$hook")"
+  if [[ -f "$hook_path" ]] && grep -Eq 'update-action-refs|npm run build.*git add dist' "$hook_path"; then
+    printf 'Legacy generated hook found: %s. Remove its obsolete action build/reference commands.\n' "$hook_path"
+  fi
 done
-
-echo "#!/bin/sh" > .git/hooks/post-checkout
-echo './update-action-refs.sh "$(git rev-parse --abbrev-ref HEAD)"' >> .git/hooks/post-checkout
-
-chmod +x .git/hooks/pre-commit .git/hooks/post-checkout

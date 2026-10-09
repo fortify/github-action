@@ -1,0 +1,41 @@
+name: Validate actions
+'on':
+  push:
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: Branch or SHA to validate (empty uses selected workflow ref)
+        required: false
+        type: string
+permissions:
+  contents: read
+jobs:
+  validate:
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - ubuntu-latest
+          - windows-latest
+        node:
+          - '20'
+          - '24'
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Checkout
+        uses: fortify/shared-github/actions/3rdparty/actions/checkout/v6@5ad1afec0f56a21b03f0887eea35505cb6a66554
+        with:
+          ref: ${{ inputs.ref || github.ref }}
+          persist-credentials: false
+      - name: Setup Node.js
+        uses: fortify/shared-github/actions/3rdparty/actions/setup-node/v6@5ad1afec0f56a21b03f0887eea35505cb6a66554
+        with:
+          node-version: ${{ matrix.node }}
+          package-manager-cache: false
+      - name: Validate generated actions and bundled runtime
+        run: |
+          npm ci --prefix .github/tooling --ignore-scripts --no-audit --no-fund
+          npm run check --prefix .github/tooling
+          npm run typecheck --prefix .github/tooling
+          npm test --prefix .github/tooling
