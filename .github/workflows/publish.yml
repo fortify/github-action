@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check-out source code
-        uses: actions/checkout@v6
+        uses: fortify/shared-github/actions/3rdparty/actions/checkout/v6@5ad1afec0f56a21b03f0887eea35505cb6a66554
       - name: Configure git
         run: |
           git config user.name github-actions
@@ -25,7 +25,7 @@ jobs:
         run: |
           ./update-action-refs.sh "${GITHUB_REF#refs/heads/}"
           git add . && git commit -m "chore: Update action references" && git push || \
-            echo "No update needed or update failed" 
+            echo "No update needed or update failed"
             
   release:
     if: github.ref == 'refs/heads/main'
@@ -33,29 +33,29 @@ jobs:
     needs: update-action-references
     steps:
       - name: Check-out source code
-        uses: actions/checkout@v6
+        uses: fortify/shared-github/actions/3rdparty/actions/checkout/v6@5ad1afec0f56a21b03f0887eea35505cb6a66554
       
       - name: Generate and process release PR
         id: release_please
-        uses: fortify/3rdparty-actions/actions/googleapis/release-please-action/v5@main
+        uses: fortify/shared-github/actions/3rdparty/googleapis/release-please-action/v5@5ad1afec0f56a21b03f0887eea35505cb6a66554
         with:
           release-type: simple
           target-branch: ${{ github.ref_name }}
           
       - name: Publish v{major}.{minor} tag
         if: steps.release_please.outputs.release_created
-        uses: fortify/.github/.github/actions/update-tag@main
+        uses: fortify/shared-github/actions/fortify/update-tag@5ad1afec0f56a21b03f0887eea35505cb6a66554
         with:
           tag_name: v${{steps.release_please.outputs.major}}.${{steps.release_please.outputs.minor}}
           github_token: ${{ secrets.GITHUB_TOKEN }}
           
       - name: Publish v{major} tag
         if: steps.release_please.outputs.release_created
-        uses: fortify/.github/.github/actions/update-tag@main
+        uses: fortify/shared-github/actions/fortify/update-tag@5ad1afec0f56a21b03f0887eea35505cb6a66554
         with:
           tag_name: v${{steps.release_please.outputs.major}}
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          
+
       - name: Update release PR
         if: steps.release_please.outputs.pr
         shell: bash
@@ -68,4 +68,3 @@ jobs:
           git config user.name github-actions
           git config user.email github-actions@fortify.com
           git add . && git commit -m "chore: Update action references" && git push || echo "No update needed"
-          

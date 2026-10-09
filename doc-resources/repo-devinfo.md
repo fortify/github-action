@@ -27,3 +27,40 @@ npm run build
 ```
 
 This creates a bundled `dist/index.js` file that includes all dependencies. The action is ready to use once the dist directory is committed.
+
+### Third-party action pins
+
+Customer-facing actions reference third-party actions directly by full commit
+SHA, with an exact release tag in the adjacent comment. Repository workflows use
+the shared-github wrappers instead. Internal Fortify action references remain
+managed by `update-action-refs.sh` and are excluded from the third-party updater.
+
+The `Update third-party action pins` workflow runs daily and can be dispatched
+manually on the default branch. `action-updates.json` sets a seven-day minimum
+release age. Releases are filtered by age before selecting the newest eligible
+version, so a newer release does not block an older eligible upgrade. Drafts,
+prereleases, missing timestamps, and moving major tags are excluded. Existing
+pins are never downgraded, and moved release tags fail validation.
+
+Directory-specific overrides constrain GHES upload-artifact to major 3. Other
+third-party references can follow new stable majors. Optional runtime tag
+variants must be explicitly selected. Unknown or unused overrides fail validation.
+
+The updater preserves changed input defaults with explicit values and raises
+draft PRs for major/runtime changes or unresolved input migrations. Review release
+notes before merging. Inspection runs read-only; a separate publishing job only
+accepts changes to existing action metadata, without file-mode changes.
+
+PR creation requires the repository setting allowing GitHub Actions to create
+pull requests. PRs created with `GITHUB_TOKEN` do not normally trigger other
+workflows, so run validation manually before merging.
+
+```bash
+npm ci --prefix scripts --ignore-scripts
+npm test --prefix scripts
+node scripts/update-action-pins.mjs --check
+```
+
+Use `--write` instead of `--check` to apply eligible updates locally. Offline
+tests do not call GitHub or Fortify services. An optional `GITHUB_TOKEN` can
+authenticate read-only release inspection to avoid anonymous API limits.

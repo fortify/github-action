@@ -20,13 +20,13 @@ runs:
   steps:
     - name: Run Fortify AST Scan
       id: run_ast_scan
-      uses: fortify/github-action/without-artifacts@main
+      uses: fortify/github-action/without-artifacts@fix/pinned-actions
       with:
         debug: ${{ inputs.debug }}
 
     - name: Upload debug artifacts (GHES)
       if: ${{ always() && steps.run_ast_scan.outputs.upload-debug-artifacts == 'true' }}
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@c6a366c94c3e0affe28c06c8df20a878f24da3cf # v3.2.2
       with:
         name: ${{ inputs.debug-artifact-name }}-${{ github.job }}
         path: ${{ steps.run_ast_scan.outputs.debug-artifacts-dir }}

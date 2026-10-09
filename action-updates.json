@@ -1,0 +1,10 @@
+{
+  "minimumReleaseAgeDays": 7,
+  "overrides": {
+    "with-ghes-artifacts": {
+      "actions/upload-artifact": {
+        "allowedMajors": [3]
+      }
+    }
+  }
+}
