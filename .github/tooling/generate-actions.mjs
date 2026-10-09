@@ -31,12 +31,21 @@ export function generateActions(source) {
   for (const [filename, definition] of Object.entries(value.outputs)) {
     validateOutputPath(filename);
     const action = structuredClone(definition);
-    if (action.runs?.using !== 'composite' || !Array.isArray(action.runs.steps)) {
-      throw new Error(`${filename}: expected composite steps`);
+    let steps;
+    if (action.runs?.using === 'composite') {
+      if (!Array.isArray(action.runs.steps)) throw new Error(`${filename}: expected composite steps`);
+      steps = action.runs.steps.flat(1);
+      action.runs.steps = steps;
+    } else if (['node20', 'node24'].includes(action.runs?.using)) {
+      if (action.runs.steps !== undefined || typeof action.runs.main !== 'string'
+          || !/^(?:\.\.\/)*[\w-][\w.-]*(?:\/[\w-][\w.-]*)*$/.test(action.runs.main)
+          || path.posix.join(path.posix.dirname(filename), action.runs.main).startsWith('../')) throw new Error(`${filename}: invalid Node action entry point`);
+      steps = [];
+    } else {
+      throw new Error(`${filename}: unsupported action runtime`);
     }
-    action.runs.steps = action.runs.steps.flat(1);
     const ids = new Set();
-    for (const step of action.runs.steps) {
+    for (const step of steps) {
       if (!step || typeof step !== 'object' || Array.isArray(step)) throw new Error(`${filename}: invalid step group`);
       if (step.id) {
         if (!/^[A-Za-z_][A-Za-z0-9_-]*$/.test(step.id) || ids.has(step.id)) throw new Error(`${filename}: invalid or duplicate step id`);
@@ -68,7 +77,7 @@ export function generateActions(source) {
     }
     if (action.outputs && !Object.keys(action.outputs).length) delete action.outputs;
     const output = new YAML.Document(action, { aliasDuplicateObjects: false });
-    action.runs.steps.forEach((step, index) => {
+    steps.forEach((step, index) => {
       if (step.uses && comments.has(step.uses)) output.getIn(['runs', 'steps', index, 'uses'], true).comment = comments.get(step.uses);
     });
     generated.set(filename, '# AUTO-GENERATED FILE - DO NOT EDIT MANUALLY.\n'

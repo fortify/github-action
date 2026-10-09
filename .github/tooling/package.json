@@ -5,7 +5,8 @@
   "scripts": {
     "test": "node --test *.test.mjs",
     "build": "node build-setup.mjs",
-    "generate": "node generate-actions.mjs",
+    "generate": "npm run generate:actions && npm run build",
+    "generate:actions": "node generate-actions.mjs",
     "check": "node generate-actions.mjs --check && node build-setup.mjs --check && node update-contributing.mjs --check",
     "docs:contributing": "node update-contributing.mjs",
     "docs:check": "node update-contributing.mjs --check",

@@ -1,1 +1,0 @@
-require('../runtime/setup.cjs').main();

@@ -9,7 +9,6 @@ elif [[ $# -ne 0 ]]; then
   exit 2
 fi
 npm ci --prefix .github/tooling --ignore-scripts --no-audit --no-fund
-npm run build --prefix .github/tooling
 npm run generate --prefix .github/tooling
 npm run typecheck --prefix .github/tooling
 npm test --prefix .github/tooling

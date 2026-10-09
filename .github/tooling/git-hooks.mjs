@@ -122,7 +122,7 @@ export async function validateSnapshot(root, { commit, full = false } = {}) {
       console.warn('Documentation reminder: review generated docs and stage intended changes. The contributor include is checked locally; other docs/shared templates require explicit bash doc-resources/update-repo-docs.sh generation.');
     }
   } catch (error) {
-    throw new Error(`${error.message}\nRegenerate explicitly: npm run generate --prefix .github/tooling; npm run build --prefix .github/tooling; npm run docs:contributing --prefix .github/tooling. Review and stage outputs yourself. Hooks never generate or stage files.`, { cause: error });
+    throw new Error(`${error.message}\nRegenerate explicitly: npm run generate --prefix .github/tooling; npm run docs:contributing --prefix .github/tooling. Review and stage outputs yourself. Hooks never generate or stage files.`, { cause: error });
   } finally {
     await rm(temporary, { recursive: true, force: true });
   }

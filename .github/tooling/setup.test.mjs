@@ -2,6 +2,10 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 import { createRequire } from 'node:module';
 import path from 'node:path';
+import { execFileSync } from 'node:child_process';
+import { mkdtemp, rm } from 'node:fs/promises';
+import { fileURLToPath } from 'node:url';
+import os from 'node:os';
 
 const { setupRequests, runSetup, runScan, parseEnvironment, executeScan } = createRequire(import.meta.url)('../../runtime/setup.cjs');
 
@@ -91,4 +95,20 @@ test('scan and setup failures still set outputs; runner debug enables collection
 test('subprocess forwards exit failure and does not interpret shell arguments', async () => {
   await executeScan(process.execPath, ['-e', 'process.exit(0)', '$(exit 1)'], process.cwd(), process.env);
   await assert.rejects(executeScan(process.execPath, ['-e', 'process.exit(7)'], process.cwd(), process.env), /exit code 7/);
+});
+
+test('shared runtime executes standalone setup when launched directly, without tool downloads', async context => {
+  const temporary = await mkdtemp(path.join(os.tmpdir(), 'fortify-runtime-entry-'));
+  context.after(() => rm(temporary, { recursive: true, force: true }));
+  const filename = fileURLToPath(new URL('../../runtime/setup.cjs', import.meta.url));
+  assert.throws(() => execFileSync(process.execPath, [filename], {
+    encoding: 'utf8',
+    env: { ...Object.fromEntries(Object.entries(process.env).filter(([name]) => !name.startsWith('INPUT_'))),
+      FCLI_BOOTSTRAP_PATH: process.execPath, FCLI_BOOTSTRAP_VERSION: '',
+      RUNNER_TEMP: temporary, 'INPUT_EXPORT-PATH': 'false',
+      INPUT_FCLI: 'bootstrapped', 'INPUT_TOOL-DEFINITIONS': '', GITHUB_ENV: path.join(temporary, 'environment'),
+      GITHUB_OUTPUT: path.join(temporary, 'output') },
+    stdio: 'pipe',
+  }), error => error.status === 1 && error.stdout.includes('Setting up Fortify tools...')
+    && error.stdout.includes('Fortify setup failed with exit code'));
 });

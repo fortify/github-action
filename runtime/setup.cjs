@@ -46128,3 +46128,4 @@ async function main() {
 module.exports = __webpack_exports__;
 /******/ })()
 ;
+if (require.main === module) { module.exports.main(); }

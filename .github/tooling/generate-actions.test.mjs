@@ -56,12 +56,20 @@ test('reject internal and unpinned references, nested groups and broken step ref
   assert.throws(() => generateActions(source.replace('        - *upload', '        - *scan')), /duplicate/);
 });
 
-test('repository actions have one scan step, optional upload, existing public outputs and same-commit runtime', async () => {
+test('repository actions preserve Node setup and composite contracts with same-commit runtime', async () => {
   const source = await readFile(new URL('../action-src/actions.yml', import.meta.url), 'utf8');
   const generated = generateActions(source);
   for (const [filename, content] of generated) {
     assert.match(content, /^# AUTO-GENERATED FILE - DO NOT EDIT MANUALLY\.\n# Source: \.github\/action-src\/actions\.yml\n# Regenerate: npm run generate --prefix \.github\/tooling\n/);
     const action = YAML.parse(content);
+    if (filename === 'setup/action.yml') {
+      const existing = YAML.parse(await readFile(new URL('../../setup/action.yml', import.meta.url), 'utf8'));
+      assert.deepEqual(action, existing);
+      assert.deepEqual(action.runs, { using: 'node24', main: '../runtime/setup.cjs' });
+      assert.equal(action.inputs['export-path'].default, 'true');
+      assert.equal(Object.keys(action.inputs).length, 8);
+      continue;
+    }
     assert.equal(action.runs.steps.length, filename === 'without-artifacts/action.yml' ? 1 : 2);
     assert.equal(action.runs.steps[0].id, 'scan');
     assert.match(content, /github-script@[a-f0-9]{40} # v\d+\.\d+\.\d+/);
@@ -111,4 +119,25 @@ test('generation creates newly declared outputs; check mode reports missing file
   await assert.rejects(readFile(path.join(root, 'new-variant/nested/action.yaml')), { code: 'ENOENT' });
   await generateRepository(root);
   await generateRepository(root, { check: true });
+});
+
+test('Node action generation preserves metadata and rejects malformed entry points and mixed runtimes', () => {
+  const source = `outputs:
+  setup/action.yml:
+    name: Setup
+    inputs:
+      tool:
+        default: skip
+    runs:
+      using: node24
+      main: index.cjs
+`;
+  const action = YAML.parse(generateActions(source).get('setup/action.yml'));
+  assert.equal(action.inputs.tool.default, 'skip');
+  assert.equal(action.runs.steps, undefined);
+  const shared = YAML.parse(generateActions(source.replace('index.cjs', '../runtime/setup.cjs')).get('setup/action.yml'));
+  assert.equal(shared.runs.main, '../runtime/setup.cjs');
+  assert.throws(() => generateActions(source.replace('index.cjs', '../../outside.cjs')), /entry point/);
+  assert.throws(() => generateActions(source.replace('      main: index.cjs', '      main: index.cjs\n      steps: []')), /entry point/);
+  assert.throws(() => generateActions(source.replace('node24', 'docker')), /unsupported action runtime/);
 });

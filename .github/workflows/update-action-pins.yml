@@ -51,6 +51,9 @@ jobs:
           GITHUB_TOKEN: ${{ github.token }}
           ACTION_UPDATE_BODY: ${{ runner.temp }}/action-pin-update/body.md
         run: node .github/tooling/update-action-pins.mjs --write
+      - name: Generate action metadata and Node runtime
+        if: steps.update.outputs.has_changes == 'true'
+        run: npm run generate --prefix .github/tooling
       - name: Validate generated updates
         if: steps.update.outputs.has_changes == 'true'
         run: |

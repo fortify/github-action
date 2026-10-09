@@ -15,7 +15,7 @@ const { code, assets } = await ncc(fileURLToPath(new URL('setup.ts', import.meta
   license: 'licenses.txt',
 });
 if (!args.includes('--check')) await mkdir(path.join(root, 'runtime'), { recursive: true });
-const outputs = { 'setup.cjs': code, ...Object.fromEntries(Object.entries(assets)
+const outputs = { 'setup.cjs': code + '\nif (require.main === module) { module.exports.main(); }\n', ...Object.fromEntries(Object.entries(assets)
   .filter(([filename]) => !filename.endsWith('.d.ts')).map(([filename, asset]) => [filename, asset.source])) };
 for (const [filename, content] of Object.entries(outputs)) {
   if (filename.includes('/') || filename.includes('\\') || filename === '..') throw new Error(`Unexpected bundle asset: ${filename}`);

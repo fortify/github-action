@@ -19,7 +19,6 @@ review the changes, and stage only intended source/output changes:
 
 ```bash
 npm run generate --prefix .github/tooling
-npm run build --prefix .github/tooling
 ```
 
 Runtime uses the same explicit generation and validation process as YAML, with
@@ -63,13 +62,15 @@ affected generated files. Do not hand-edit generated top-level documentation.
 
 ### Source and generated implementation
 
-`.github/action-src/actions.yml` owns all composite definitions, reusable YAML
+`.github/action-src/actions.yml` owns all action metadata, reusable YAML
 anchors, exact third-party SHA pins, and updater policies. `without-artifacts`
 is the source parent; artifact variants add an upload step, and the root action
 is a direct alias of the GitHub variant. Output anchors match their action directory
 names. Generated action files are committed and must not
 be edited directly. The generator resolves shallow YAML merges, expands one
 level of step groups, and strips `x-update-policy` and `x-repository-paths` metadata.
+It emits both the composite scan actions and the standalone Node `/setup` action;
+all generated action metadata carries the same warning and regeneration command.
 The latter maps step environment variables to repository-relative files; the
 generator computes the correct path from each action directory automatically.
 Root and GitHub-variant actions therefore share the same definition and behavior,
@@ -90,8 +91,10 @@ version or add fcli to PATH.
 
 `.github/tooling/setup.ts` is the shared TypeScript source. It bundles the
 `@fortify/setup` NPM package and its dependencies into one CommonJS file. The
-standalone `/setup` Node 24 action is retained as an input adapter over the same
-bundle. Composites currently use github-script v7's private Node 20 runtime;
+standalone `/setup` Node 24 action references `../runtime/setup.cjs` directly.
+The shared bundle runs standalone setup only when executed directly; importing
+it from a composite just exposes its functions. No separate setup entry-point
+adapter is maintained. Composites currently use github-script v7's private Node 20 runtime;
 runner/GHES installations must support that runtime, and `/setup` additionally
 requires Node 24 action support. GHES must have access to the pinned external
 actions through its configured action availability/synchronization mechanism.
@@ -100,12 +103,17 @@ actions through its configured action availability/synchronization mechanism.
 
 ```bash
 npm ci --prefix .github/tooling --ignore-scripts
-npm run build --prefix .github/tooling
 npm run generate --prefix .github/tooling
 npm run check --prefix .github/tooling
 npm run typecheck --prefix .github/tooling
 npm test --prefix .github/tooling
 ```
+
+`generate` is the single action-build task: it regenerates every declared action
+file and compiles the shared Node runtime/license bundle. Use it after editing
+action source, runtime source, generators, or dependencies. For targeted work,
+`generate:actions` only emits YAML and `build` only compiles Node code.
+Documentation generation remains separate. Neither task stages files.
 
 ### Feature development workflow
 
@@ -116,8 +124,8 @@ when a branch switch or dependency edit changes the lockfile.
 
 | Use case | When and where | Action |
 | --- | --- | --- |
-| Change composite steps, inputs, outputs, metadata, or variants | Locally after editing `.github/action-src/actions.yml`, before staging | Run `npm run generate --prefix .github/tooling`. Review and stage the source plus every changed generated action. New output paths belong in the YAML, not a second script list. |
-| Change runtime behavior | Locally after editing `.github/tooling/setup.ts`, before staging | Run `npm run build --prefix .github/tooling`. Review and stage runtime source, `runtime/setup.cjs`, and any changed license output. `/setup` metadata/adapter remain hand-maintained. |
+| Change action steps, inputs, outputs, metadata, or variants | Locally after editing `.github/action-src/actions.yml`, before staging | Run `npm run generate --prefix .github/tooling`. Review and stage the source plus every changed generated action, including `/setup` metadata. New output paths belong in the YAML, not a second script list. |
+| Change runtime behavior | Locally after editing `.github/tooling/setup.ts`, before staging | Run `npm run generate --prefix .github/tooling`. Review and stage runtime source, `runtime/setup.cjs`, and any changed license output. Scan composites and standalone `/setup` use the same bundle; no separate adapter needs updating. |
 | Change generators, bundler config, or dependency versions | Locally before committing | Refresh locked dependencies if needed, regenerate affected YAML/runtime output, and run checks, typecheck, and tests. Commit manifest/lockfile changes with affected source/output. |
 | Change contributor instructions | Locally before staging | Edit `doc-resources/repo-devinfo.md`, run `npm run docs:contributing --prefix .github/tooling`, then review and stage the fragment and guide. |
 | Change other documentation | Locally before committing | Edit source fragments, explicitly run the full doc generator, and review/stage affected output. Do not rely on a later automatic refresh for a feature commit. |
@@ -125,7 +133,7 @@ when a branch switch or dependency edit changes the lockfile.
 | Push a feature | Locally after committing | Pre-push checks each pushed tip's committed output, runtime, types, and tests. Unstaged changes cannot repair an incomplete commit; amend or add a follow-up commit with the missing output. |
 | Feature push or pull request | Automatically in GitHub | `Validate actions` verifies committed output and runs Linux/Windows, Node 20/24 tests. Publish workflow also validates pushes. Neither generates missing files nor pushes fixes to your branch. |
 | Test the actual action | In a caller workflow after pushing a complete feature commit | Use `fortify/github-action@feat-1`, or a variant at the same ref. Supply authorized test configuration/credentials through secrets. Test GitHub/GHES compatibility and failure/debug behavior explicitly; offline tests do not run scans. |
-| Update third-party pins | Scheduled/manual workflow on the default branch, or explicit local updater invocation | Updater changes source pins, regenerates declared actions, validates, and opens one PR. New GitHub majors/runtime changes need draft review; GHES upload stays on v3. |
+| Update third-party pins | Scheduled/manual workflow on the default branch, or explicit local updater invocation | Updater changes source pins and regenerates declared actions. The producer workflow runs the combined `generate` task before validating and opening one PR. New GitHub majors/runtime changes need draft review; GHES upload stays on v3. |
 | Review a bot PR | Before merging, in GitHub and a caller workflow when compatibility changes | Dispatch `Validate actions` with the PR branch/SHA in `ref`, because `GITHUB_TOKEN` PRs do not normally trigger other workflows. Read release notes and run live compatibility checks before accepting major/runtime changes. |
 | Merge/release | Automatically on `main` after passing validation | Release tooling publishes validated commits/tags without branch-aware regeneration. The docs workflow refreshes docs on `main` pushes, schedule, or manual dispatch; it is separate from feature action generation. |
 
