@@ -217,14 +217,16 @@ async function patchFixture(context) {
   return root;
 }
 
-test('patch export and scope validation follow declared output paths', async context => {
+test('patch export and scope validation follow declared output paths with Windows Git CRLF conversion', async context => {
   const producer = await patchFixture(context);
   await updatePins(producer, mockClient(), { now, write: true });
   const patch = path.join(producer, 'update.patch');
   await exportUpdatePatch(producer, patch);
   assert.match(await readFile(patch, 'utf8'), /new-variant\/nested\/action.yaml/);
   const consumer = await patchFixture(context);
+  git(consumer, 'config', 'core.autocrlf', 'true');
   await applyUpdatePatch(consumer, patch);
+  assert.match(await readFile(path.join(consumer, 'action.yml'), 'utf8'), /\r\n/);
   await generateRepository(consumer, { check: true });
   assert.match(git(consumer, 'diff', '--cached', '--name-only'), /new-variant\/nested\/action.yaml/);
 });

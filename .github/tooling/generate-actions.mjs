@@ -110,7 +110,7 @@ export async function generateRepository(root, { check = false } = {}) {
       }
     }
     if (check) {
-      if (missing || await readFile(target, 'utf8') !== content) mismatches.push(filename);
+      if (missing || (await readFile(target, 'utf8')).replace(/\r\n/g, '\n') !== content) mismatches.push(filename);
     } else {
       await writeFile(target, content);
     }

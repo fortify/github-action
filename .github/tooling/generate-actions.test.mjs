@@ -119,6 +119,12 @@ test('generation creates newly declared outputs; check mode reports missing file
   await assert.rejects(readFile(path.join(root, 'new-variant/nested/action.yaml')), { code: 'ENOENT' });
   await generateRepository(root);
   await generateRepository(root, { check: true });
+  const filename = path.join(root, 'new-variant/nested/action.yaml');
+  const generated = await readFile(filename, 'utf8');
+  await writeFile(filename, generated.replace(/\n/g, '\r\n'));
+  await generateRepository(root, { check: true });
+  await writeFile(filename, generated.replace('name: Upload', 'name: Modified').replace(/\n/g, '\r\n'));
+  await assert.rejects(generateRepository(root, { check: true }), /stale/);
 });
 
 test('Node action generation preserves metadata and rejects malformed entry points and mixed runtimes', () => {
