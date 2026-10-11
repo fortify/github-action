@@ -83,6 +83,8 @@ Edit action manifests directly; YAML-only changes require no build. After
 changing TypeScript, build configuration, or runtime dependencies, rebuild and
 commit both affected bundles and license files with their sources and lockfile.
 `check` verifies committed bundles without repairing or staging files.
+`.gitattributes` keeps text files LF on all platforms, including Windows
+checkouts with `core.autocrlf` enabled, so generated bundle bytes remain stable.
 Tests exercise both bundles, setup inputs, same-step
 environment handoff, subprocess failures, debug outputs, and action contracts.
 They do not download tools or call Fortify services.

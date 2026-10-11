@@ -34,6 +34,7 @@ jobs:
           node-version: '24'
           package-manager-cache: false
       - name: Validate action contracts and bundled runtimes
+        shell: bash
         run: |
           npm ci --ignore-scripts --no-audit --no-fund
           npm run check
