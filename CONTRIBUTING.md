@@ -108,6 +108,35 @@ runner/GHES installations must support that runtime, and `/setup` additionally
 requires Node 24 action support. GHES must have access to the pinned external
 actions through its configured action availability/synchronization mechanism.
 
+### Why actions are self-contained
+
+The original composites called other actions in this repository through branch
+or version tags, for example `fortify/github-action/without-artifacts@v3`.
+Pinning the outer action to a commit SHA does not pin those nested calls: GitHub
+resolves each `uses` reference independently. If a nested tag/branch is moved or
+compromised, the same outer SHA can execute different, potentially malicious
+code. Every transitive action reference must be immutable to close that gap.
+
+A simple double-commit workaround does not fix a multi-level call chain. Suppose
+commit A contains tag-based sub-actions, and commit B changes the root to call a
+sub-action at A's SHA. That sub-action still calls its own child through the tag
+recorded in A; changing the child reference in B does not modify A. A bottom-up
+sequence of separately pinned commits could freeze a finite dependency chain,
+but requires tracking every depth and creates historical-version coupling on
+each change. Our generated flat actions avoid both mutable transitive references
+and that release/feature-branch bookkeeping. Shared local runtime files come
+from the same downloaded commit as the action metadata.
+
+A separate repository for shared actions can also be secure if all transitive
+references are SHA-pinned, but is sub-optimal here. GHES operators would need to
+allow and synchronize another repository and its referenced commits; feature
+testing and releases would require coordinated changes across repositories.
+It also introduces another download/dependency boundary for a small set of
+shared components. Keeping one canonical source and bundling shared runtime
+code into this repository provides reuse without those operational costs.
+Third-party actions still require their own SHA pins and GHES availability;
+this design does not remove the need to review their transitive dependencies.
+
 ### Building and testing
 
 ```bash
@@ -123,6 +152,11 @@ file and compiles the shared Node runtime/license bundle. Use it after editing
 action source, runtime source, generators, or dependencies. For targeted work,
 `generate:actions` only emits YAML and `build` only compiles Node code.
 Documentation generation remains separate. Neither task stages files.
+
+The `test` task discovers test files in Node and passes explicit filenames to
+the Node test runner, rather than relying on shell wildcard expansion. This
+works with npm's Windows shell as well as Linux and preserves test failures as
+nonzero exit codes. All validation workflows use this same npm task.
 
 ### Feature development workflow
 

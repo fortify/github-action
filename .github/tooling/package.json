@@ -3,7 +3,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "test": "node --test *.test.mjs",
+    "test": "node run-tests.mjs",
     "build": "node build-setup.mjs",
     "generate": "npm run generate:actions && npm run build",
     "generate:actions": "node generate-actions.mjs",
