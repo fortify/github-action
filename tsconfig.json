@@ -7,5 +7,5 @@
     "esModuleInterop": true,
     "skipLibCheck": true
   },
-  "include": ["setup.ts"]
+  "include": ["src/**/*.ts"]
 }

@@ -1,7 +1,10 @@
 name: Validate actions
 'on':
   push:
+    branches-ignore:
+      - main
   pull_request:
+  workflow_call:
   workflow_dispatch:
     inputs:
       ref:
@@ -18,9 +21,6 @@ jobs:
         os:
           - ubuntu-latest
           - windows-latest
-        node:
-          - '20'
-          - '24'
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout
@@ -31,11 +31,11 @@ jobs:
       - name: Setup Node.js
         uses: fortify/shared-github/actions/3rdparty/actions/setup-node/v6@5ad1afec0f56a21b03f0887eea35505cb6a66554
         with:
-          node-version: ${{ matrix.node }}
+          node-version: '24'
           package-manager-cache: false
-      - name: Validate generated actions and bundled runtime
+      - name: Validate action contracts and bundled runtimes
         run: |
-          npm ci --prefix .github/tooling --ignore-scripts --no-audit --no-fund
-          npm run check --prefix .github/tooling
-          npm run typecheck --prefix .github/tooling
-          npm test --prefix .github/tooling
+          npm ci --ignore-scripts --no-audit --no-fund
+          npm run check
+          npm run typecheck
+          npm test

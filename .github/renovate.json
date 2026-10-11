@@ -1,0 +1,40 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "enabledManagers": ["github-actions"],
+  "github-actions": {
+    "managerFilePatterns": ["/(^|/)action\\.yml$/"]
+  },
+  "includePaths": ["action.yml", "**/action.yml"],
+  "ignorePaths": [".github/workflows/**"],
+  "dependencyDashboard": false,
+  "automerge": false,
+  "prBodyNotes": [
+    "This PR was created with GITHUB_TOKEN, so normal pull-request CI does not run automatically. Dispatch the Validate actions workflow with this PR branch or SHA as its ref and review its results before merging."
+  ],
+  "packageRules": [
+    {
+      "matchManagers": ["github-actions"],
+      "pinDigests": true,
+      "minimumReleaseAge": "7 days",
+      "minimumReleaseAgeBehaviour": "timestamp-required",
+      "internalChecksFilter": "strict",
+      "groupName": "third-party action pins"
+    },
+    {
+      "matchManagers": ["github-actions"],
+      "matchPackageNames": ["actions/upload-artifact"],
+      "matchFileNames": ["with-ghes-artifacts/action.yml"],
+      "allowedVersions": ">=3.0.0 <4.0.0"
+    },
+    {
+      "matchManagers": ["github-actions"],
+      "matchPackageNames": ["actions/github-script"],
+      "allowedVersions": ">=9.0.0 <10.0.0"
+    },
+    {
+      "matchManagers": ["github-actions"],
+      "matchUpdateTypes": ["digest"],
+      "enabled": false
+    }
+  ]
+}

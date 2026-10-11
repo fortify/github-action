@@ -3,115 +3,36 @@ name: Update third-party action pins
   schedule:
     - cron: '20 6 * * *'
   workflow_dispatch:
-  pull_request:
-    paths:
-      - '**/action.yml'
-      - '**/action.yaml'
-      - .github/action-src/**
-      - .github/tooling/**
-      - runtime/**
-      - .github/workflows/update-action-pins.yml
 
 permissions:
   contents: read
 
 concurrency:
-  group: action-pins-${{ github.event.pull_request.number || 'updates' }}
+  group: action-pins
   cancel-in-progress: false
 
 jobs:
-  generate:
-    runs-on: ubuntu-latest
-    outputs:
-      has_changes: ${{ steps.update.outputs.has_changes }}
-      requires_migration: ${{ steps.update.outputs.requires_migration }}
-    steps:
-      - name: Checkout
-        uses: fortify/shared-github/actions/3rdparty/actions/checkout/v6@5ad1afec0f56a21b03f0887eea35505cb6a66554
-        with:
-          persist-credentials: false
-      - name: Setup Node.js
-        uses: fortify/shared-github/actions/3rdparty/actions/setup-node/v6@5ad1afec0f56a21b03f0887eea35505cb6a66554
-        with:
-          node-version: '22'
-          package-manager-cache: false
-      - name: Install updater dependencies
-        run: npm ci --prefix .github/tooling --ignore-scripts --no-audit --no-fund
-      - name: Test updater
-        run: |
-          npm run check --prefix .github/tooling
-          npm test --prefix .github/tooling
-      - name: Prepare update output
-        if: github.event_name != 'pull_request'
-        run: mkdir -p "$RUNNER_TEMP/action-pin-update"
-      - name: Inspect releases and update pins
-        id: update
-        if: github.event_name != 'pull_request' && github.ref_name == github.event.repository.default_branch
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
-          ACTION_UPDATE_BODY: ${{ runner.temp }}/action-pin-update/body.md
-        run: node .github/tooling/update-action-pins.mjs --write
-      - name: Generate action metadata and Node runtime
-        if: steps.update.outputs.has_changes == 'true'
-        run: npm run generate --prefix .github/tooling
-      - name: Validate generated updates
-        if: steps.update.outputs.has_changes == 'true'
-        run: |
-          npm run check --prefix .github/tooling
-          npm test --prefix .github/tooling
-      - name: Export source and generated-action patch
-        if: steps.update.outputs.has_changes == 'true'
-        env:
-          ACTION_UPDATE_PATCH: ${{ runner.temp }}/action-pin-update/actions.patch
-        run: node .github/tooling/update-action-pins.mjs --export-patch
-      - name: Upload update
-        if: steps.update.outputs.has_changes == 'true'
-        uses: fortify/shared-github/actions/3rdparty/actions/upload-artifact/v7@5ad1afec0f56a21b03f0887eea35505cb6a66554
-        with:
-          name: action-pin-update
-          path: ${{ runner.temp }}/action-pin-update
-          retention-days: 1
-
-  open-pr:
-    needs: generate
-    if: needs.generate.outputs.has_changes == 'true'
+  renovate:
+    if: github.ref_name == github.event.repository.default_branch
     runs-on: ubuntu-latest
     permissions:
       contents: write
       pull-requests: write
     steps:
-      - name: Checkout default branch
-        uses: fortify/shared-github/actions/3rdparty/actions/checkout/v6@5ad1afec0f56a21b03f0887eea35505cb6a66554
-        with:
-          ref: ${{ github.event.repository.default_branch }}
-          persist-credentials: false
-      - name: Download update
-        uses: fortify/shared-github/actions/3rdparty/actions/download-artifact/v8@5ad1afec0f56a21b03f0887eea35505cb6a66554
-        with:
-          name: action-pin-update
-          path: ${{ runner.temp }}/action-pin-update
       - name: Setup Node.js
         uses: fortify/shared-github/actions/3rdparty/actions/setup-node/v6@5ad1afec0f56a21b03f0887eea35505cb6a66554
         with:
-          node-version: '22'
+          node-version: '24'
           package-manager-cache: false
-      - name: Install trusted updater dependencies
-        run: npm ci --prefix .github/tooling --ignore-scripts --no-audit --no-fund
-      - name: Apply and verify patch scope
+      - name: Update action manifest pins with Renovate
+        run: npx --yes --package=renovate@44.149.3 renovate
         env:
-          ACTION_UPDATE_PATCH: ${{ runner.temp }}/action-pin-update/actions.patch
-        run: node .github/tooling/update-action-pins.mjs --apply-patch
-      - name: Verify source and generated output
-        run: |
-          npm run check --prefix .github/tooling
-          npm test --prefix .github/tooling
-      - name: Create or update pull request
-        uses: fortify/shared-github/actions/3rdparty/peter-evans/create-pull-request/v8@5ad1afec0f56a21b03f0887eea35505cb6a66554
-        with:
-          branch: chore/update-third-party-action-pins
-          base: ${{ github.event.repository.default_branch }}
-          delete-branch: true
-          commit-message: 'fix: update pinned third-party actions'
-          title: 'Update pinned third-party actions'
-          body-path: ${{ runner.temp }}/action-pin-update/body.md
-          draft: ${{ needs.generate.outputs.requires_migration == 'true' && 'always-true' || 'false' }}
+          RENOVATE_PLATFORM: github
+          RENOVATE_TOKEN: ${{ github.token }}
+          RENOVATE_REPOSITORIES: ${{ github.repository }}
+          RENOVATE_USERNAME: github-actions[bot]
+          RENOVATE_GIT_AUTHOR: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>
+          RENOVATE_ONBOARDING: 'false'
+          RENOVATE_REQUIRE_CONFIG: required
+          RENOVATE_AUTODISCOVER: 'false'
+          RENOVATE_ALLOWED_COMMANDS: '[]'

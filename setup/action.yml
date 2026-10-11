@@ -1,6 +1,3 @@
-# AUTO-GENERATED FILE - DO NOT EDIT MANUALLY.
-# Source: .github/action-src/actions.yml
-# Regenerate: npm run generate --prefix .github/tooling
 name: Setup Fortify Tools
 description: Set up Fortify tools like fcli, ScanCentral Client, FoDUploader and FortifyVulnerabilityExporter
 author: Fortify

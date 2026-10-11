@@ -1,23 +1,27 @@
 #!/usr/bin/env bash
 set -euo pipefail
 cd "$(dirname "$0")"
-install_hooks=false
-if [[ $# -eq 1 && "$1" == "--hooks" ]]; then
-  install_hooks=true
-elif [[ $# -ne 0 ]]; then
-  printf 'Usage: %s [--hooks]\n' "$0" >&2
+if [[ $# -ne 0 ]]; then
+  printf 'Usage: %s\n' "$0" >&2
   exit 2
 fi
-npm ci --prefix .github/tooling --ignore-scripts --no-audit --no-fund
-npm run generate --prefix .github/tooling
-npm run typecheck --prefix .github/tooling
-npm test --prefix .github/tooling
-if [[ "$install_hooks" == true ]]; then
-  node .github/tooling/git-hooks.mjs --install
+if [[ -d ".github/tooling/node_modules" ]]; then
+  printf 'Remove the obsolete .github/tooling/node_modules installation before continuing; it can shadow the root dependencies.\n' >&2
+  exit 1
 fi
-for hook in pre-commit post-checkout; do
-  hook_path="$(git rev-parse --git-path "hooks/$hook")"
-  if [[ -f "$hook_path" ]] && grep -Eq 'update-action-refs|npm run build.*git add dist' "$hook_path"; then
-    printf 'Legacy generated hook found: %s. Remove its obsolete action build/reference commands.\n' "$hook_path"
+if hooks_path="$(git config --get core.hooksPath)"; then
+  :
+else
+  status=$?
+  if [[ "$status" -ne 1 ]]; then
+    exit "$status"
   fi
-done
+fi
+if [[ "$hooks_path" == ".github/tooling/hooks" ]]; then
+  printf 'The repository validation hooks were removed. Disable the obsolete setting with: git config --local --unset core.hooksPath\n' >&2
+fi
+npm ci --ignore-scripts --no-audit --no-fund
+npm run build
+npm run check
+npm run typecheck
+npm test

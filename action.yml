@@ -1,8 +1,5 @@
-# AUTO-GENERATED FILE - DO NOT EDIT MANUALLY.
-# Source: .github/action-src/actions.yml
-# Regenerate: npm run generate --prefix .github/tooling
 name: Fortify AST Scan (with GitHub artifacts)
-description: Run Fortify AST Scan and upload debug artifacts using actions/upload-artifact@v7 (GitHub.com).
+description: Run Fortify AST Scan and upload debug artifacts (GitHub.com).
 author: Fortify
 inputs:
   debug:
@@ -22,14 +19,14 @@ runs:
   steps:
     - name: Run Fortify AST Scan
       id: scan
-      uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7.0.1
+      uses: actions/github-script@d746ffe35508b1917358783b479e04febd2b8f71 # v9.0.0
       env:
         FORTIFY_DEBUG: ${{ inputs.debug }}
         GITHUB_TOKEN: ${{ github.token }}
-        FORTIFY_SETUP_BUNDLE: ${{ github.action_path }}/runtime/setup.cjs
+        FORTIFY_CI_BUNDLE: ${{ github.action_path }}/runtime/run-fcli-ci-action.cjs
       with:
         script: |
-          const { runScan } = require(process.env.FORTIFY_SETUP_BUNDLE);
+          const { runScan } = require(process.env.FORTIFY_CI_BUNDLE);
           await runScan(process.env.FORTIFY_DEBUG);
     - name: Upload debug artifacts (github.com)
       if: ${{ always() && steps.scan.outputs.upload-debug-artifacts == 'true' }}

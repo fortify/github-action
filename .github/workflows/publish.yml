@@ -1,5 +1,7 @@
 on:
   push:
+    branches:
+      - main
 
 permissions:
   contents: write
@@ -8,21 +10,9 @@ permissions:
 name: Publish release
 jobs:
   validate:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check-out source code
-        uses: fortify/shared-github/actions/3rdparty/actions/checkout/v6@5ad1afec0f56a21b03f0887eea35505cb6a66554
-      - name: Setup Node.js
-        uses: fortify/shared-github/actions/3rdparty/actions/setup-node/v6@5ad1afec0f56a21b03f0887eea35505cb6a66554
-        with:
-          node-version: "22"
-          package-manager-cache: false
-      - name: Validate committed action implementation
-        run: |
-          npm ci --prefix .github/tooling --ignore-scripts --no-audit --no-fund
-          npm run check --prefix .github/tooling
-          npm run typecheck --prefix .github/tooling
-          npm test --prefix .github/tooling
+    permissions:
+      contents: read
+    uses: ./.github/workflows/validate-actions.yml
 
   release:
     if: github.ref == 'refs/heads/main'
