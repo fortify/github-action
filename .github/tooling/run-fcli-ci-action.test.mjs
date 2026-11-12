@@ -86,6 +86,23 @@ async function debugArtifactFiles(fixture) {
   return readdir(directory);
 }
 
+async function assertReadmeZip(fixture) {
+  assert.equal(fixture.outputs['upload-debug-artifacts'], 'true');
+  assert.deepEqual(await debugArtifactFiles(fixture), ['debug-job.zip']);
+  const zipFile = fixture.outputs['debug-artifacts-zip'];
+  assert.equal(zipFile, path.join(fixture.outputs['debug-artifacts-dir'], 'debug-job.zip'));
+  const reader = new ZipReader(new Uint8ArrayReader(new Uint8Array(await readFile(zipFile))), { useWebWorkers: false });
+  try {
+    const entries = await reader.getEntries();
+    assert.deepEqual(entries.map(entry => [entry.filename, entry.encrypted]), [['README.txt', false]]);
+    const readme = await entries[0].getData(new TextWriter());
+    assert.match(readme, /debug-artifact-password/);
+    assert.doesNotMatch(readme, /fcli log contents|hidden contents|test-password/);
+  } finally {
+    await reader.close();
+  }
+}
+
 test('single-step scan imports setup env, uses argument array, and preserves publish opts and token', async t => {
   const fixture = await scanFixture(t);
   await runScan('true', fixture.services);
@@ -121,24 +138,29 @@ test('debug artifacts are packaged as AES-256 encrypted zip without exposing the
   await reader.close();
 });
 
-test('debug artifacts are only collected if a password is set', async t => {
+test('debugging without a password uploads only an unencrypted README zip', async t => {
   for (const [debugInput, runnerDebug] of [['true', 'false'], ['false', '1']]) {
     const fixture = await scanFixture(t, { debug: runnerDebug, password: '' });
+    fixture.services.createZip = async () => assert.fail('Debug data must not be packaged without a password');
     await runScan(debugInput, fixture.services);
     assert.deepEqual(fixture.calls[2][1], ['action', 'run', 'ci', '--debug=false']);
     assert.equal(fixture.warnings.length, 1);
     assert.match(fixture.warnings[0], /debug-artifact-password/);
     assert.deepEqual(fixture.secrets, []);
+    await assertReadmeZip(fixture);
+  }
+});
+
+test('disabled debugging never requests an upload, with or without a password', async t => {
+  for (const password of ['', 'test-password']) {
+    const fixture = await scanFixture(t, { password });
+    await runScan('false', fixture.services);
+    assert.deepEqual(fixture.calls[2][1], ['action', 'run', 'ci', '--debug=false']);
+    assert.deepEqual(fixture.warnings, []);
     assert.equal(fixture.outputs['upload-debug-artifacts'], 'false');
     assert.equal(fixture.outputs['debug-artifacts-zip'], '');
     assert.deepEqual(await debugArtifactFiles(fixture), ['README.txt']);
-    const readme = await readFile(path.join(fixture.outputs['debug-artifacts-dir'], 'README.txt'), 'utf8');
-    assert.match(readme, /debug-artifact-password/);
   }
-  const fixture = await scanFixture(t, { password: '' });
-  await runScan('false', fixture.services);
-  assert.deepEqual(fixture.warnings, []);
-  assert.deepEqual(await debugArtifactFiles(fixture), ['README.txt']);
 });
 
 test('scan and setup failures still set outputs; runner debug enables collection', async t => {
@@ -148,9 +170,8 @@ test('scan and setup failures still set outputs; runner debug enables collection
   assert.equal(fixture.outputs['debug-artifacts-zip'], path.join(fixture.outputs['debug-artifacts-dir'], 'debug-job.zip'));
   const setupFailure = await scanFixture(t);
   setupFailure.services.setup = async () => { throw new Error('setup failed'); };
-  await assert.rejects(runScan('false', setupFailure.services), /setup failed/);
-  assert.equal(setupFailure.outputs['upload-debug-artifacts'], 'false');
-  assert.deepEqual(await debugArtifactFiles(setupFailure), ['README.txt']);
+  await assert.rejects(runScan('true', setupFailure.services), /setup failed/);
+  await assertReadmeZip(setupFailure);
   assert.equal(setupFailure.calls.length, 0);
 });
 
@@ -158,19 +179,32 @@ test('debug artifact packaging problems result in warnings without masking scan 
   const zipFailure = await scanFixture(t, { fail: true, debug: '1' });
   zipFailure.services.createZip = async () => { throw new Error('zip failed'); };
   await assert.rejects(runScan('false', zipFailure.services), /scan failed/);
-  const invalidName = await scanFixture(t);
-  invalidName.services.env.FORTIFY_DEBUG_ARTIFACT_NAME = 'invalid/name';
-  await runScan('true', invalidName.services);
   const noFiles = await scanFixture(t);
   noFiles.services.execute = async () => {};
   await runScan('true', noFiles.services);
-  for (const [fixture, warning] of [[zipFailure, /zip failed/], [invalidName, /invalid debug artifact name/], [noFiles, /no files/]]) {
+  for (const [fixture, warning] of [[zipFailure, /zip failed/], [noFiles, /No debug artifact files/]]) {
     assert.equal(fixture.warnings.length, 1);
     assert.match(fixture.warnings[0], warning);
-    assert.equal(fixture.outputs['upload-debug-artifacts'], 'false');
-    assert.equal(fixture.outputs['debug-artifacts-zip'], '');
-    assert.deepEqual(await debugArtifactFiles(fixture), ['README.txt']);
+    await assertReadmeZip(fixture);
   }
+  const invalidName = await scanFixture(t);
+  invalidName.services.env.FORTIFY_DEBUG_ARTIFACT_NAME = 'invalid/name';
+  await runScan('true', invalidName.services);
+  assert.equal(invalidName.warnings.length, 1);
+  assert.match(invalidName.warnings[0], /invalid debug artifact name/);
+  assert.equal(invalidName.outputs['upload-debug-artifacts'], 'false');
+  assert.equal(invalidName.outputs['debug-artifacts-zip'], '');
+  assert.deepEqual(await debugArtifactFiles(invalidName), ['README.txt']);
+});
+
+test('failure to prepare even the README fallback does not expose an unusable upload or mask scan failures', async t => {
+  const readmeFailure = await scanFixture(t, { fail: true, password: '' });
+  readmeFailure.services.createReadmeZip = async () => { throw new Error('README zip failed'); };
+  await assert.rejects(runScan('true', readmeFailure.services), /scan failed/);
+  assert.equal(readmeFailure.warnings.length, 2);
+  assert.match(readmeFailure.warnings[1], /README zip failed/);
+  assert.deepEqual([readmeFailure.outputs['upload-debug-artifacts'], readmeFailure.outputs['debug-artifacts-dir'],
+    readmeFailure.outputs['debug-artifacts-zip']], ['false', '', '']);
   const directoryFailure = await scanFixture(t);
   await writeFile(path.join(directoryFailure.temp, 'file'), '');
   directoryFailure.services.env.RUNNER_TEMP = path.join(directoryFailure.temp, 'file');

@@ -7,7 +7,7 @@ inputs:
     required: false
     default: "false"
   debug-artifact-password:
-    description: Password for encrypting the debug artifacts zip file using AES-256; debug artifacts are not collected if not set. Use a strong, randomly generated password stored as a GitHub secret.
+    description: Password for encrypting debug artifacts using AES-256. Without a password, debug data is not collected and requested debug output is an unencrypted README-only zip. Use a strong, randomly generated password stored as a GitHub secret.
     required: false
   debug-artifact-name:
     description: Name for the debug artifacts archive; defaults to "fortify-debug-artifacts"

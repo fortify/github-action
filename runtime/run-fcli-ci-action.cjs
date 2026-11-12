@@ -58140,9 +58140,14 @@ const external_node_stream_promises_namespaceObject = require("node:stream/promi
 
 // Using require to have ncc bundle the CommonJS build of zip.js; the ES module build uses import.meta,
 // which causes a syntax error in our CommonJS bundles.
-const { ZipWriter } = __nccwpck_require__(5635);
+const { TextReader, Uint8ArrayWriter, ZipWriter } = __nccwpck_require__(5635);
 function errorCode(error) {
     return error.code;
+}
+async function createDebugArtifactsReadmeZip(zipFile, readme) {
+    const writer = new ZipWriter(new Uint8ArrayWriter(), { useWebWorkers: false });
+    await writer.add('README.txt', new TextReader(readme));
+    await (0,promises_namespaceObject.writeFile)(zipFile, await writer.close());
 }
 // Mirrors actions/upload-artifact directory handling: hidden files and directories are excluded,
 // symbolic links are followed, and broken links are ignored.
@@ -58263,7 +58268,8 @@ async function executeScan(command, args, cwd, env) {
     });
 }
 const scanServices = {
-    setup: runSetup, execute: executeScan, mkdir: promises_namespaceObject.mkdir, readEnvironment, createZip: createDebugArtifactsZip, core: core_namespaceObject, env: process.env,
+    setup: runSetup, execute: executeScan, mkdir: promises_namespaceObject.mkdir, readEnvironment, createZip: createDebugArtifactsZip,
+    createReadmeZip: createDebugArtifactsReadmeZip, core: core_namespaceObject, env: process.env,
 };
 // Characters rejected by actions/upload-artifact in artifact names; leading dot would result in a hidden file.
 const invalidArtifactName = /^\.|[":<>|*?\r\n\\/\0]/;
@@ -58275,38 +58281,45 @@ re-running the workflow with GitHub's "Enable debug logging" option) and a passw
 explain why no debug artifacts are available.
 
 As debug artifacts may contain sensitive data, they're only made available as a password-protected (AES-256)
-zip file. Note that the 'debug-artifacts-dir' output is deprecated; please upload the file referenced by the
-'debug-artifacts-zip' output instead. See https://github.com/fortify/github-action#artifact-storage for details.
+zip file. When debugging is requested but no encrypted zip is available, an unencrypted zip containing only
+this README is provided instead. Note that the 'debug-artifacts-dir' output is deprecated; please upload the
+file referenced by the 'debug-artifacts-zip' output instead.
+See https://github.com/fortify/github-action#artifact-storage for details.
 `;
-async function createZipFile(services, dataDirectory, artifactsDirectory, password) {
-    const name = services.env.FORTIFY_DEBUG_ARTIFACT_NAME || 'fortify-debug-artifacts';
-    if (invalidArtifactName.test(name)) {
-        services.core.warning(`Debug artifacts will not be uploaded due to invalid debug artifact name: ${name}`);
-        return '';
-    }
-    const zipFile = external_node_path_namespaceObject.join(artifactsDirectory, `${name}.zip`);
+async function createZipFile(services, dataDirectory, zipFile, password) {
     try {
         const count = await services.createZip(dataDirectory, zipFile, password);
         if (count) {
             services.core.info(`Created password-protected debug artifacts zip file ${zipFile} containing ${count} files`);
-            return zipFile;
+            return true;
         }
-        services.core.warning(`Debug artifacts will not be uploaded as no files were found in ${dataDirectory}`);
+        services.core.warning(`No debug artifact files were found in ${dataDirectory}; creating a README-only zip instead`);
     }
     catch (error) {
-        services.core.warning(`Debug artifacts will not be uploaded due to error creating zip file: ${error.message}`);
+        services.core.warning(`Error creating encrypted debug artifacts zip file; creating a README-only zip instead: ${error.message}`);
     }
-    return '';
+    return false;
 }
-// The deprecated debug-artifacts-dir output points to a dedicated per-scan directory that contains either the encrypted
-// zip file or a README file, so existing workflows that upload this directory never upload unencrypted debug artifacts.
+// The per-scan directory contains only an encrypted debug zip or a README (zipped when debugging is requested).
 async function packageDebugArtifacts(services, debug, dataDirectory, tempDirectory, password) {
     try {
         const directory = await (0,promises_namespaceObject.mkdtemp)(external_node_path_namespaceObject.join(tempDirectory, 'fortify-debug-artifacts-'));
-        const zipFile = debug ? await createZipFile(services, dataDirectory, directory, password) : '';
-        if (!zipFile)
-            await (0,promises_namespaceObject.writeFile)(external_node_path_namespaceObject.join(directory, 'README.txt'), debugArtifactsReadme);
-        return { directory, zipFile };
+        if (debug) {
+            const name = services.env.FORTIFY_DEBUG_ARTIFACT_NAME || 'fortify-debug-artifacts';
+            if (invalidArtifactName.test(name)) {
+                services.core.warning(`Debug artifacts will not be uploaded due to invalid debug artifact name: ${name}`);
+            }
+            else {
+                const zipFile = external_node_path_namespaceObject.join(directory, `${name}.zip`);
+                if (!password || !await createZipFile(services, dataDirectory, zipFile, password)) {
+                    await services.createReadmeZip(zipFile, debugArtifactsReadme);
+                    services.core.info(`Created README-only debug artifacts zip file ${zipFile}`);
+                }
+                return { directory, zipFile };
+            }
+        }
+        await (0,promises_namespaceObject.writeFile)(external_node_path_namespaceObject.join(directory, 'README.txt'), debugArtifactsReadme);
+        return { directory, zipFile: '' };
     }
     catch (error) {
         services.core.warning(`Debug artifacts will not be uploaded due to error preparing debug artifacts directory: ${error.message}`);
@@ -58351,7 +58364,7 @@ async function runScan(debugInput, dependencies = {}) {
         });
     }
     finally {
-        const artifacts = await packageDebugArtifacts(services, debug, directory, tempDirectory, password);
+        const artifacts = await packageDebugArtifacts(services, debugRequested, directory, tempDirectory, password);
         services.core.setOutput('upload-debug-artifacts', String(artifacts.zipFile !== ''));
         services.core.setOutput('debug-artifacts-dir', artifacts.directory);
         services.core.setOutput('debug-artifacts-zip', artifacts.zipFile);

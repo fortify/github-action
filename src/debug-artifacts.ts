@@ -1,12 +1,12 @@
 import * as path from 'node:path';
 import { createReadStream, createWriteStream } from 'node:fs';
-import { readdir, realpath, rm, stat } from 'node:fs/promises';
+import { readdir, realpath, rm, stat, writeFile } from 'node:fs/promises';
 import { Readable, Writable } from 'node:stream';
 import { finished } from 'node:stream/promises';
 
 // Using require to have ncc bundle the CommonJS build of zip.js; the ES module build uses import.meta,
 // which causes a syntax error in our CommonJS bundles.
-const { ZipWriter } = require('@zip.js/zip.js') as typeof import('@zip.js/zip.js');
+const { TextReader, Uint8ArrayWriter, ZipWriter } = require('@zip.js/zip.js') as typeof import('@zip.js/zip.js');
 
 interface DebugArtifactFile {
     file: string;
@@ -17,6 +17,12 @@ interface DebugArtifactFile {
 
 function errorCode(error: unknown) {
     return (error as NodeJS.ErrnoException).code;
+}
+
+export async function createDebugArtifactsReadmeZip(zipFile: string, readme: string) {
+    const writer = new ZipWriter(new Uint8ArrayWriter(), { useWebWorkers: false });
+    await writer.add('README.txt', new TextReader(readme));
+    await writeFile(zipFile, await writer.close());
 }
 
 // Mirrors actions/upload-artifact directory handling: hidden files and directories are excluded,

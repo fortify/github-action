@@ -46,10 +46,15 @@ executes `fcli action run ci`. Debug outputs are set even when setup or scanning
 fails. If debugging is enabled and a debug artifact password is set, the scan
 module then packages the Fortify data directory into an AES-256 encrypted zip
 file using zip.js (`src/debug-artifacts.ts`); artifact variants upload only this
-zip file. The zip file is created in a dedicated per-scan directory, exposed
-through the deprecated `debug-artifacts-dir` output, which otherwise contains a
-`README.txt` file, so workflows that upload this directory never upload
-unencrypted debug artifacts. The password is removed from the environment before
+zip file. If debugging is requested but no encrypted zip is available, the scan
+module creates an unencrypted zip from static README text only, without reading
+the Fortify data directory. Both cases set `upload-debug-artifacts` to `true`.
+Invalid artifact names or failures to prepare even the README-only zip produce a
+warning and suppress the upload. Disabled debugging never requests an upload.
+The zip file is created in a dedicated per-scan directory, exposed through the
+deprecated `debug-artifacts-dir` output, which otherwise contains a plain
+`README.txt` file. Workflows that upload this directory never upload unencrypted
+debug data. The password is removed from the environment before
 setup, so it isn't passed to fcli or other subprocesses. Importing either bundle
 does not execute standalone setup; the build adds the direct-execution entry
 point only to the setup bundle.

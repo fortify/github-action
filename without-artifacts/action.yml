@@ -7,17 +7,17 @@ inputs:
     required: false
     default: "false"
   debug-artifact-password:
-    description: Password for encrypting the debug artifacts zip file using AES-256; debug artifacts are not collected if not set. Use a strong, randomly generated password stored as a GitHub secret.
+    description: Password for encrypting debug artifacts using AES-256. Without a password, debug data is not collected and requested debug output is an unencrypted README-only zip. Use a strong, randomly generated password stored as a GitHub secret.
     required: false
 outputs:
   upload-debug-artifacts:
-    description: '"true" if the password-protected debug artifacts zip file was created and should be uploaded; requires debug artifacts to be enabled (inputs.debug==true or runner.debug==1) and inputs.debug-artifact-password to be set'
+    description: '"true" if debugging is requested (inputs.debug==true or runner.debug==1) and a zip file is available to upload; contains either password-protected debug artifacts or an unencrypted README explaining why no debug artifacts are available'
     value: ${{ steps.scan.outputs.upload-debug-artifacts }}
   debug-artifacts-zip:
-    description: Path to the password-protected (AES-256) debug artifacts zip file to be uploaded; empty if not created
+    description: Path to the zip file to be uploaded; contains either password-protected (AES-256) debug artifacts or only an unencrypted README.txt file; empty if not created
     value: ${{ steps.scan.outputs.debug-artifacts-zip }}
   debug-artifacts-dir:
-    description: Deprecated, upload debug-artifacts-zip instead; path to a directory containing either the password-protected (AES-256) debug artifacts zip file, or a README.txt file explaining why no debug artifacts are available
+    description: Deprecated, upload debug-artifacts-zip instead; path to a directory containing the encrypted or README-only zip file, or a plain README.txt file when no zip is created; never contains unencrypted debug data
     value: ${{ steps.scan.outputs.debug-artifacts-dir }}
 runs:
   using: composite
