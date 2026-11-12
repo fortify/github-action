@@ -89,16 +89,24 @@ jobs:
 
 ### Artifact storage
 
-If debugging is enabled (either via the `debug: true` action input or by re-running the workflow with GitHub's "Enable debug logging" option), debug artifacts are collected during the scan and uploaded after the scan completes.
+If debugging is enabled (either via the `debug: true` action input or by re-running the workflow with GitHub's "Enable debug logging" option), debug artifacts are collected during the scan and uploaded after the scan completes. As debug artifacts may contain sensitive data like scan results or credentials that weren't redacted from log files, debug artifacts are only collected if the `debug-artifact-password` action input is set, and uploaded as an AES-256 encrypted zip file protected by this password. If debugging is enabled but this input isn't set, debug artifacts are not collected and a warning is logged.
+
+```yaml
+      - uses: fortify/github-action@v3
+        with:
+          debug-artifact-password: ${{ secrets.FORTIFY_DEBUG_ARTIFACT_PASSWORD }}
+```
+
+Use a strong, randomly generated password stored as a GitHub secret, for example generated using `openssl rand -base64 24`. Not all zip tools support AES encryption; use for example 7-Zip, WinRAR, PeaZip or Keka to extract the debug artifacts. Note that file names and sizes are visible without the password.
 
 The top-level `fortify/github-action` action uploads debug artifacts to GitHub.com artifact storage using `actions/upload-artifact@v7`. If this doesn't match your environment, the following sub-actions provide alternatives:
 
 | Sub-action | Description |
 |---|---|
-| `fortify/github-action` | Default. Uploads to GitHub.com artifact storage using `actions/upload-artifact@v7`. |
+| `fortify/github-action` | Default. Uploads the encrypted zip file as-is to GitHub.com artifact storage using `actions/upload-artifact@v7`. |
 | `fortify/github-action/with-github-artifacts` | Identical to the default; use this when you want to make the artifact storage choice explicit in your workflow. |
-| `fortify/github-action/with-ghes-artifacts` | Uploads to GHES-compatible artifact storage using `actions/upload-artifact@v3`. Use this on GitHub Enterprise Server. |
-| `fortify/github-action/without-artifacts` | Does not upload artifacts. Exposes `upload-debug-artifacts` and `debug-artifacts-dir` outputs so you can add your own upload step targeting any storage backend. |
+| `fortify/github-action/with-ghes-artifacts` | Uploads to GHES-compatible artifact storage using `actions/upload-artifact@v3`, which wraps the encrypted zip file in another zip file. Use this on GitHub Enterprise Server. |
+| `fortify/github-action/without-artifacts` | Does not upload artifacts. Exposes `upload-debug-artifacts` and `debug-artifacts-zip` outputs so you can add your own upload step targeting any storage backend. The `debug-artifacts-dir` output is deprecated; for backward compatibility, it points to a directory containing either the encrypted zip file or a `README.txt` file explaining why no debug artifacts are available. |
 
 ### Detailed Documentation
 
