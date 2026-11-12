@@ -1,5 +1,20 @@
 # Changelog
 
+## [3.2.0](https://github.com/fortify/github-action/compare/v3.1.1...v3.2.0) (2026-11-12)
+
+
+### Features
+
+* Add debug artifact password input ([8612de9](https://github.com/fortify/github-action/commit/8612de9d5eb945603dd22f6a7a2a17ed6647680a))
+* Add support for linux/arm64 runners ([72549b1](https://github.com/fortify/github-action/commit/72549b16ed5e42ba8ac772fba856697d5b402ddc))
+
+
+### Bug Fixes
+
+* Pin `upload-artifact` actions to commit SHA as per security best practices ([abd305c](https://github.com/fortify/github-action/commit/abd305cb929aa0f2cbe750947fef5242280cc101))
+* Remove internal action references to simplify maintenance and improve security posture ([abd305c](https://github.com/fortify/github-action/commit/abd305cb929aa0f2cbe750947fef5242280cc101))
+* Update NPM dependencies ([e082e88](https://github.com/fortify/github-action/commit/e082e884e78220ed10f12de92c2513b2df328116))
+
 ## [3.1.1](https://github.com/fortify/github-action/compare/v3.1.0...v3.1.1) (2026-05-15)
 
 
