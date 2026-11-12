@@ -57529,23 +57529,32 @@ function normalizeVersion(version) {
     // Only add 'v' prefix if version contains only numbers and dots
     return /^[\d.]+$/.test(version) ? `v${version}` : version;
 }
+const FCLI_LINUX_ARM64_ARCHIVE = 'fcli-linux-arm64.tgz';
+/**
+ * Get name of the fcli release asset for the current platform and architecture.
+ * Windows on arm64 uses the x64 binary through emulation, as fcli doesn't
+ * provide a native Windows arm64 binary.
+ */
+function getFcliArchiveName() {
+    const platform = external_os_namespaceObject.platform();
+    if (platform === 'win32') {
+        return 'fcli-windows.zip';
+    }
+    else if (platform === 'darwin') {
+        return 'fcli-mac.tgz';
+    }
+    else if (external_os_namespaceObject.arch() === 'arm64') {
+        return FCLI_LINUX_ARM64_ARCHIVE;
+    }
+    else {
+        return 'fcli-linux.tgz';
+    }
+}
 /**
  * Build fcli download URL from version
  */
 function buildFcliUrl(version) {
-    const normalizedVersion = normalizeVersion(version);
-    const platform = external_os_namespaceObject.platform();
-    let archiveName;
-    if (platform === 'win32') {
-        archiveName = 'fcli-windows.zip';
-    }
-    else if (platform === 'darwin') {
-        archiveName = 'fcli-mac.tgz';
-    }
-    else {
-        archiveName = 'fcli-linux.tgz';
-    }
-    return `https://github.com/fortify/fcli/releases/download/${normalizedVersion}/${archiveName}`;
+    return `https://github.com/fortify/fcli/releases/download/${normalizeVersion(version)}/${getFcliArchiveName()}`;
 }
 /**
  * Get default bootstrap configuration
@@ -57696,18 +57705,13 @@ FH/4Co007lmXLAe12lQQqR/pOTeHJv1sfda1xaHtj4/Tcrq04Kx0ZmGAd5D9lA92
 VQIDAQAB
 -----END PUBLIC KEY-----`;
 /**
- * Detect platform and return archive name
+ * Error thrown when an HTTP download returns a non-success status
  */
-function getFcliArchiveName() {
-    const platform = external_os_namespaceObject.platform();
-    if (platform === 'win32') {
-        return 'fcli-windows.zip';
-    }
-    else if (platform === 'darwin') {
-        return 'fcli-mac.tgz';
-    }
-    else {
-        return 'fcli-linux.tgz';
+class DownloadError extends Error {
+    status;
+    constructor(status, statusText) {
+        super(`Download failed: ${status} ${statusText}`);
+        this.status = status;
     }
 }
 /**
@@ -57766,7 +57770,7 @@ async function downloadFile(url, destPath) {
         redirect: 'follow'
     });
     if (!response.ok) {
-        throw new Error(`Download failed: ${response.status} ${response.statusText}`);
+        throw new DownloadError(response.status, response.statusText);
     }
     if (!response.body) {
         throw new Error('Response body is empty');
@@ -57878,6 +57882,10 @@ async function downloadAndInstallFcli(config) {
         await downloadFile(downloadUrl, archivePath);
     }
     catch (error) {
+        if (error instanceof DownloadError && error.status === 404 && downloadUrl.endsWith(`/${FCLI_LINUX_ARM64_ARCHIVE}`)) {
+            throw new Error(`Failed to download fcli from ${downloadUrl}: the requested fcli release doesn't provide a Linux arm64 binary.\n`
+                + `Use an fcli version that provides ${FCLI_LINUX_ARM64_ARCHIVE}, or configure an alternative fcli installation through --fcli-url/FCLI_BOOTSTRAP_URL or --fcli-path/FCLI_BOOTSTRAP_PATH.`);
+        }
         throw new Error(`Failed to download fcli from ${downloadUrl}: ${formatError(error)}`);
     }
     if (!external_fs_.existsSync(archivePath)) {

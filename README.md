@@ -109,6 +109,10 @@ jobs:
           fcli fod session logout ...
 ```
 
+### Linux ARM64 runners
+
+Both the setup and scan actions can bootstrap native fcli on `linux/arm64` runners. When setting `FCLI_BOOTSTRAP_VERSION`, select an fcli release that includes `fcli-linux-arm64.tgz`. Any additional Fortify tools must also support the runner's operating system and architecture.
+
 ### Artifact storage
 
 If debugging is enabled (either via the `debug: true` action input or by re-running the workflow with GitHub's "Enable debug logging" option), debug artifacts are collected during the scan and uploaded after the scan completes. As debug artifacts may contain sensitive data like scan results or credentials that weren't redacted from log files, debug artifacts are only collected if the `debug-artifact-password` action input is set, and uploaded as an AES-256 encrypted zip file protected by this password. If debugging is enabled but this input isn't set, debug artifacts are not collected and a warning is logged.
