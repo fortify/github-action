@@ -1,0 +1,38 @@
+name: Update third-party action pins
+'on':
+  schedule:
+    - cron: '20 6 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: action-pins
+  cancel-in-progress: false
+
+jobs:
+  renovate:
+    if: github.ref_name == github.event.repository.default_branch
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - name: Setup Node.js
+        uses: fortify/shared-github/actions/3rdparty/actions/setup-node/v6@5ad1afec0f56a21b03f0887eea35505cb6a66554
+        with:
+          node-version: '24'
+          package-manager-cache: false
+      - name: Update action manifest pins with Renovate
+        run: npx --yes --package=renovate@44.149.3 renovate
+        env:
+          RENOVATE_PLATFORM: github
+          RENOVATE_TOKEN: ${{ github.token }}
+          RENOVATE_REPOSITORIES: ${{ github.repository }}
+          RENOVATE_USERNAME: github-actions[bot]
+          RENOVATE_GIT_AUTHOR: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>
+          RENOVATE_ONBOARDING: 'false'
+          RENOVATE_REQUIRE_CONFIG: required
+          RENOVATE_AUTODISCOVER: 'false'
+          RENOVATE_ALLOWED_COMMANDS: '[]'

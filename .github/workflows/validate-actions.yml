@@ -1,0 +1,42 @@
+name: Validate actions
+'on':
+  push:
+    branches-ignore:
+      - main
+  pull_request:
+  workflow_call:
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: Branch or SHA to validate (empty uses selected workflow ref)
+        required: false
+        type: string
+permissions:
+  contents: read
+jobs:
+  validate:
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - ubuntu-latest
+          - windows-latest
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Checkout
+        uses: fortify/shared-github/actions/3rdparty/actions/checkout/v6@5ad1afec0f56a21b03f0887eea35505cb6a66554
+        with:
+          ref: ${{ inputs.ref || github.ref }}
+          persist-credentials: false
+      - name: Setup Node.js
+        uses: fortify/shared-github/actions/3rdparty/actions/setup-node/v6@5ad1afec0f56a21b03f0887eea35505cb6a66554
+        with:
+          node-version: '24'
+          package-manager-cache: false
+      - name: Validate action contracts and bundled runtimes
+        shell: bash
+        run: |
+          npm ci --ignore-scripts --no-audit --no-fund
+          npm run check
+          npm run typecheck
+          npm test
