@@ -43,14 +43,19 @@ test('manually maintained manifests preserve setup and scan contracts', async ()
     assert.equal(scan.id, 'scan');
     assert.match(scan.uses, /^actions\/github-script@/);
     assert.equal(scan.env.FORTIFY_DEBUG, '${{ inputs.debug }}');
+    assert.equal(scan.env.FORTIFY_DEBUG_ARTIFACT_PASSWORD, '${{ inputs.debug-artifact-password }}');
+    assert.equal(scan.env.FORTIFY_DEBUG_ARTIFACT_NAME,
+      upload ? '${{ inputs.debug-artifact-name }}-${{ github.job }}' : 'fortify-debug-artifacts-${{ github.job }}');
     assert.equal(scan.env.GITHUB_TOKEN, '${{ github.token }}');
     const bundle = path.posix.normalize(scan.env.FORTIFY_CI_BUNDLE.replace('${{ github.action_path }}', path.posix.dirname(filename)));
     assert.equal(bundle, 'runtime/run-fcli-ci-action.cjs');
     await access(new URL(bundle, root));
     assert.equal(scan.with.script.trim(), 'const { runScan } = require(process.env.FORTIFY_CI_BUNDLE);\nawait runScan(process.env.FORTIFY_DEBUG);');
     assert.equal(action.inputs.debug.default, 'false');
+    assert.equal(action.inputs['debug-artifact-password'].required, false);
+    assert.equal(action.inputs['debug-artifact-password'].default, undefined);
     if (!upload) {
-      assert.deepEqual(Object.keys(action.outputs).sort(), ['debug-artifacts-dir', 'upload-debug-artifacts']);
+      assert.deepEqual(Object.keys(action.outputs).sort(), ['debug-artifacts-dir', 'debug-artifacts-zip', 'upload-debug-artifacts']);
       for (const name of Object.keys(action.outputs)) {
         assert.equal(action.outputs[name].value, `\${{ steps.scan.outputs.${name} }}`);
       }
@@ -58,11 +63,12 @@ test('manually maintained manifests preserve setup and scan contracts', async ()
       assert.equal(action.outputs, undefined);
       assert.match(upload.uses, /^actions\/upload-artifact@/);
       assert.equal(upload.if, "${{ always() && steps.scan.outputs.upload-debug-artifacts == 'true' }}");
-      assert.deepEqual(upload.with, {
-        name: '${{ inputs.debug-artifact-name }}-${{ github.job }}',
-        path: '${{ steps.scan.outputs.debug-artifacts-dir }}',
-        'retention-days': '${{ inputs.debug-retention-days }}',
-      });
+      const path = '${{ steps.scan.outputs.debug-artifacts-zip }}';
+      const retention = '${{ inputs.debug-retention-days }}';
+      // upload-artifact v4+ derives the artifact name from the zip file name when uploading without archiving
+      assert.deepEqual(upload.with, filename === 'with-ghes-artifacts/action.yml'
+        ? { name: '${{ inputs.debug-artifact-name }}-${{ github.job }}', path, 'retention-days': retention }
+        : { path, archive: false, 'retention-days': retention });
       assert.equal(action.inputs['debug-artifact-name'].default, 'fortify-debug-artifacts');
       assert.equal(action.inputs['debug-retention-days'].default, '1');
     }
@@ -77,8 +83,10 @@ test('root and GitHub variant remain equivalent; all variants share scan impleme
   for (const filename of ['with-ghes-artifacts/action.yml', 'without-artifacts/action.yml']) {
     const action = await readAction(filename);
     action.runs.steps[0].env.FORTIFY_CI_BUNDLE = base.runs.steps[0].env.FORTIFY_CI_BUNDLE;
+    action.runs.steps[0].env.FORTIFY_DEBUG_ARTIFACT_NAME = base.runs.steps[0].env.FORTIFY_DEBUG_ARTIFACT_NAME;
     assert.deepEqual(action.runs.steps[0], base.runs.steps[0]);
     assert.deepEqual(action.inputs.debug, base.inputs.debug);
+    assert.deepEqual(action.inputs['debug-artifact-password'], base.inputs['debug-artifact-password']);
   }
 });
 

@@ -7,7 +7,7 @@ import os from 'node:os';
 test('Git keeps source and generated runtime files LF even with core.autocrlf enabled', () => {
   const root = fileURLToPath(new URL('../../', import.meta.url));
   const files = [
-    'src/setup.ts', 'src/run-fcli-ci-action.ts',
+    'src/setup.ts', 'src/run-fcli-ci-action.ts', 'src/debug-artifacts.ts',
     'runtime/setup.cjs', 'runtime/run-fcli-ci-action.cjs',
     'runtime/setup.licenses.txt', 'runtime/run-fcli-ci-action.licenses.txt',
   ];

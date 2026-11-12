@@ -3,15 +3,21 @@ description: Run Fortify AST Scan without uploading debug artifacts; use this su
 author: Fortify
 inputs:
   debug:
-    description: Whether to output debug artifacts; note that these may contain sensitive data like access tokens or credentials. Automatically enabled when workflow is re-run with "Enable debug logging" checked.
+    description: Whether to output debug artifacts; note that these may contain sensitive data like access tokens or credentials. Automatically enabled when workflow is re-run with "Enable debug logging" checked. Debug artifacts are only collected if debug-artifact-password is set.
     required: false
     default: "false"
+  debug-artifact-password:
+    description: Password for encrypting debug artifacts using AES-256. Without a password, debug data is not collected and requested debug output is an unencrypted README-only zip. Use a strong, randomly generated password stored as a GitHub secret.
+    required: false
 outputs:
   upload-debug-artifacts:
-    description: '"true" if debug artifacts should be uploaded (inputs.debug==true or runner.debug==1)'
+    description: '"true" if debugging is requested (inputs.debug==true or runner.debug==1) and a zip file is available to upload; contains either password-protected debug artifacts or an unencrypted README explaining why no debug artifacts are available'
     value: ${{ steps.scan.outputs.upload-debug-artifacts }}
+  debug-artifacts-zip:
+    description: Path to the zip file to be uploaded; contains either password-protected (AES-256) debug artifacts or only an unencrypted README.txt file; empty if not created
+    value: ${{ steps.scan.outputs.debug-artifacts-zip }}
   debug-artifacts-dir:
-    description: Path to the debug artifacts directory (env.FORTIFY_DATA_DIR)
+    description: Deprecated, upload debug-artifacts-zip instead; path to a directory containing the encrypted or README-only zip file, or a plain README.txt file when no zip is created; never contains unencrypted debug data
     value: ${{ steps.scan.outputs.debug-artifacts-dir }}
 runs:
   using: composite
@@ -21,6 +27,8 @@ runs:
       uses: actions/github-script@d746ffe35508b1917358783b479e04febd2b8f71 # v9.0.0
       env:
         FORTIFY_DEBUG: ${{ inputs.debug }}
+        FORTIFY_DEBUG_ARTIFACT_NAME: fortify-debug-artifacts-${{ github.job }}
+        FORTIFY_DEBUG_ARTIFACT_PASSWORD: ${{ inputs.debug-artifact-password }}
         GITHUB_TOKEN: ${{ github.token }}
         FORTIFY_CI_BUNDLE: ${{ github.action_path }}/../runtime/run-fcli-ci-action.cjs
       with:
